@@ -1,0 +1,14 @@
+# personal settings
+
+# Intellij
+.idea/*
+!.idea/runConfigurations/
+*.iml
+
+# Eclipse
+/.settings/
+.classpath
+.project
+
+# Maven related files
+/target/
