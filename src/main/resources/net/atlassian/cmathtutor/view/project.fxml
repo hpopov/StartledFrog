@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="911.0"
+	prefWidth="1600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="net.atlassian.cmathtutor.presenter.ProjectPresenter">
+	<children>
+		<MenuBar fx:id="menuBar">
+			<menus>
+				<Menu mnemonicParsing="false" text="File">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Close" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Edit">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Delete" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Help">
+					<items>
+						<MenuItem mnemonicParsing="false" text="About" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+		<SplitPane dividerPositions="0.1, 0.8" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+			<items>
+				<VBox fx:id="viewButtonsContainer" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0" prefWidth="156.0">
+					<children>
+						<Button fx:id="persistentViewButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#switchToPersistentView"
+							prefHeight="156.0" prefWidth="156.0" text="Persistence View" textAlignment="CENTER" wrapText="true">
+							<graphic>
+								<ImageView fitHeight="60.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../images/persistence_view2.jpg" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+						<Button fx:id="configurationViewButton" contentDisplay="TOP" mnemonicParsing="false"
+							onAction="#switchToConfigurationView" prefHeight="156.0" prefWidth="156.0" text="Configuration View" textAlignment="CENTER"
+							wrapText="true">
+							<graphic>
+								<ImageView fitHeight="68.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../images/configuration_view.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
+					</children>
+				</VBox>
+				<StackPane fx:id="viewPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0" prefWidth="1110.0">
+					<children>
+						<!-- <fx:include source="persistence.fxml" fx:id="persistence" /> -->
+						<fx:include fx:id="configuration" source="configuration.fxml" />
+					</children>
+				</StackPane>
+				<TilePane fx:id="persistenceToolbarTilePane" visible="false" minHeight="-Infinity" minWidth="-Infinity"
+					prefHeight="877.0" prefWidth="316.0">
+					<children>
+						<Button mnemonicParsing="false" onAction="#addNewDiagram" prefHeight="100.0" prefWidth="100.0" text="New Diagram"
+							textAlignment="CENTER" wrapText="true" />
+					</children>
+				</TilePane>
+			</items>
+		</SplitPane>
+	</children>
+</VBox>

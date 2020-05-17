@@ -9,14 +9,14 @@ import javafx.beans.property.StringProperty;
 import lombok.ToString;
 
 @ToString
-public class GlobalPropertiesModel {
+public class CreateProjectProperties {
 
     private ObjectProperty<File> projectDestinationFolder;
     private StringProperty applicationName;
     private StringProperty rootPackage;
     private StringProperty projectDescription;
 
-    public GlobalPropertiesModel() {
+    public CreateProjectProperties() {
 	projectDestinationFolder = new SimpleObjectProperty<>();
 	applicationName = new SimpleStringProperty();
 	rootPackage = new SimpleStringProperty();

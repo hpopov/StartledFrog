@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+	prefHeight="375.0" prefWidth="400.0" spacing="25.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="net.atlassian.cmathtutor.presenter.LoadProjectPresenter">
+	<padding>
+		<Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+	</padding>
+	<children>
+		<HBox alignment="CENTER">
+			<children>
+				<Label text="Load project">
+					<font>
+						<Font name="System Bold" size="22.0" />
+					</font>
+				</Label>
+			</children>
+		</HBox>
+		<HBox alignment="CENTER_LEFT">
+			<children>
+				<Label fx:id="projectFileNameLabel" text="...">
+					<padding>
+						<Insets left="5.0" right="5.0" />
+					</padding>
+					<HBox.margin>
+						<Insets left="5.0" right="5.0" />
+					</HBox.margin>
+				</Label>
+				<Button mnemonicParsing="false" onAction="#selectProjectFile" text="Select .startled-frog file" />
+			</children>
+		</HBox>
+		<GridPane maxWidth="-Infinity" prefWidth="400.0">
+			<children>
+				<Label contentDisplay="TEXT_ONLY" maxWidth="300.0" text="Application name:" />
+				<Label contentDisplay="TEXT_ONLY" maxWidth="300.0" text="Root package:" GridPane.rowIndex="1" />
+				<Label contentDisplay="TEXT_ONLY" maxWidth="300.0" text="Startled Frog version:" GridPane.rowIndex="2" />
+				<Label fx:id="applicationNameLabel" GridPane.columnIndex="1" />
+				<Label fx:id="rootPackageLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<Label fx:id="sfVersionLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+			</children>
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES" maxWidth="557.0" minWidth="10.0" prefWidth="194.0" />
+				<ColumnConstraints hgrow="SOMETIMES" maxWidth="993.0" minWidth="10.0" percentWidth="58.0" prefWidth="930.0" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+			</rowConstraints>
+		</GridPane>
+		<HBox alignment="CENTER_RIGHT" spacing="15.0">
+			<children>
+				<ProgressBar fx:id="loadProgressBar" prefHeight="23.0" prefWidth="143.0" progress="0.0" visible="false" />
+				<Button fx:id="loadProjectButton" mnemonicParsing="false" onAction="#loadProject" text="Load Startled Frog project">
+					<HBox.margin>
+						<Insets />
+					</HBox.margin>
+				</Button>
+			</children>
+			<VBox.margin>
+				<Insets top="10.0" />
+			</VBox.margin>
+		</HBox>
+		<HBox alignment="CENTER_RIGHT">
+			<children>
+				<Button fx:id="startModellingButton" mnemonicParsing="false" onAction="#startModelling" text="Start modelling" />
+			</children>
+		</HBox>
+	</children>
+</VBox>

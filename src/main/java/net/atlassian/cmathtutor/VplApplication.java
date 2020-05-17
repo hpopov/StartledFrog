@@ -3,14 +3,15 @@ package net.atlassian.cmathtutor;
 import java.io.IOException;
 
 import com.airhacks.afterburner.injection.Injector;
-import com.airhacks.afterburner.views.FXMLView;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import net.atlassian.cmathtutor.view.MainView;
+import net.atlassian.cmathtutor.view.StartView;
 
 public class VplApplication extends Application {
+
+    public static final String MAIN_TITLE = "Startled Frog";
 
     public static void main(String[] args) throws Exception {
 	launch(args);
@@ -18,10 +19,10 @@ public class VplApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-	FXMLView view = new MainView();
+	StartView view = new StartView();
 	Scene scene = new Scene(view.getView());
 	stage.setScene(scene);
-	stage.setTitle("Startled Frog -- visual programming language");
+	stage.setTitle(MAIN_TITLE + " -- " + view.getTitle());
 	stage.show();
     }
 

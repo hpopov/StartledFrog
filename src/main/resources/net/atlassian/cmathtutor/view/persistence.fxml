@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<SplitPane dividerPositions="0.85" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="1384.0"
+	prefHeight="877.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="net.atlassian.cmathtutor.presenter.PersistencePresenter" fx:id="root">
+	<items>
+		<AnchorPane maxWidth="1170.0">
+			<children>
+				<fx:include source="persistenceDiagram.fxml" fx:id="persistenceDiagram" />
+			</children>
+		</AnchorPane>
+		<TilePane />
+	</items>
+</SplitPane>
