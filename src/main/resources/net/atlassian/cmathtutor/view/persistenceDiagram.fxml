@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.fxdiagram.core.XRoot?>
+
+<XRoot xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.atlassian.cmathtutor.presenter.PersistenceDiagramPresenter"
+	fx:id="root">
+	<!-- TODO Add Nodes -->
+</XRoot>
+
