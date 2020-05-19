@@ -9,8 +9,10 @@ import de.fxdiagram.core.XDiagram;
 import de.fxdiagram.core.XRoot;
 import de.fxdiagram.core.tools.actions.CenterAction;
 import de.fxdiagram.core.tools.actions.DeleteAction;
+import de.fxdiagram.core.tools.actions.LoadAction;
 import de.fxdiagram.core.tools.actions.RedoAction;
 import de.fxdiagram.core.tools.actions.RevealAction;
+import de.fxdiagram.core.tools.actions.SaveAction;
 import de.fxdiagram.core.tools.actions.SelectAllAction;
 import de.fxdiagram.core.tools.actions.UndoAction;
 import de.fxdiagram.core.tools.actions.ZoomToFitAction;
@@ -54,8 +56,8 @@ public class PersistenceDiagramView extends FXMLView {
 		new RedoAction(),
 		new UndoAction(),
 		new RevealAction(),
-//			new LoadAction,
-//			new SaveAction,
+		new LoadAction(),
+		new SaveAction(),
 		new SelectAllAction(),
 		new ZoomToFitAction()// ,
 //			new NavigatePreviousAction,

@@ -32,6 +32,7 @@
 		<xtext-version>2.12.0</xtext-version>
 		<jaxb.version>2.3.1</jaxb.version>
 		<jaxp.version>1.4.5</jaxp.version>
+		<guava.version>29.0-jre</guava.version> <!-- Need version 20.0-android at least to use graphs -->
 	</properties>
 
 	<build>
@@ -154,6 +155,12 @@
 			<groupId>javax.xml.parsers</groupId>
 			<artifactId>jaxp-api</artifactId>
 			<version>${jaxp.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>29.0-jre</version>
 		</dependency>
 
 
