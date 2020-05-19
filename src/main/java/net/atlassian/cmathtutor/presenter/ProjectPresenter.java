@@ -5,9 +5,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import de.fxdiagram.core.XRoot;
-import de.fxdiagram.core.command.AddRemoveCommand;
-import de.fxdiagram.lib.simple.SimpleNode;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -54,7 +51,7 @@ public class ProjectPresenter implements Initializable {
 
     private ChangeListenerRegistryHelper changeListenerRegistryHelper = new ChangeListenerRegistryHelper();
     private Stage stage;
-    private XRoot xRoot;
+//    private XRoot xRoot;
 
     @Override
     public void initialize(URL var1, ResourceBundle var2) {
@@ -79,8 +76,8 @@ public class ProjectPresenter implements Initializable {
 	stage = new Stage(StageStyle.UNDECORATED);
 	stage.initModality(Modality.NONE);
 	PersistenceDiagramView view = new PersistenceDiagramView();
-	xRoot = (XRoot) view.getView();
-	Scene persistentViewScene = new Scene(xRoot);
+//	xRoot = (XRoot) view.getView();
+	Scene persistentViewScene = new Scene(view.getView());
 	PerspectiveCamera perspectiveCamera = new PerspectiveCamera();
 	persistentViewScene.setCamera(perspectiveCamera);
 	stage.setScene(persistentViewScene);
@@ -117,11 +114,11 @@ public class ProjectPresenter implements Initializable {
 
     @FXML
     public void addNewDiagram() {
-	SimpleNode newNode = new SimpleNode("New node!");
-	newNode.setLayoutX(300);
-	newNode.setLayoutY(300);
-	AddRemoveCommand addNewNodeCommand = AddRemoveCommand.newAddCommand(xRoot.getDiagram(), newNode);
-	xRoot.getCommandStack().execute(addNewNodeCommand);
+//	SimpleNode newNode = new SimpleNode("New node!");
+//	newNode.setLayoutX(300);
+//	newNode.setLayoutY(300);
+//	AddRemoveCommand addNewNodeCommand = AddRemoveCommand.newAddCommand(xRoot.getDiagram(), newNode);
+//	xRoot.getCommandStack().execute(addNewNodeCommand);
     }
 
 }
