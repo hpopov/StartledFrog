@@ -9,6 +9,6 @@ public interface PrimitiveAttribute extends Identifiable {
 
     PrimitiveType getType();
 
-    ObservableSet<ConstraintType> getConstraints();
+    ObservableSet<ConstraintType> getUnmodifiableConstraints();
 
 }

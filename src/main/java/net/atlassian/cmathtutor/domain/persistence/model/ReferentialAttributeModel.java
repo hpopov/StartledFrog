@@ -9,22 +9,34 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import net.atlassian.cmathtutor.domain.persistence.Association;
+import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.AttributeArity;
 import net.atlassian.cmathtutor.domain.persistence.OwnerType;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
+import net.atlassian.cmathtutor.util.UidUtil;
 
+@ToString(callSuper = true)
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class ReferentialAttributeModel extends AbstractAttributeModel implements ReferentialAttribute {
 
-    private ObjectProperty<AssociationModel> association = new SimpleObjectProperty<>();
     private ObjectProperty<OwnerType> ownerType = new SimpleObjectProperty<>();
     private BooleanProperty navigable = new SimpleBooleanProperty();
     private ObjectProperty<AttributeArity> arity = new SimpleObjectProperty<>();
 
+    @ToString.Exclude
+    private ObjectProperty<AssociationModel> association = new SimpleObjectProperty<>();
+
     public ReferentialAttributeModel(String id) {
 	super(id);
+    }
+
+    public static ReferentialAttributeModel makeIdentifiableInstance(String name,
+	    PersistenceUnitModel parentClassifier) {
+	ReferentialAttributeModel referentialAttributeModel = new ReferentialAttributeModel(UidUtil.getUId());
+	referentialAttributeModel.setName(name);
+	referentialAttributeModel.setParentClassifier(parentClassifier);
+	return referentialAttributeModel;
     }
 
     public ReadOnlyObjectProperty<AssociationModel> associationProperty() {
@@ -32,7 +44,7 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
     }
 
     @XmlTransient
-    public Association getAssociation() {
+    public AssociationModel getAssociation() {
 	return this.associationProperty().get();
     }
 

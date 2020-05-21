@@ -14,8 +14,12 @@ import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.collections.SetChangeListener.Change;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.Persistence;
 import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
+import net.atlassian.cmathtutor.domain.persistence.PrimitiveAttribute;
+import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
+import net.atlassian.cmathtutor.domain.persistence.RepositoryOperation;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class PersistenceUnitModel extends AbstractIdentifyableModel implements PersistenceUnit {
@@ -29,6 +33,14 @@ public class PersistenceUnitModel extends AbstractIdentifyableModel implements P
     private ObservableSet<RepositoryOperationModel> repositoryOperations = FXCollections
 	    .observableSet(new LinkedHashSet<>());
 
+    private ObservableSet<PrimitiveAttributeModel> unmodifiablePrimitiveAttributes = FXCollections
+	    .unmodifiableObservableSet(primitiveAttributes);
+    private ObservableSet<ReferentialAttributeModel> unmodifiableReferentialAttributes = FXCollections
+	    .unmodifiableObservableSet(referentialAttributes);
+    private ObservableSet<RepositoryOperationModel> unmodifiableRepositoryOperations = FXCollections
+	    .unmodifiableObservableSet(repositoryOperations);
+
+    @ToString.Exclude
     private ObjectProperty<PersistenceModel> persistence = new SimpleObjectProperty<>();
 
     public PersistenceUnitModel() {
@@ -77,19 +89,31 @@ public class PersistenceUnitModel extends AbstractIdentifyableModel implements P
 	this.nameProperty().set(name);
     }
 
-    @Override
     public ObservableSet<PrimitiveAttributeModel> getPrimitiveAttributes() {
 	return primitiveAttributes;
     }
 
-    @Override
     public ObservableSet<ReferentialAttributeModel> getReferentialAttributes() {
 	return referentialAttributes;
     }
 
-    @Override
     public ObservableSet<RepositoryOperationModel> getRepositoryOperations() {
 	return repositoryOperations;
+    }
+
+    @Override
+    public ObservableSet<? extends PrimitiveAttribute> getUnmodifiablePrimitiveAttributes() {
+	return unmodifiablePrimitiveAttributes;
+    }
+
+    @Override
+    public ObservableSet<? extends ReferentialAttribute> getUnmodifiableReferentialAttributes() {
+	return unmodifiableReferentialAttributes;
+    }
+
+    @Override
+    public ObservableSet<? extends RepositoryOperation> getUnmodifiableRepositoryOperations() {
+	return unmodifiableRepositoryOperations;
     }
 
     public ReadOnlyObjectProperty<PersistenceModel> persistenceProperty() {

@@ -8,19 +8,31 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
 import net.atlassian.cmathtutor.domain.persistence.RepositoryOperation;
+import net.atlassian.cmathtutor.util.UidUtil;
 
+@ToString(callSuper = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class RepositoryOperationModel extends AbstractIdentifyableModel implements RepositoryOperation {
 
     @EqualsAndHashCode.Include
     private StringProperty name = new SimpleStringProperty();
+    @ToString.Exclude
     @EqualsAndHashCode.Include
     private ObjectProperty<PersistenceUnitModel> parentClassifier = new SimpleObjectProperty<>();
 
-    public RepositoryOperationModel() {
-	name = new SimpleStringProperty();
+    public static RepositoryOperationModel makeIdentifiableInstance(String name,
+	    PersistenceUnitModel parentClassifier) {
+	RepositoryOperationModel repositoryOperationModel = new RepositoryOperationModel(UidUtil.getUId());
+	repositoryOperationModel.setName(name);
+	repositoryOperationModel.setParentClassifier(parentClassifier);
+	return repositoryOperationModel;
+    }
+
+    public RepositoryOperationModel(String id) {
+	super(id);
     }
 
     @Override

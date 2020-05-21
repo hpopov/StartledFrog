@@ -4,8 +4,8 @@ import javafx.collections.ObservableSet;
 
 public interface Persistence extends Identifiable {
 
-    ObservableSet<? extends PersistenceUnit> getPersistenceUnits();
+    ObservableSet<? extends PersistenceUnit> getUnmodifiablePersistenceUnits();
 
-    ObservableSet<? extends Association> getAssociations();
+    ObservableSet<? extends Association> getUnmodifiableAssociations();
 
 }

@@ -3,12 +3,21 @@ package net.atlassian.cmathtutor.domain.persistence.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener.Change;
+import lombok.ToString;
+import net.atlassian.cmathtutor.domain.persistence.Association;
 import net.atlassian.cmathtutor.domain.persistence.Persistence;
+import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
 
+@ToString(callSuper = true)
 public class PersistenceModel extends AbstractIdentifyableModel implements Persistence {
 
     private ObservableSet<PersistenceUnitModel> persistenceUnits = FXCollections.observableSet();
     private ObservableSet<AssociationModel> associations = FXCollections.observableSet();
+
+    private ObservableSet<? extends PersistenceUnit> unmodifiablePersistenceUnits = FXCollections
+	    .unmodifiableObservableSet(persistenceUnits);
+    private ObservableSet<? extends Association> unmodifiableAssociations = FXCollections
+	    .unmodifiableObservableSet(associations);
 
     public PersistenceModel() {
 	super();
@@ -39,14 +48,22 @@ public class PersistenceModel extends AbstractIdentifyableModel implements Persi
 	});
     }
 
-    @Override
     public ObservableSet<PersistenceUnitModel> getPersistenceUnits() {
 	return persistenceUnits;
     }
 
-    @Override
     public ObservableSet<AssociationModel> getAssociations() {
 	return associations;
+    }
+
+    @Override
+    public ObservableSet<? extends PersistenceUnit> getUnmodifiablePersistenceUnits() {
+	return unmodifiablePersistenceUnits;
+    }
+
+    @Override
+    public ObservableSet<? extends Association> getUnmodifiableAssociations() {
+	return unmodifiableAssociations;
     }
 
 }

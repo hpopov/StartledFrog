@@ -9,10 +9,10 @@ public interface PersistenceUnit extends Identifiable {
 
     String getName();
 
-    ObservableSet<? extends PrimitiveAttribute> getPrimitiveAttributes();
+    ObservableSet<? extends PrimitiveAttribute> getUnmodifiablePrimitiveAttributes();
 
-    ObservableSet<? extends ReferentialAttribute> getReferentialAttributes();
+    ObservableSet<? extends ReferentialAttribute> getUnmodifiableReferentialAttributes();
 
-    ObservableSet<? extends RepositoryOperation> getRepositoryOperations();
+    ObservableSet<? extends RepositoryOperation> getUnmodifiableRepositoryOperations();
 
 }

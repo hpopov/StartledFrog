@@ -1,14 +1,17 @@
 package net.atlassian.cmathtutor.domain.persistence.model;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.AggregationKind;
 import net.atlassian.cmathtutor.domain.persistence.Association;
-import net.atlassian.cmathtutor.domain.persistence.Persistence;
 
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class AssociationModel extends AbstractIdentifyableModel implements Association {
 
@@ -18,7 +21,8 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
     @EqualsAndHashCode.Include
     private ObjectProperty<ReferentialAttributeModel> elementAttribute = new SimpleObjectProperty<>();
 
-    private ObjectProperty<PersistenceModel> persistence;
+    @ToString.Exclude
+    private ObjectProperty<PersistenceModel> persistence = new SimpleObjectProperty<>();
 
     public AssociationModel(String id) {
 	super(id);
@@ -90,7 +94,8 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
 	return this.persistence;
     }
 
-    public Persistence getPersistence() {
+    @XmlTransient
+    public PersistenceModel getPersistence() {
 	return this.persistenceProperty().get();
     }
 

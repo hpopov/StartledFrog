@@ -8,10 +8,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.ConstraintType;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveAttribute;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveType;
+import net.atlassian.cmathtutor.util.UidUtil;
 
+@ToString(callSuper = true)
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class PrimitiveAttributeModel extends AbstractAttributeModel implements PrimitiveAttribute {
@@ -19,6 +22,16 @@ public class PrimitiveAttributeModel extends AbstractAttributeModel implements P
     private ObjectProperty<PrimitiveType> type = new SimpleObjectProperty<>();
     private ObservableSet<ConstraintType> constraints = FXCollections
 	    .observableSet(EnumSet.noneOf(ConstraintType.class));
+
+    private ObservableSet<ConstraintType> unmodifiableConstraints = FXCollections
+	    .unmodifiableObservableSet(constraints);
+
+    public static PrimitiveAttributeModel makeIdentifiableInstance(String name, PersistenceUnitModel parentClassifier) {
+	PrimitiveAttributeModel primitiveAttributeModel = new PrimitiveAttributeModel(UidUtil.getUId());
+	primitiveAttributeModel.setName(name);
+	primitiveAttributeModel.setParentClassifier(parentClassifier);
+	return primitiveAttributeModel;
+    }
 
     public PrimitiveAttributeModel(String id) {
 	super(id);
@@ -38,8 +51,12 @@ public class PrimitiveAttributeModel extends AbstractAttributeModel implements P
 	this.typeProperty().set(type);
     }
 
-    @Override
     public ObservableSet<ConstraintType> getConstraints() {
 	return this.constraints;
+    }
+
+    @Override
+    public ObservableSet<ConstraintType> getUnmodifiableConstraints() {
+	return unmodifiableConstraints;
     }
 }

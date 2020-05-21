@@ -9,15 +9,17 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.Attribute;
-import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
 
+@ToString(callSuper = true)
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public abstract class AbstractAttributeModel extends AbstractIdentifyableModel implements Attribute {
 
     @EqualsAndHashCode.Include
     private StringProperty name = new SimpleStringProperty();
+    @ToString.Exclude
     @EqualsAndHashCode.Include
     private ObjectProperty<PersistenceUnitModel> parentClassifier = new SimpleObjectProperty<>();
 
@@ -44,7 +46,7 @@ public abstract class AbstractAttributeModel extends AbstractIdentifyableModel i
     }
 
     @XmlTransient
-    public PersistenceUnit getParentClassifier() {
+    public PersistenceUnitModel getParentClassifier() {
 	return this.parentClassifierProperty().get();
     }
 

@@ -14,24 +14,24 @@ import net.atlassian.cmathtutor.domain.persistence.model.ReferentialAttributeMod
 public class AssociationDescriptor extends AbstractDescriptor implements Association {
 
     private AssociationModel association;
+    private PersistenceDescriptor parentDescriptor;
 
-    private AssociationDescriptor(AssociationModel association) {
+    private AssociationDescriptor(AssociationModel association, PersistenceDescriptor parentDescriptor) {
 	super(association.getId());
 	this.association = association;
+	this.parentDescriptor = parentDescriptor;
     }
 
-    public static AssociationDescriptor wrap(@NonNull AssociationModel association) {
+    public static AssociationDescriptor wrap(@NonNull AssociationModel association,
+	    @NonNull PersistenceDescriptor parentDescriptor) {
 	if (association.getId() == null) {
 	    throw new IllegalArgumentException("Association must have non-null id");
 	}
 	if (association.getAggregationKind() == null) {
 	    throw new IllegalArgumentException("Association must have non-null aggregationKind");
 	}
-	if (association.getPersistence() != null) {
-	    throw new IllegalArgumentException("Association must NOT have persistence yet");
-	}
 	validateAssociationAttributes(association.getContainerAttribute(), association.getElementAttribute());
-	return new AssociationDescriptor(association);
+	return new AssociationDescriptor(association, parentDescriptor);
     }
 
     private static void validateAssociationAttributes(@NonNull ReferentialAttributeModel containerAttribute,
