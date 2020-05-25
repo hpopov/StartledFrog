@@ -1,5 +1,9 @@
 package net.atlassian.cmathtutor.domain.persistence.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlTransient;
 
 import javafx.beans.property.ObjectProperty;
@@ -11,6 +15,7 @@ import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.AggregationKind;
 import net.atlassian.cmathtutor.domain.persistence.Association;
 
+@XmlAccessorType(XmlAccessType.NONE)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class AssociationModel extends AbstractIdentifyableModel implements Association {
@@ -53,6 +58,7 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
 	return this.aggregationKind;
     }
 
+    @XmlElement(required = true)
     @Override
     public AggregationKind getAggregationKind() {
 	return this.aggregationKindProperty().get();
@@ -67,6 +73,8 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
 	return this.containerAttribute;
     }
 
+    @XmlElement(required = true)
+    @XmlIDREF
     @Override
     public ReferentialAttributeModel getContainerAttribute() {
 	return this.containerAttributeProperty().get();
@@ -81,6 +89,8 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
 	return this.elementAttribute;
     }
 
+    @XmlElement(required = true)
+    @XmlIDREF
     @Override
     public ReferentialAttributeModel getElementAttribute() {
 	return this.elementAttributeProperty().get();

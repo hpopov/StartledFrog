@@ -1,5 +1,11 @@
 package net.atlassian.cmathtutor.domain.persistence.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener.Change;
@@ -8,6 +14,8 @@ import net.atlassian.cmathtutor.domain.persistence.Association;
 import net.atlassian.cmathtutor.domain.persistence.Persistence;
 import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 @ToString(callSuper = true)
 public class PersistenceModel extends AbstractIdentifyableModel implements Persistence {
 
@@ -48,10 +56,14 @@ public class PersistenceModel extends AbstractIdentifyableModel implements Persi
 	});
     }
 
+    @XmlElementWrapper(name = "persistence-units", required = true)
+    @XmlElement(name = "persistence-unit", required = false)
     public ObservableSet<PersistenceUnitModel> getPersistenceUnits() {
 	return persistenceUnits;
     }
 
+    @XmlElementWrapper(name = "associations", required = true)
+    @XmlElement(name = "association", required = false)
     public ObservableSet<AssociationModel> getAssociations() {
 	return associations;
     }

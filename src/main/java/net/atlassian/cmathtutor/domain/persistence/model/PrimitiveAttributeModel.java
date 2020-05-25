@@ -2,6 +2,10 @@ package net.atlassian.cmathtutor.domain.persistence.model;
 
 import java.util.EnumSet;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -14,6 +18,7 @@ import net.atlassian.cmathtutor.domain.persistence.PrimitiveAttribute;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveType;
 import net.atlassian.cmathtutor.util.UidUtil;
 
+@XmlAccessorType(XmlAccessType.NONE)
 @ToString(callSuper = true)
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
@@ -42,6 +47,7 @@ public class PrimitiveAttributeModel extends AbstractAttributeModel implements P
 	return this.type;
     }
 
+    @XmlElement(required = true)
     @Override
     public PrimitiveType getType() {
 	return this.typeProperty().get();
@@ -51,6 +57,7 @@ public class PrimitiveAttributeModel extends AbstractAttributeModel implements P
 	this.typeProperty().set(type);
     }
 
+    @XmlElement(required = false, name = "constraint")
     public ObservableSet<ConstraintType> getConstraints() {
 	return this.constraints;
     }

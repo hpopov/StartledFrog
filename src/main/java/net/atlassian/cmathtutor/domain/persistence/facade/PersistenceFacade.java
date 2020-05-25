@@ -1,9 +1,17 @@
 package net.atlassian.cmathtutor.domain.persistence.facade;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.domain.persistence.AggregationKind;
 import net.atlassian.cmathtutor.domain.persistence.AttributeArity;
+import net.atlassian.cmathtutor.domain.persistence.ConstraintType;
 import net.atlassian.cmathtutor.domain.persistence.OwnerType;
 import net.atlassian.cmathtutor.domain.persistence.Persistence;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveType;
@@ -12,6 +20,7 @@ import net.atlassian.cmathtutor.domain.persistence.descriptor.IllegalOperationEx
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceUnitDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.model.AssociationModel;
+import net.atlassian.cmathtutor.domain.persistence.model.PersistenceModel;
 import net.atlassian.cmathtutor.domain.persistence.model.PrimitiveAttributeModel;
 import net.atlassian.cmathtutor.domain.persistence.model.ReferentialAttributeModel;
 import net.atlassian.cmathtutor.domain.persistence.model.RepositoryOperationModel;
@@ -21,10 +30,29 @@ import net.atlassian.cmathtutor.util.UidUtil;
 public class PersistenceFacade {
 
     private static final int REFERENTIAL_ATTRIBUTE_DEFAULT_NAME_TRESHOLD = 3;
-    private PersistenceDescriptor persistenceDescriptor = PersistenceDescriptor.newInstance();
+    private PersistenceDescriptor persistenceDescriptor;
 
+    private PersistenceFacade(PersistenceDescriptor persistenceDescriptor) {
+	this.persistenceDescriptor = persistenceDescriptor;
+    }
     public Persistence getWrappedPersistence() {
 	return persistenceDescriptor.getPersistence();
+    }
+    
+    public static PersistenceFacade newInstance() {
+	return new PersistenceFacade(PersistenceDescriptor.newInstance());
+    }
+    
+    public static PersistenceFacade loadFromFile(File persistenceModelFile) {
+	PersistenceModel persistence = null;
+	try {
+	    JAXBContext context = JAXBContext.newInstance(PersistenceModel.class);
+	    persistence = (PersistenceModel) context.createUnmarshaller().unmarshal(new FileReader(persistenceModelFile));
+	} catch (JAXBException | FileNotFoundException e) {
+	    throw new RuntimeException("Unable to load persistence model using JAXB", e);
+	}
+	PersistenceDescriptor descriptor = executeInExceptionWrapper(PersistenceDescriptor::wrap, persistence);
+	return new PersistenceFacade(descriptor);
     }
 
     public PersistenceUnitBuilder persistenceUnitBuilder(@NonNull String name) {
@@ -36,7 +64,7 @@ public class PersistenceFacade {
     }
 
     private void assertNameContainsAllowableCharactersOnly(String name) {
-	if (false == name.matches("[a-zA-Z]+[a-zA-Z_0-9 \\-]*")) {
+	if (false == name.trim().matches("[a-zA-Z]+[a-zA-Z_0-9 \\-]*")) {
 	    throw new IllegalArgumentException(
 		    "Name must start with latin letter and contain only letters, digits, dashes, underscores or spaces");
 	}
@@ -44,6 +72,7 @@ public class PersistenceFacade {
 
     private String trimAndUppercaseFirstLetter(String name) {
 	name = name.trim();
+	name = name.replaceAll("[ ]+", " ");
 	char firstLetter = name.charAt(0);
 	if (false == Character.isUpperCase(firstLetter)) {
 	    name = Character.toUpperCase(firstLetter) + name.substring(1);
@@ -53,6 +82,7 @@ public class PersistenceFacade {
 
     private String trimAndLowercaseFirstLetter(String name) {
 	name = name.trim();
+	name = name.replaceAll("[ ]+", " ");
 	char firstLetter = name.charAt(0);
 	if (false == Character.isLowerCase(firstLetter)) {
 	    name = Character.toLowerCase(firstLetter) + name.substring(1);
@@ -110,7 +140,7 @@ public class PersistenceFacade {
 	try {
 	    logic.run();
 	} catch (IllegalOperationException e) {
-	    throw new RuntimeException(e.getMessage());
+	    throw new RuntimeException(e.getMessage(), e);
 	}
     }
 
@@ -118,7 +148,7 @@ public class PersistenceFacade {
 	try {
 	    return logic.apply(argument);
 	} catch (IllegalOperationException e) {
-	    throw new RuntimeException(e.getMessage());
+	    throw new RuntimeException(e.getMessage(), e);
 	}
     }
 
@@ -168,6 +198,11 @@ public class PersistenceFacade {
 	    public PrimitiveAttributeBuilder name(String name) {
 		assertNameContainsAllowableCharactersOnly(name);
 		primitiveAttributeModel.setName(trimAndLowercaseFirstLetter(name));
+		return this;
+	    }
+
+	    public PrimitiveAttributeBuilder withConstraint(ConstraintType constraint) {
+		primitiveAttributeModel.getConstraints().add(constraint);
 		return this;
 	    }
 

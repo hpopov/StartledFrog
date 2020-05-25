@@ -1,5 +1,8 @@
 package net.atlassian.cmathtutor.domain.persistence.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import javafx.beans.property.ObjectProperty;
@@ -12,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.Attribute;
 
+@XmlAccessorType(XmlAccessType.NONE)
 @ToString(callSuper = true)
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
@@ -32,6 +36,7 @@ public abstract class AbstractAttributeModel extends AbstractIdentifyableModel i
 	return this.name;
     }
 
+    @XmlElement(required = true)
     @Override
     public String getName() {
 	return this.nameProperty().get();

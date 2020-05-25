@@ -3,7 +3,6 @@ package net.atlassian.cmathtutor.presenter;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -27,6 +26,7 @@ import net.atlassian.cmathtutor.helper.ChangeListenerRegistryHelper;
 import net.atlassian.cmathtutor.model.CreateProjectProperties;
 import net.atlassian.cmathtutor.model.Project;
 import net.atlassian.cmathtutor.service.ProjectService;
+import net.atlassian.cmathtutor.util.CaseUtil;
 import net.atlassian.cmathtutor.util.FileNameChangeListener;
 
 @Slf4j
@@ -106,13 +106,7 @@ public class CreateProjectPresenter implements Initializable {
     }
 
     private String convertToCamelCase(String applicationName) {
-	return Stream.of(applicationName.split("([ .:,\\t\\r\\n]+|(?<=[a-z0-9])(?=[A-Z]))")).map(String::toLowerCase)
-		.filter(token -> !token.isEmpty()).map(token -> {
-		    String stringToReplace = "[" + token.charAt(0) + "]";
-		    String replacement = String.valueOf(Character.toUpperCase(token.charAt(0)));
-		    return token.replaceFirst(stringToReplace, replacement);
-		})
-		.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+	return CaseUtil.toCapitalizedCamelCase(applicationName);
     }
 
     @FXML

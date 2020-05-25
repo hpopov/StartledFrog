@@ -1,5 +1,9 @@
 package net.atlassian.cmathtutor.domain.persistence.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import javafx.beans.property.BooleanProperty;
@@ -15,6 +19,7 @@ import net.atlassian.cmathtutor.domain.persistence.OwnerType;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
 import net.atlassian.cmathtutor.util.UidUtil;
 
+@XmlAccessorType(XmlAccessType.NONE)
 @ToString(callSuper = true)
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
@@ -57,6 +62,7 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
 	return this.ownerType;
     }
 
+    @XmlElement(required = true)
     @Override
     public OwnerType getOwnerType() {
 	return this.ownerTypeProperty().get();
@@ -71,6 +77,7 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
 	return this.navigable;
     }
 
+    @XmlElement(required = true)
     @Override
     public boolean isNavigable() {
 	return this.navigableProperty().get();
@@ -85,6 +92,7 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
 	return this.arity;
     }
 
+    @XmlAttribute(required = true)
     @Override
     public AttributeArity getArity() {
 	return this.arityProperty().get();

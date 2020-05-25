@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.Version;
+import net.atlassian.cmathtutor.domain.persistence.translate.changelog.DatabaseChangeLog;
 import net.atlassian.cmathtutor.model.Project;
 
 @Slf4j
@@ -20,6 +21,7 @@ public class ProjectService {
     private static final String SF_PROJECT_FILENAME = ".startled-frog";
     private static final String SF_PROJECT_FOLDER_NAME = ".sf-project";
     private static final Version CURRENT_VERSION = Version.V_0_0_1_a;
+    private static final String CHANGELOG_MASTER_XML = "src/main/resources/db/changelog/changelog-master.xml";
     public static final String CURRENT_DEPENDENCY_VERSION = "0.0.1a";
 
     private Project currentProject;
@@ -29,12 +31,16 @@ public class ProjectService {
     }
 
     public void persistCurrentProject() {
-	if (currentProject == null) {
-	    throw new NullPointerException("ProjectService does not contain currentProject to persist");
-	}
+	assertCurrentProjectIsNotNull();
 	currentProject.setStartledFrogProjectFolder(SF_PROJECT_FOLDER_NAME);
 	currentProject.setVersion(CURRENT_VERSION);
 	persistProject(currentProject);
+    }
+
+    private void assertCurrentProjectIsNotNull() {
+	if (currentProject == null) {
+	    throw new NullPointerException("ProjectService does not contain currentProject");
+	}
     }
 
     private void persistProject(Project project) {
@@ -65,6 +71,22 @@ public class ProjectService {
 
     public String getProjectExtension() {
 	return SF_PROJECT_FILENAME;
+    }
+
+    public void persistLiquibaseChangeLog(DatabaseChangeLog changeLog) {
+	assertCurrentProjectIsNotNull();
+	try {
+	    JAXBContext context = JAXBContext.newInstance(DatabaseChangeLog.class);
+	    Marshaller marshaller = context.createMarshaller();
+	    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+	    marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
+		    "http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd");
+	    marshaller.marshal(changeLog,
+		    currentProject.getProjectFolder().toPath().resolve(CHANGELOG_MASTER_XML).toFile());
+	} catch (JAXBException e) {
+	    log.error("Unable to persist the liquibase changelog using JAXB", e);
+	    return;
+	}
     }
 
 }

@@ -1,0 +1,14 @@
+package $repository.packageName;
+
+import org.springframework.data.rest.webmvc.RepositoryRestController;
+#foreach( $importType in $repository.TypesToImport )
+import ${importType.TypeUri};
+#end
+
+@RepositoryRestController
+public interface $repository.Name extends $repository.SuperType.Name#if( $repository.SuperType.isGeneric() )<$repository.SuperType.displayParametersList()>#end {
+    #foreach( $operation in $repository.Operations)
+
+    $operation.ReturnType.Name#if( $operation.ReturnType.isGeneric() )<$operation.ReturnType.displayParametersList()>#end ${operation.Name}(${operation.displayArgumentsList()});
+    #end
+}

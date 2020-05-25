@@ -2,6 +2,10 @@ package net.atlassian.cmathtutor.domain.persistence.model;
 
 import java.util.LinkedHashSet;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
 
 import javafx.beans.property.ObjectProperty;
@@ -21,6 +25,7 @@ import net.atlassian.cmathtutor.domain.persistence.PrimitiveAttribute;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
 import net.atlassian.cmathtutor.domain.persistence.RepositoryOperation;
 
+@XmlAccessorType(XmlAccessType.NONE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class PersistenceUnitModel extends AbstractIdentifyableModel implements PersistenceUnit {
 
@@ -80,6 +85,7 @@ public class PersistenceUnitModel extends AbstractIdentifyableModel implements P
 	return this.name;
     }
 
+    @XmlElement(required = true)
     @Override
     public String getName() {
 	return this.nameProperty().get();
@@ -89,14 +95,20 @@ public class PersistenceUnitModel extends AbstractIdentifyableModel implements P
 	this.nameProperty().set(name);
     }
 
+    @XmlElementWrapper(required = true, name = "primitive-attributes")
+    @XmlElement(required = false, name = "primitive-attribute")
     public ObservableSet<PrimitiveAttributeModel> getPrimitiveAttributes() {
 	return primitiveAttributes;
     }
 
+    @XmlElementWrapper(required = true, name = "referential-attributes")
+    @XmlElement(required = false, name = "referential-attribute")
     public ObservableSet<ReferentialAttributeModel> getReferentialAttributes() {
 	return referentialAttributes;
     }
 
+    @XmlElementWrapper(required = true, name = "repository-operations")
+    @XmlElement(required = false, name = "repository-operation")
     public ObservableSet<RepositoryOperationModel> getRepositoryOperations() {
 	return repositoryOperations;
     }

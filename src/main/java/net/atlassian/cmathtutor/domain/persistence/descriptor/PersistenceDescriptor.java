@@ -24,17 +24,34 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
     @Getter
     private PersistenceModel persistence;
 
-    private MutableGraph<ReferentialAttributeModel> persistenceUnitGraph = GraphBuilder.directed()
+    private MutableGraph<PersistenceUnitModel> persistenceUnitGraph = GraphBuilder.directed()
 	    .allowsSelfLoops(false)
 	    .build();
 
-    private PersistenceDescriptor(String id) {
+    private PersistenceDescriptor(String id, PersistenceModel persistence) {
 	super(id);
-	persistence = new PersistenceModel(id);
+	this.persistence = persistence;
     }
 
     public static PersistenceDescriptor newInstance() {
-	return new PersistenceDescriptor(UidUtil.getUId());
+	String id = UidUtil.getUId();
+	return new PersistenceDescriptor(id, new PersistenceModel(id));
+    }
+
+    public static PersistenceDescriptor wrap(@NonNull PersistenceModel persistence) throws IllegalOperationException {
+	if (persistence.getId() == null) {
+	    throw new IllegalArgumentException("Persistence to wrap must have non null id");
+	}
+	PersistenceDescriptor persistenceDescriptor = new PersistenceDescriptor(persistence.getId(), persistence);
+	for (PersistenceUnitModel persistenceUnit : persistence.getPersistenceUnits()) {
+	    PersistenceUnitDescriptor.wrap(persistenceUnit, persistenceDescriptor);// TODO: descriptors are missed as
+										   // well + units are
+	    // not fully validated
+	}
+	for (AssociationModel association : persistence.getAssociations()) {
+	    persistenceDescriptor.addAssociationInner(association);// TODO: association descriptors are missed now...
+	}
+	return persistenceDescriptor;
     }
 
     public PersistenceUnitDescriptor addNewPersistenceUnit(@NonNull String name)
@@ -111,6 +128,13 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	if (persistence.getAssociations().contains(association)) {
 	    throw new IllegalOperationException("Equal association already exists");
 	}
+	AssociationDescriptor associationDescriptor = addAssociationInner(association);
+	persistence.getAssociations().add(association);
+
+	return associationDescriptor;
+    }
+
+    private AssociationDescriptor addAssociationInner(AssociationModel association) throws IllegalOperationException {
 	AssociationDescriptor associationDescriptor = AssociationDescriptor.wrap(association, this);
 	validateAssociationReferentialAttributes(association.getContainerAttribute(),
 		association.getElementAttribute());
@@ -118,8 +142,6 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 		|| association.getAggregationKind().equals(AggregationKind.COMPOSITE)) {
 	    addEdgeToPersistenceUnitGraph(association.getContainerAttribute(), association.getElementAttribute());
 	}
-	persistence.getAssociations().add(association);
-
 	return associationDescriptor;
     }
 
@@ -137,14 +159,15 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 
     private void addEdgeToPersistenceUnitGraph(ReferentialAttributeModel containerAttribute,
 	    ReferentialAttributeModel elementAttribute) throws IllegalOperationException {
-	if (containerAttribute.equals(elementAttribute)) {
-	    throw new IllegalOperationException("Container must not be equal to element");
+	if (containerAttribute.getParentClassifier().equals(elementAttribute.getParentClassifier())) {
+	    throw new IllegalOperationException("Container classifier must not be equal to element classifier");
 	}
-	if (persistenceUnitGraph.nodes().contains(elementAttribute)
-		&& persistenceUnitGraph.inDegree(elementAttribute) > 0) {
+	if (persistenceUnitGraph.nodes().contains(elementAttribute.getParentClassifier())
+		&& persistenceUnitGraph.inDegree(elementAttribute.getParentClassifier()) > 0) {
 	    throw new IllegalOperationException("Element can only have one parent container");
 	}
-	boolean isNewEdge = persistenceUnitGraph.putEdge(containerAttribute, elementAttribute);
+	boolean isNewEdge = persistenceUnitGraph.putEdge(containerAttribute.getParentClassifier(),
+		elementAttribute.getParentClassifier());
 	if (false == isNewEdge) {
 	    throw new IllegalStateException("The edge added must be a new one");
 	}

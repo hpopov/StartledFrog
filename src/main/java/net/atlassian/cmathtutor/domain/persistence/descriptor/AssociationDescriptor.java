@@ -7,6 +7,7 @@ import lombok.NonNull;
 import net.atlassian.cmathtutor.domain.persistence.AggregationKind;
 import net.atlassian.cmathtutor.domain.persistence.Association;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
+import net.atlassian.cmathtutor.domain.persistence.descriptor.validator.AssociationValidator;
 import net.atlassian.cmathtutor.domain.persistence.model.AssociationModel;
 import net.atlassian.cmathtutor.domain.persistence.model.ReferentialAttributeModel;
 
@@ -23,7 +24,7 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
     }
 
     public static AssociationDescriptor wrap(@NonNull AssociationModel association,
-	    @NonNull PersistenceDescriptor parentDescriptor) {
+	    @NonNull PersistenceDescriptor parentDescriptor) throws IllegalOperationException {
 	if (association.getId() == null) {
 	    throw new IllegalArgumentException("Association must have non-null id");
 	}
@@ -31,6 +32,7 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
 	    throw new IllegalArgumentException("Association must have non-null aggregationKind");
 	}
 	validateAssociationAttributes(association.getContainerAttribute(), association.getElementAttribute());
+	AssociationValidator.assertAssociationIsSupported(association);
 	return new AssociationDescriptor(association, parentDescriptor);
     }
 

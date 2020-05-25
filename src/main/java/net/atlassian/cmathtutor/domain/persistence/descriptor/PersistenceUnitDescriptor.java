@@ -46,7 +46,7 @@ public class PersistenceUnitDescriptor extends AbstractDescriptor implements Per
     public void initializeNewReferentialAttribute(@NonNull ReferentialAttributeModel referentialAttribute)
 	    throws IllegalOperationException {
 	assertPersistenceUnitNotContainAttributeWithName(referentialAttribute.getName());
-	referentialAttribute.setParentClassifier(persistenceUnit);
+	persistenceUnit.getReferentialAttributes().add(referentialAttribute);
     }
 
     private void assertPersistenceUnitNotContainAttributeWithName(@NonNull String attributeName)
