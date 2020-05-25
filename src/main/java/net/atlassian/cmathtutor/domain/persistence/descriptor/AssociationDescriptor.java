@@ -53,7 +53,6 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
 	}
     }
 
-    @Override
     public ReadOnlyObjectProperty<AggregationKind> aggregationKindProperty() {
 	return association.aggregationKindProperty();
     }
@@ -63,7 +62,6 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
 	return association.getAggregationKind();
     }
 
-    @Override
     public ReadOnlyObjectProperty<? extends ReferentialAttribute> containerAttributeProperty() {
 	return association.containerAttributeProperty();
     }
@@ -73,7 +71,6 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
 	return association.getContainerAttribute();
     }
 
-    @Override
     public ReadOnlyObjectProperty<? extends ReferentialAttribute> elementAttributeProperty() {
 	return association.elementAttributeProperty();
     }
@@ -81,6 +78,11 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
     @Override
     public ReferentialAttribute getElementAttribute() {
 	return association.getElementAttribute();
+    }
+
+    @Override
+    public PersistenceDescriptor getPersistence() {
+	return parentDescriptor;
     }
 
 }

@@ -31,7 +31,6 @@ public abstract class AbstractAttributeModel extends AbstractIdentifyableModel i
 	super(id);
     }
 
-    @Override
     public StringProperty nameProperty() {
 	return this.name;
     }
@@ -51,6 +50,7 @@ public abstract class AbstractAttributeModel extends AbstractIdentifyableModel i
     }
 
     @XmlTransient
+    @Override
     public PersistenceUnitModel getParentClassifier() {
 	return this.parentClassifierProperty().get();
     }

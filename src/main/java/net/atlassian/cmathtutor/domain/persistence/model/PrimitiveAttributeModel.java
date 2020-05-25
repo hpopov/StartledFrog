@@ -42,7 +42,6 @@ public class PrimitiveAttributeModel extends AbstractAttributeModel implements P
 	super(id);
     }
 
-    @Override
     public ObjectProperty<PrimitiveType> typeProperty() {
 	return this.type;
     }

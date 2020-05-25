@@ -13,7 +13,6 @@ import javafx.beans.property.StringProperty;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
 import net.atlassian.cmathtutor.domain.persistence.RepositoryOperation;
 import net.atlassian.cmathtutor.util.UidUtil;
 
@@ -41,7 +40,6 @@ public class RepositoryOperationModel extends AbstractIdentifyableModel implemen
 	super(id);
     }
 
-    @Override
     public StringProperty nameProperty() {
 	return this.name;
     }
@@ -61,7 +59,8 @@ public class RepositoryOperationModel extends AbstractIdentifyableModel implemen
     }
 
     @XmlTransient
-    public PersistenceUnit getParentClassifier() {
+    @Override
+    public PersistenceUnitModel getParentClassifier() {
 	return this.parentClassifierProperty().get();
     }
 

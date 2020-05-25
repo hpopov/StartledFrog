@@ -49,6 +49,7 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
     }
 
     @XmlTransient
+    @Override
     public AssociationModel getAssociation() {
 	return this.associationProperty().get();
     }
@@ -57,7 +58,6 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
 	this.association.set(association);
     }
 
-    @Override
     public ObjectProperty<OwnerType> ownerTypeProperty() {
 	return this.ownerType;
     }
@@ -72,7 +72,6 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
 	this.ownerTypeProperty().set(ownerType);
     }
 
-    @Override
     public BooleanProperty navigableProperty() {
 	return this.navigable;
     }
@@ -87,7 +86,6 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
 	this.navigableProperty().set(navigable);
     }
 
-    @Override
     public ObjectProperty<AttributeArity> arityProperty() {
 	return this.arity;
     }

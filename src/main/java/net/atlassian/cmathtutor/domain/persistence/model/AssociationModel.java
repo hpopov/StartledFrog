@@ -53,7 +53,6 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
 	elementAttributeProperty().addListener(attributeChangeListener);
     }
 
-    @Override
     public ObjectProperty<AggregationKind> aggregationKindProperty() {
 	return this.aggregationKind;
     }
@@ -68,7 +67,6 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
 	this.aggregationKindProperty().set(aggregationKind);
     }
 
-    @Override
     public ObjectProperty<ReferentialAttributeModel> containerAttributeProperty() {
 	return this.containerAttribute;
     }
@@ -84,7 +82,6 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
 	this.containerAttributeProperty().set(containerAttribute);
     }
 
-    @Override
     public ObjectProperty<ReferentialAttributeModel> elementAttributeProperty() {
 	return this.elementAttribute;
     }
@@ -105,6 +102,7 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
     }
 
     @XmlTransient
+    @Override
     public PersistenceModel getPersistence() {
 	return this.persistenceProperty().get();
     }

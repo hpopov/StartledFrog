@@ -19,7 +19,6 @@ import javafx.collections.SetChangeListener;
 import javafx.collections.SetChangeListener.Change;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import net.atlassian.cmathtutor.domain.persistence.Persistence;
 import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveAttribute;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
@@ -80,7 +79,6 @@ public class PersistenceUnitModel extends AbstractIdentifyableModel implements P
 	});
     }
 
-    @Override
     public StringProperty nameProperty() {
 	return this.name;
     }
@@ -133,7 +131,8 @@ public class PersistenceUnitModel extends AbstractIdentifyableModel implements P
     }
 
     @XmlTransient
-    public Persistence getPersistence() {
+    @Override
+    public PersistenceModel getPersistence() {
 	return this.persistenceProperty().get();
     }
 

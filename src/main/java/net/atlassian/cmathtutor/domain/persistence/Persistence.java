@@ -1,11 +1,10 @@
 package net.atlassian.cmathtutor.domain.persistence;
 
-import javafx.collections.ObservableSet;
+import java.util.Set;
 
 public interface Persistence extends Identifiable {
 
-    ObservableSet<? extends PersistenceUnit> getUnmodifiablePersistenceUnits();
+    Set<? extends PersistenceUnit> getUnmodifiablePersistenceUnits();
 
-    ObservableSet<? extends Association> getUnmodifiableAssociations();
-
+    Set<? extends Association> getUnmodifiableAssociations();
 }

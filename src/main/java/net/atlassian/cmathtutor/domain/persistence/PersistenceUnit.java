@@ -1,18 +1,16 @@
 package net.atlassian.cmathtutor.domain.persistence;
 
-import javafx.beans.property.ReadOnlyStringProperty;
-import javafx.collections.ObservableSet;
+import java.util.Set;
 
 public interface PersistenceUnit extends Identifiable {
 
-    ReadOnlyStringProperty nameProperty();
-
     String getName();
 
-    ObservableSet<? extends PrimitiveAttribute> getUnmodifiablePrimitiveAttributes();
+    Set<? extends PrimitiveAttribute> getUnmodifiablePrimitiveAttributes();
 
-    ObservableSet<? extends ReferentialAttribute> getUnmodifiableReferentialAttributes();
+    Set<? extends ReferentialAttribute> getUnmodifiableReferentialAttributes();
 
-    ObservableSet<? extends RepositoryOperation> getUnmodifiableRepositoryOperations();
+    Set<? extends RepositoryOperation> getUnmodifiableRepositoryOperations();
 
+    Persistence getPersistence();
 }

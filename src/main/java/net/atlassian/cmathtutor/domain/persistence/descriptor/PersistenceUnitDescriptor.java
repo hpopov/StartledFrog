@@ -74,15 +74,9 @@ public class PersistenceUnitDescriptor extends AbstractDescriptor implements Per
 	    throw new IllegalOperationException(
 		    "Persistence unit already contains repository operation with the same name");
 	}
-//	validateRepositoryOperationName(name);
 	persistenceUnit.getRepositoryOperations().add(repositoryOperation);
     }
 
-//    private void validateRepositoryOperationName(String name) {
-//	RepositoryOperationNameValidator.validate(name, getUnmodifiableRepositoryOperations());
-//    }
-
-    @Override
     public ReadOnlyStringProperty nameProperty() {
 	return persistenceUnit.nameProperty();
     }
@@ -107,16 +101,8 @@ public class PersistenceUnitDescriptor extends AbstractDescriptor implements Per
 	return persistenceUnit.getUnmodifiableRepositoryOperations();
     }
 
-//    private static class RepositoryOperationNameValidator {
-//
-//	public static void validate(String name, Set<? extends RepositoryOperation> unmodifiableRepositoryOperations)
-//		throws IllegalOperationException {
-//	    if (false == name.startsWith("findBy")) {
-//		throw new IllegalOperationException("The method name must start with 'findBy' key word");
-//	    }
-//	    Pattern pattern = Pattern.compile("findBy.*Is.*");
-////	    if (name.)
-//	}
-//
-//    }
+    @Override
+    public PersistenceDescriptor getPersistence() {
+	return parentDescriptor;
+    }
 }
