@@ -10,12 +10,12 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.PackagedType;
 
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Getter
-public class EntityData extends AbstractDeclarationData implements PackagedType {
+public class Entity extends AbstractDeclaration implements PackagedType {
 
-    private List<VariableData> fields = new LinkedList<>();
+    private List<Variable> fields = new LinkedList<>();
     private String tableName;
 
-    public EntityData(String name, String packageName, String tableName) {
+    public Entity(String name, String packageName, String tableName) {
 	super(name, packageName);
 	this.tableName = tableName;
     }

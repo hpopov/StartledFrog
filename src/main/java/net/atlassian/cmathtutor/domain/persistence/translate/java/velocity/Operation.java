@@ -15,13 +15,13 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.Packa
 @Getter
 @AllArgsConstructor
 @Builder
-public class OperationData implements PackagedTypesContainer {
+public class Operation implements PackagedTypesContainer {
 
     private static final String COMMA_SPACE = ", ";
     private Type returnType;
     private String name;
     @Builder.Default
-    private List<VariableData> arguments = new LinkedList<>();
+    private List<Variable> arguments = new LinkedList<>();
 
     public String displayArgumentsList() {
 	if (arguments.isEmpty()) {
@@ -33,7 +33,7 @@ public class OperationData implements PackagedTypesContainer {
 
     }
 
-    private static String displayArgument(VariableData arg) {
+    private static String displayArgument(Variable arg) {
 	return arg.getType().getName()
 		+ (arg.getType().isGeneric() ? "<" + arg.getType().displayParametersList() + ">" : "") + " "
 		+ arg.getName();

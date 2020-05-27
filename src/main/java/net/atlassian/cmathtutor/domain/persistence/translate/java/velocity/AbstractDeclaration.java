@@ -10,7 +10,7 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.PackagedType;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @Getter(onMethod = @__(@Override))
-public abstract class AbstractDeclarationData implements PackagedType {
+public abstract class AbstractDeclaration implements PackagedType {
 
     @EqualsAndHashCode.Include
     protected String name;

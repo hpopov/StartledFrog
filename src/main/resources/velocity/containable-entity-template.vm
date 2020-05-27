@@ -7,12 +7,12 @@ import lombok.Data;
 import ${importType.TypeUri};
 #end
 
-import ua.cmathtutor.startledfrog.entity.composition.CompositeElement;
+import ua.cmathtutor.startledfrog.entity.Containable;
 
 @Entity
 @Table(name = "$entity.TableName")
 @Data
-public class $entity.Name implements CompositeElement {
+public class $entity.Name implements Containable {
     #foreach( $field in $entity.Fields)
     
     	#foreach( $annotation in $field.Annotations )
@@ -25,7 +25,7 @@ public class $entity.Name implements CompositeElement {
     $annotation.toString()
     #end
     @Override
-    public Object getCompositeParent() {
-        return ${entity.CompositeParentGetterName}();
+    public Object getContainer() {
+        return ${entity.ContainerGetterName}();
     }
 }

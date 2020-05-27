@@ -12,7 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -21,6 +23,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.Annotation;
 
@@ -105,6 +108,10 @@ public final class AnnotationInstances {
 
     public static JoinTableBuilder joinTableBuilder() {
 	return new JoinTableBuilder();
+    }
+
+    public static ManyToManyBuilder manyToManyBuilder() {
+	return new ManyToManyBuilder();
     }
 
     public static class ManyToOneBuilder {
@@ -212,8 +219,8 @@ public final class AnnotationInstances {
 	    return this;
 	}
 
-	public AnnotationInstance<OneToOne> build() {
-	    return newAnnotationInstance(OneToOne.class, values);
+	public AnnotationInstance<OneToMany> build() {
+	    return newAnnotationInstance(OneToMany.class, values);
 	}
     }
 
@@ -229,8 +236,18 @@ public final class AnnotationInstances {
 	    return new JoinTableBuilder.JoinColumnBuilder("inverseJoinColumns");
 	}
 
+	public JoinTableBuilder inverseJoinColumns(@NonNull AnnotationInstance<JoinColumn> inverseJoinColumn) {
+	    values.put("inverseJoinColumns", inverseJoinColumn);
+	    return this;
+	}
+
 	public JoinTableBuilder.JoinColumnBuilder joinColumns() {
 	    return new JoinTableBuilder.JoinColumnBuilder("joinColumns");
+	}
+
+	public JoinTableBuilder joinColumns(@NonNull AnnotationInstance<JoinColumn> joinColumn) {
+	    values.put("joinColumns", joinColumn);
+	    return this;
 	}
 
 	public AnnotationInstance<JoinTable> build() {
@@ -277,6 +294,29 @@ public final class AnnotationInstances {
 		JoinTableBuilder.this.values.put(joinTableValuesKey, newAnnotationInstance(JoinColumn.class, values));
 		return JoinTableBuilder.this;
 	    }
+	}
+    }
+
+    public static class ManyToManyBuilder {
+	private Map<String, Instance<?>> values = new LinkedHashMap<>(3);
+
+	public ManyToManyBuilder fetch(FetchType fetch) {
+	    values.put("fetch", EnumInstance.ofConstant(fetch));
+	    return this;
+	}
+
+	public ManyToManyBuilder cascade(CascadeType cascade, CascadeType... cascades) {
+	    values.put("cascade", EnumInstance.listOfConstants(cascade, cascades));
+	    return this;
+	}
+
+	public ManyToManyBuilder mappedBy(String mappedBy) {
+	    values.put("mappedBy", PrimitiveInstances.newString(mappedBy));
+	    return this;
+	}
+
+	public AnnotationInstance<ManyToMany> build() {
+	    return newAnnotationInstance(ManyToMany.class, values);
 	}
     }
 

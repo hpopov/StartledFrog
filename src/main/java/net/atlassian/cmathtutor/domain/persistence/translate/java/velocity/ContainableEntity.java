@@ -9,14 +9,14 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.Annot
 import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.AnnotationInstances;
 
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class CompositeElementEntityData extends EntityData {
+public class ContainableEntity extends Entity {
 
     private static final List<AnnotationInstance<?>> COMPOSITE_PARENT_ANNOTATIONS = Collections
 	    .singletonList(AnnotationInstances.jsonIgnore());
 
-    private VariableData compositeParentField;
+    private Variable compositeParentField;
 
-    public CompositeElementEntityData(String name, String packageName, String tableName) {
+    public ContainableEntity(String name, String packageName, String tableName) {
 	super(name, packageName, tableName);
     }
 
@@ -30,11 +30,11 @@ public class CompositeElementEntityData extends EntityData {
 	return COMPOSITE_PARENT_ANNOTATIONS;
     }
 
-    public String getCompositeParentGetterName() {
+    public String getContainerGetterName() {
 	return composeGetterName(compositeParentField);
     }
 
-    public static String composeGetterName(@NonNull VariableData field) {
+    private static String composeGetterName(@NonNull Variable field) {
 	String fieldName = field.getName();
 	return "get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
     }

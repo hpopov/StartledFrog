@@ -6,7 +6,15 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AttributeArity {
-    AT_MOST_ONE("0..1"), ONE("1"), AT_LEAST_ZERO("*");
+    AT_MOST_ONE("0..1"), ONE_EXACTLY("1"), AT_LEAST_ZERO("*");
 
     private String appearance;
+
+    public boolean isMany() {
+	return AT_LEAST_ZERO == this;
+    }
+
+    public boolean isOne() {
+	return AT_LEAST_ZERO != this;
+    }
 }

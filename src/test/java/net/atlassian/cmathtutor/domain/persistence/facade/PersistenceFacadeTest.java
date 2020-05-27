@@ -117,7 +117,7 @@ class PersistenceFacadeTest {
 			.name("Inhabitants_human")
 			.build()
 		.elementAttribute()
-			.arity(AttributeArity.ONE)
+			.arity(AttributeArity.ONE_EXACTLY)
 			.navigable(true)
 			.ownerType(OwnerType.CLASSIFIER)
 			.build()

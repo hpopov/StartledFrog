@@ -12,12 +12,12 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.PackagedType;
 
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Getter
-public class RepositoryData extends AbstractDeclarationData {
+public class Repository extends AbstractDeclaration {
 
     private ClassType<?> superType;
-    private List<OperationData> operations = new LinkedList<>();
+    private List<Operation> operations = new LinkedList<>();
 
-    public RepositoryData(String name, String packageName, ClassType<?> superType) {
+    public Repository(String name, String packageName, ClassType<?> superType) {
 	super(name, packageName);
 	this.superType = superType;
     }

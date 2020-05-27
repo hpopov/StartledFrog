@@ -14,13 +14,13 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.Impor
 import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.PackagedTypesContainer;
 
 @Getter
-public class VariableData implements PackagedTypesContainer {
+public class Variable implements PackagedTypesContainer {
 
     private Type type;
     private String name;
     private List<AnnotationInstance<?>> annotations = new LinkedList<>();
 
-    public VariableData(Type type, String name) {
+    public Variable(Type type, String name) {
 	this.type = type;
 	this.name = name;
     }

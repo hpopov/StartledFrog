@@ -14,7 +14,7 @@ public class JavaClassComposer {
 	this.ve = ve;
     }
 
-    public Writer createEntityClass(EntityData entity, Writer writer) {
+    public Writer createEntityClass(Entity entity, Writer writer) {
 	VelocityContext context = new VelocityContext();
 	context.put("entity", entity);
 	Template template = ve.getTemplate("velocity/entity-template.vm");
@@ -23,27 +23,27 @@ public class JavaClassComposer {
 	return writer;
     }
 
-    public Writer createCompositeElementEntityClass(CompositeElementEntityData compositeElementEntity, Writer writer) {
+    public Writer createContainableEntityClass(ContainableEntity containableEntity, Writer writer) {
 	VelocityContext context = new VelocityContext();
-	context.put("entity", compositeElementEntity);
-	Template template = ve.getTemplate("velocity/composite-element-template.vm");
+	context.put("entity", containableEntity);
+	Template template = ve.getTemplate("velocity/containable-entity-template.vm");
 	template.merge(context, writer);
 
 	return writer;
     }
 
-    public Writer createApplicationClass(ApplicationData applicationData, Writer writer) {
+    public Writer createApplicationClass(Application application, Writer writer) {
 	VelocityContext context = new VelocityContext();
-	context.put("app", applicationData);
+	context.put("app", application);
 	Template template = ve.getTemplate("velocity/app-template.vm");
 	template.merge(context, writer);
 
 	return writer;
     }
 
-    public Writer createRepositoryInterface(RepositoryData repositoryData, Writer writer) {
+    public Writer createRepositoryInterface(Repository repository, Writer writer) {
 	VelocityContext context = new VelocityContext();
-	context.put("repository", repositoryData);
+	context.put("repository", repository);
 	Template template = ve.getTemplate("velocity/repository-template.vm");
 	template.merge(context, writer);
 

@@ -17,13 +17,13 @@ import org.junit.jupiter.api.Test;
 
 import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.AnnotationInstances;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.PrimitiveInstances;
-import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.ApplicationData;
-import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.CompositeElementEntityData;
-import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.EntityData;
+import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Application;
+import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.ContainableEntity;
+import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Entity;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.JavaClassComposer;
-import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.OperationData;
-import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.RepositoryData;
-import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.VariableData;
+import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Operation;
+import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Repository;
+import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Variable;
 
 class JavaClassComposerTest {
 
@@ -49,25 +49,25 @@ class JavaClassComposerTest {
     @Test
     void testCreateApplicationClass() {
 	StringWriter writer = new StringWriter();
-	javaClassComposer.createApplicationClass(new ApplicationData("ua.kpi.iasa.entity", "User"), writer);
+	javaClassComposer.createApplicationClass(new Application("ua.kpi.iasa.entity", "User"), writer);
 	System.out.println(writer.getBuffer());
     }
 
     @Test
     void testCreateEntityClass() {
-	EntityData entityData = new EntityData("Candle", "com.example.demo.entity.composition", "candle");
-	VariableData pk = createPkVariable();
-	entityData.getFields().add(pk);
-	VariableData price = new VariableData(PrimitiveType.INTEGER, "price");
+	Entity entity = new Entity("Candle", "com.example.demo.entity.composition", "candle");
+	Variable pk = createPkVariable();
+	entity.getFields().add(pk);
+	Variable price = new Variable(PrimitiveType.INTEGER, "price");
 	price.getAnnotations().add(AnnotationInstances.column("price", false, false));
-	entityData.getFields().add(price);
+	entity.getFields().add(price);
 	StringWriter writer = new StringWriter();
-	javaClassComposer.createEntityClass(entityData, writer);
+	javaClassComposer.createEntityClass(entity, writer);
 	System.out.println(writer.getBuffer());
     }
 
-    private VariableData createPkVariable() {
-	VariableData pk = new VariableData(PrimitiveType.LONG, "pk");
+    private Variable createPkVariable() {
+	Variable pk = new Variable(PrimitiveType.LONG, "pk");
 	pk.getAnnotations().add(AnnotationInstances.id());
 	pk.getAnnotations().add(AnnotationInstances.generatedValueIdentity());
 	pk.getAnnotations().add(AnnotationInstances.column("PK", false, true));
@@ -76,47 +76,47 @@ class JavaClassComposerTest {
 
     @Test
     void when_parentElement_isUndefined_then_CreateCompositeElementEntityClass_shouldThrow_anException() {
-	CompositeElementEntityData entityData = new CompositeElementEntityData("Wick",
+	ContainableEntity entityData = new ContainableEntity("Wick",
 		"com.example.demo.entity.composition", "wick");
-	VariableData pk = createPkVariable();
+	Variable pk = createPkVariable();
 	entityData.getFields().add(pk);
-	VariableData material = new VariableData(PrimitiveType.STRING, "material");
+	Variable material = new Variable(PrimitiveType.STRING, "material");
 	material.getAnnotations().add(AnnotationInstances.column("material"));
 	entityData.getFields().add(material);
 
 	StringWriter writer = new StringWriter();
 	assertThrows(MethodInvocationException.class,
-		() -> javaClassComposer.createCompositeElementEntityClass(entityData, writer));
+		() -> javaClassComposer.createContainableEntityClass(entityData, writer));
 //	System.out.println(writer.getBuffer());
     }
 
     @Test
     void when_parentElement_isDefined_then_CreateCompositeElementEntityClass_should_writeCompositeElementEntity() {
-	CompositeElementEntityData entityData = new CompositeElementEntityData("Wick",
+	ContainableEntity entityData = new ContainableEntity("Wick",
 		"com.example.demo.entity.composition", "wick");
-	VariableData pk = createPkVariable();
+	Variable pk = createPkVariable();
 	entityData.getFields().add(pk);
-	VariableData material = new VariableData(PrimitiveType.STRING, "material");
+	Variable material = new Variable(PrimitiveType.STRING, "material");
 	material.getAnnotations().add(AnnotationInstances.column("material"));
 	entityData.getFields().add(material);
 	entityData.selectCompositeParentField("material");
 
 	StringWriter writer = new StringWriter();
-	javaClassComposer.createCompositeElementEntityClass(entityData, writer);
+	javaClassComposer.createContainableEntityClass(entityData, writer);
 	System.out.println(writer.getBuffer());
     }
 
     @Test
     void testBoth_CreateCompositeElementEntityClass_and_CreateEntityClass() {
-	CompositeElementEntityData compositeEntityData = new CompositeElementEntityData("Wick",
+	ContainableEntity compositeEntityData = new ContainableEntity("Wick",
 		"com.example.demo.entity.composition", "wick");
-	EntityData entityData = new EntityData("Candle", "com.example.demo.entity.composition", "candle");
-	VariableData pk = createPkVariable();
-	entityData.getFields().add(pk);
-	VariableData price = new VariableData(PrimitiveType.INTEGER, "price");
+	Entity entity = new Entity("Candle", "com.example.demo.entity.composition", "candle");
+	Variable pk = createPkVariable();
+	entity.getFields().add(pk);
+	Variable price = new Variable(PrimitiveType.INTEGER, "price");
 	price.getAnnotations().add(AnnotationInstances.column("price", false));
-	entityData.getFields().add(price);
-	VariableData wick = new VariableData(compositeEntityData, "wick");
+	entity.getFields().add(price);
+	Variable wick = new Variable(compositeEntityData, "wick");
 	wick.getAnnotations().add(AnnotationInstances.oneToOneBuilder()
 		.cascade(CascadeType.ALL)
 		.optional(false)
@@ -125,15 +125,15 @@ class JavaClassComposerTest {
 		.name("wick_PK")
 		.nullable(true)
 		.build());
-	entityData.getFields().add(wick);
+	entity.getFields().add(wick);
 	StringWriter writer = new StringWriter();
-	javaClassComposer.createEntityClass(entityData, writer);
+	javaClassComposer.createEntityClass(entity, writer);
 
 	compositeEntityData.getFields().add(createPkVariable());
-	VariableData material = new VariableData(PrimitiveType.STRING, "material");
+	Variable material = new Variable(PrimitiveType.STRING, "material");
 	material.getAnnotations().add(AnnotationInstances.column("material"));
 	compositeEntityData.getFields().add(material);
-	VariableData candle = new VariableData(entityData, "candle");
+	Variable candle = new Variable(entity, "candle");
 	candle.getAnnotations().add(AnnotationInstances.jsonIgnore());
 	candle.getAnnotations().add(AnnotationInstances.oneToOneBuilder()
 		.cascade(CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH)
@@ -143,20 +143,20 @@ class JavaClassComposerTest {
 	compositeEntityData.getFields().add(candle);
 	compositeEntityData.selectCompositeParentField("candle");
 
-	javaClassComposer.createCompositeElementEntityClass(compositeEntityData, writer);
+	javaClassComposer.createContainableEntityClass(compositeEntityData, writer);
 	System.out.println(writer.getBuffer());
     }
 
     @Test
     void test_CreateRepositoryInterface() {
-	CompositeElementEntityData compositeEntityData = new CompositeElementEntityData("Wick",
+	ContainableEntity compositeEntityData = new ContainableEntity("Wick",
 		"com.example.demo.entity.composition", "wick");
 	StringWriter writer = new StringWriter();
-	EntityData entityData = new EntityData("Candle", "com.example.demo.entity.composition", "candle");
-	RepositoryData candleRepository = new RepositoryData("CandleRepository",
-		"com.example.demo.repository.composition", ClassTypes.crudRepository(entityData));
-	RepositoryData wickRepository = new RepositoryData("WickRepository", "com.example.demo.repository.composition",
-		ClassTypes.compositeElementRepository(compositeEntityData));
+	Entity entity = new Entity("Candle", "com.example.demo.entity.composition", "candle");
+	Repository candleRepository = new Repository("CandleRepository",
+		"com.example.demo.repository.composition", ClassTypes.crudRepository(entity));
+	Repository wickRepository = new Repository("WickRepository", "com.example.demo.repository.composition",
+		ClassTypes.containableRepository(compositeEntityData));
 
 	javaClassComposer.createRepositoryInterface(candleRepository, writer);
 	javaClassComposer.createRepositoryInterface(wickRepository, writer);
@@ -166,12 +166,12 @@ class JavaClassComposerTest {
     @Test
     void test_CreateRepositoryInterfaceWithOperation() {
 	StringWriter writer = new StringWriter();
-	EntityData authorEntity = new EntityData("Author", "com.example.demo.entity", "author");
-	EntityData bookEntity = new EntityData("Book", "com.example.demo.entity", "book");
-	RepositoryData bookRepository = new RepositoryData("BookRepository",
+	Entity authorEntity = new Entity("Author", "com.example.demo.entity", "author");
+	Entity bookEntity = new Entity("Book", "com.example.demo.entity", "book");
+	Repository bookRepository = new Repository("BookRepository",
 		"com.example.demo.repository", ClassTypes.crudRepository(bookEntity));
-	VariableData authorsVariable = new VariableData(ClassTypes.collection(authorEntity), "authors");
-	OperationData findAllByAuthorsInOperation = new OperationData(ClassTypes.collection(bookEntity),
+	Variable authorsVariable = new Variable(ClassTypes.collection(authorEntity), "authors");
+	Operation findAllByAuthorsInOperation = new Operation(ClassTypes.collection(bookEntity),
 		"findAllByAuthorsIn", Collections.singletonList(authorsVariable));
 	bookRepository.getOperations().add(findAllByAuthorsInOperation);
 

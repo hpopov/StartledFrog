@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ApplicationData {
+public class Application {
 
     private String packageName;
     private String name;

@@ -22,9 +22,9 @@ public class AssociationValidator {
 	    @NonNull ReferentialAttributeModel elementAttribute) throws IllegalOperationException {
 	associationMustNotBeBidirectional(containerAttribute, elementAttribute);
 	associationMustNotBeOneToOne(containerAttribute, elementAttribute);
-	ReferentialAttributeModel arityOneAttribute = containerAttribute.getArity().equals(AttributeArity.ONE)
+	ReferentialAttributeModel arityOneAttribute = containerAttribute.getArity().equals(AttributeArity.ONE_EXACTLY)
 		? containerAttribute
-		: (elementAttribute.getArity().equals(AttributeArity.ONE)
+		: (elementAttribute.getArity().equals(AttributeArity.ONE_EXACTLY)
 			? elementAttribute
 			: null);
 	arityOneAttributeMustBeOwnedByClassifier(arityOneAttribute);
@@ -40,8 +40,8 @@ public class AssociationValidator {
 
     private static void associationMustNotBeOneToOne(ReferentialAttributeModel containerAttribute,
 	    ReferentialAttributeModel elementAttribute) throws IllegalOperationException {
-	if (containerAttribute.arityProperty().equals(AttributeArity.ONE)
-		&& elementAttribute.arityProperty().equals(AttributeArity.ONE)) {
+	if (containerAttribute.arityProperty().equals(AttributeArity.ONE_EXACTLY)
+		&& elementAttribute.arityProperty().equals(AttributeArity.ONE_EXACTLY)) {
 	    throw new IllegalOperationException("One-to-one association is not supported");
 	}
     }
@@ -64,7 +64,7 @@ public class AssociationValidator {
 	case NONE:
 	    break;
 	case SHARED:
-	    if (association.getContainerAttribute().getArity().equals(AttributeArity.ONE)) {
+	    if (association.getContainerAttribute().getArity().equals(AttributeArity.ONE_EXACTLY)) {
 		throw new IllegalOperationException("Aggregation with element of arity one should be modelled as"
 			+ " plain association only");
 	    }
