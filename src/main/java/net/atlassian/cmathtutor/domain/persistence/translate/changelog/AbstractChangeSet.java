@@ -3,6 +3,7 @@ package net.atlassian.cmathtutor.domain.persistence.translate.changelog;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,4 +23,19 @@ public abstract class AbstractChangeSet {
     private String id;
     @XmlAttribute(required = true)
     private String author;
+
+    @XmlElement(required = false)
+    public CreateTable getCreateTable() {
+	return null;
+    }
+
+    @XmlElement(required = false)
+    public AddForeignKeyConstraint getAddForeignKeyConstraint() {
+	return null;
+    }
+
+    @XmlElement(required = false)
+    public CreateIndex getCreateIndex() {
+	return null;
+    }
 }

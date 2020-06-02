@@ -41,4 +41,11 @@ public class CaseUtil {
 	String snakeCasedString = sb.substring(0, sb.length() - UNDERSCORE.length());
 	return snakeCasedString;
     }
+
+    public static String capitalizeFirstCharacter(@NonNull String string) {
+	if (string.isEmpty()) {
+	    return string;
+	}
+	return Character.toUpperCase(string.charAt(0)) + string.substring(1);
+    }
 }

@@ -86,14 +86,12 @@
 			<artifactId>afterburner.fx</artifactId>
 			<version>${afterburner.version}</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>${apache.commons.version}</version>
 		</dependency>
-
 
 
 		<!-- https://mvnrepository.com/artifact/org.apache.velocity/velocity-engine-core -->
@@ -194,7 +192,7 @@
 			<artifactId>spring-data-rest-core</artifactId>
 			<version>${spring-data-rest.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>ua.cmathtutor.startledfrog</groupId>
 			<artifactId>SpringBoot-dependencies</artifactId>

@@ -50,7 +50,7 @@
                 </primitive-attribute>
             </primitive-attributes>
             <referential-attributes>
-                <referential-attribute arity="ONE" id="7bf8dc60-361c-4b2c-aac4-17439f532593">
+                <referential-attribute arity="ONE_EXACTLY" id="7bf8dc60-361c-4b2c-aac4-17439f532593">
                     <name>the beau-tiful word_</name>
                     <navigable>true</navigable>
                     <ownerType>CLASSIFIER</ownerType>

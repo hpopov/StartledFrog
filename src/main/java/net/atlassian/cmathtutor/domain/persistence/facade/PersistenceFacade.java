@@ -13,7 +13,6 @@ import net.atlassian.cmathtutor.domain.persistence.AggregationKind;
 import net.atlassian.cmathtutor.domain.persistence.AttributeArity;
 import net.atlassian.cmathtutor.domain.persistence.ConstraintType;
 import net.atlassian.cmathtutor.domain.persistence.OwnerType;
-import net.atlassian.cmathtutor.domain.persistence.Persistence;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveType;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.AssociationDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.IllegalOperationException;
@@ -35,7 +34,7 @@ public class PersistenceFacade {
     private PersistenceFacade(PersistenceDescriptor persistenceDescriptor) {
 	this.persistenceDescriptor = persistenceDescriptor;
     }
-    public Persistence getWrappedPersistence() {
+    public PersistenceModel getWrappedPersistence() {
 	return persistenceDescriptor.getPersistence();
     }
     

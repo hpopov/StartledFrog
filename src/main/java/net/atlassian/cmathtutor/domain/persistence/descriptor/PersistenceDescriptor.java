@@ -165,7 +165,7 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	if (persistenceUnitGraph.nodes().contains(elementAttribute.getParentClassifier())
 		&& persistenceUnitGraph.inDegree(elementAttribute.getParentClassifier()) > 0) {
 	    throw new IllegalOperationException("Element can only have one parent container");
-	}
+	}//TODO: add directed cycle check
 	boolean isNewEdge = persistenceUnitGraph.putEdge(containerAttribute.getParentClassifier(),
 		elementAttribute.getParentClassifier());
 	if (false == isNewEdge) {

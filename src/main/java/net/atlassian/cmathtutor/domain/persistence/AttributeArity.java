@@ -17,4 +17,12 @@ public enum AttributeArity {
     public boolean isOne() {
 	return AT_LEAST_ZERO != this;
     }
+
+    public boolean isNullable() {
+	return ONE_EXACTLY != this;
+    }
+
+    public boolean isNotNullable() {
+	return ONE_EXACTLY == this;
+    }
 }

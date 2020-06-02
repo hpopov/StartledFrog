@@ -43,6 +43,8 @@ public class ConstraintsTranslator {
 
     public Constraints translateArityToJoinTableColumnConstraints(AttributeArity translatedAttributeArity,
 	    AttributeArity referencedAttributeArity) {
-	return translateArityToConstraints(translatedAttributeArity, referencedAttributeArity, false);
+	return Constraints.builder()
+		.primaryKey(true)
+		.build();
     }
 }

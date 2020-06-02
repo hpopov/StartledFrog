@@ -25,6 +25,8 @@ import net.atlassian.cmathtutor.fxservice.impl.SystemCallCreateStartledFrogProje
 import net.atlassian.cmathtutor.helper.ChangeListenerRegistryHelper;
 import net.atlassian.cmathtutor.model.CreateProjectProperties;
 import net.atlassian.cmathtutor.model.Project;
+import net.atlassian.cmathtutor.service.ConfigurationDomainService;
+import net.atlassian.cmathtutor.service.PersistenceDomainService;
 import net.atlassian.cmathtutor.service.ProjectService;
 import net.atlassian.cmathtutor.util.CaseUtil;
 import net.atlassian.cmathtutor.util.FileNameChangeListener;
@@ -53,6 +55,10 @@ public class CreateProjectPresenter implements Initializable {
 
     @Inject
     private ProjectService projectService;
+    @Inject
+    private PersistenceDomainService persistenceDomainService;
+    @Inject
+    private ConfigurationDomainService configurationDomainService;
 
     private DirectoryChooser projectFolderChooser = new DirectoryChooser();
     private CreateProjectProperties createProjectProperties = new CreateProjectProperties();
@@ -62,7 +68,8 @@ public class CreateProjectPresenter implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-	createProjectService = new SystemCallCreateStartledFrogProjectService(createProjectProperties, projectService);
+	createProjectService = new SystemCallCreateStartledFrogProjectService(createProjectProperties, projectService,
+		persistenceDomainService, configurationDomainService);
 	projectFolderChooser.setTitle("Choose the folder to generate project skeleton in");
 	createProjectProperties.applicationNameProperty().bindBidirectional(applicationNameTextField.textProperty());
 	createProjectProperties.rootPackageProperty().bindBidirectional(rootPackageTextField.textProperty());

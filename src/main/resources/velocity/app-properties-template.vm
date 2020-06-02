@@ -1,0 +1,16 @@
+spring.datasource.url=jdbc:mysql://${model.DockerMachineIp}:3306/${model.Database}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+spring.datasource.username=${model.User}
+spring.datasource.password=${model.Password}
+
+##jpa
+spring.jpa.show-sql=true
+
+##liquibase
+spring.liquibase.change-log=classpath:/db/changelog/changelog-master.xml
+logging.level.liquibase = INFO
+spring.liquibase.user=root
+spring.liquibase.password=${model.RootPassword}
+
+spring.jpa.hibernate.ddl-auto=none
+
+logging.level.${model.Project.RootPackage} = DEBUG

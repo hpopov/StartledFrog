@@ -1,4 +1,4 @@
-package $repository.packageName;
+package $repository.PackageName;
 
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 #foreach( $importType in $repository.TypesToImport )

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:databaseChangeLog xmlns:ns2="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet id="Thu May 28 01:00:00 EEST 2020-1" author="Startled Frog (generated)">
+        <createTable tableName="human">
+            <column autoIncrement="true" type="BIGINT" name="PK">
+                <constraints primaryKey="true"/>
+            </column>
+            <column autoIncrement="false" type="INT" name="age">
+                <constraints/>
+            </column>
+            <column autoIncrement="false" type="BIGINT" name="the_beau-tiful_word__PK">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="Thu May 28 01:00:00 EEST 2020-2" author="Startled Frog (generated)">
+        <createTable tableName="the_beau-tiful_word_">
+            <column autoIncrement="true" type="BIGINT" name="PK">
+                <constraints primaryKey="true"/>
+            </column>
+            <column autoIncrement="false" type="BIGINT" name="word_age_____-">
+                <constraints nullable="false"/>
+            </column>
+            <column autoIncrement="false" type="TINYINT(1)" name="existed">
+                <constraints nullable="false"/>
+            </column>
+            <column autoIncrement="false" type="VARCHAR(64)" name="world_name">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="Thu May 28 01:00:00 EEST 2020-3" author="Startled Frog (generated)">
+        <createTable tableName="standalone_superman">
+            <column autoIncrement="true" type="BIGINT" name="PK">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="Thu May 28 01:00:00 EEST 2020-4" author="Startled Frog (generated)">
+        <createIndex indexName="fk_human_the_beau-tiful_word__PK_idx" tableName="human">
+            <column name="the_beau-tiful_word__PK"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="Thu May 28 01:00:00 EEST 2020-5" author="Startled Frog (generated)">
+        <addForeignKeyConstraint baseColumnNames="the_beau-tiful_word__PK" baseTableName="human" constraintName="fk_human_the_beau-tiful_word__the_beau-tiful_word__PK" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="PK" referencedTableName="the_beau-tiful_word_" validate="true"/>
+    </changeSet>
+</ns2:databaseChangeLog>

@@ -27,4 +27,26 @@ public class TranslatorHelper {
 		    "Association " + association + " must contain one end owned by classifier");
 	}
     }
+
+    public static ReferentialAttribute definePrimaryAttribute(Association association) {
+	if (association.getContainerAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+	    return association.getContainerAttribute();
+	} else if (association.getElementAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+	    return association.getElementAttribute();
+	} else {
+	    throw new IllegalArgumentException(
+		    "Association " + association + " must contain one end owned by classifier");
+	}
+    }
+
+    public static ReferentialAttribute defineSecondaryAttribute(Association association) {
+	if (association.getContainerAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+	    return association.getElementAttribute();
+	} else if (association.getElementAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+	    return association.getContainerAttribute();
+	} else {
+	    throw new IllegalArgumentException(
+		    "Association " + association + " must contain one end owned by classifier");
+	}
+    }
 }

@@ -46,14 +46,14 @@ public class AttributeToFieldTranslator {
 
     private PrimitiveTypeToTypeTranslator primitiveTypeTranslator;
     private AttributeNameToVariableNameTranslator attributeNameTranslator;
-    private AnnotationInstanceTranslator attributeConstraintsTranslator;
+    private AnnotationInstanceTranslator annotationInstanceTranslator;
 
     public Variable translatePrimitiveAttribute(PrimitiveAttribute attribute, String columnName) {
 	Type variableType = primitiveTypeTranslator.translate(attribute.getType());
 	String variableName = attributeNameTranslator.translate(attribute.getName());
 	Variable field = new Variable(variableType, variableName);
 	field.getAnnotations()
-		.add(attributeConstraintsTranslator.translateToColumn(attribute.getUnmodifiableConstraints(),
+		.add(annotationInstanceTranslator.translateToColumn(attribute.getUnmodifiableConstraints(),
 			columnName));
 	return field;
     }
@@ -69,7 +69,7 @@ public class AttributeToFieldTranslator {
 		.add(getArityAnnotationForPrimaryReferentialAttribute(primaryAttr, fieldCascade, fieldCascades));
 	ReferentialAttribute secondaryAttr = TranslatorHelper.getAnotherAttributeFromAssociation(primaryAttr);
 
-	primaryReferenceField.getAnnotations().add(attributeConstraintsTranslator
+	primaryReferenceField.getAnnotations().add(annotationInstanceTranslator
 		.translateArityToJoinColumn(primaryAttr.getArity(), secondaryAttr.getArity(), joinColumnName));
 	return primaryReferenceField;
     }
@@ -82,10 +82,10 @@ public class AttributeToFieldTranslator {
 		.add(getArityAnnotationForPrimaryReferentialAttribute(primaryAttr, fieldCascade, fieldCascades));
 	ReferentialAttribute secondaryAttr = TranslatorHelper.getAnotherAttributeFromAssociation(primaryAttr);
 
-	AnnotationInstance<JoinColumn> joinColumn = attributeConstraintsTranslator
+	AnnotationInstance<JoinColumn> inverseJoinColumn = annotationInstanceTranslator
 		.translateArityToJoinColumnInJoinTable(secondaryAttr.getArity(),
 			joinTable.getPrimaryAttributeJoinColumn().getName());
-	AnnotationInstance<JoinColumn> inverseJoinColumn = attributeConstraintsTranslator
+	AnnotationInstance<JoinColumn> joinColumn = annotationInstanceTranslator
 		.translateArityToJoinColumnInJoinTable(primaryAttr.getArity(),
 			joinTable.getSecondaryAttributeJoinColumn().getName());
 	primaryReferenceField.getAnnotations().add(AnnotationInstances.joinTableBuilder()
@@ -96,12 +96,12 @@ public class AttributeToFieldTranslator {
 	return primaryReferenceField;
     }
 
-    private Variable translateReferentialAttribute(ReferentialAttribute attribute, Entity referencedEntity) {
+    public Variable translateReferentialAttribute(ReferentialAttribute attribute, Entity referencedEntity) {
 	Type primaryReferenceType = translateAttributeArityToType(referencedEntity, attribute.getArity());
 	return new Variable(primaryReferenceType, attributeNameTranslator.translate(attribute.getName()));
     }
 
-    private Type translateAttributeArityToType(Entity referencedEntity, AttributeArity attributeArity) {
+    public Type translateAttributeArityToType(Entity referencedEntity, AttributeArity attributeArity) {
 	return attributeArity.isMany()
 		? ClassTypes.set(referencedEntity)
 		: referencedEntity;
@@ -162,12 +162,13 @@ public class AttributeToFieldTranslator {
 	ReferentialAttribute primaryAttribute = TranslatorHelper.getAnotherAttributeFromAssociation(secondaryAttr);
 	ImmutablePair<AttributeArity, AttributeArity> arity = new ImmutablePair<>(primaryAttribute.getArity(),
 		secondaryAttr.getArity());
+	String primaryFieldName = attributeNameTranslator.translate(primaryAttribute.getName());
 	if (arity.getLeft().isMany()) {
 	    if (arity.getRight().isMany()) {// many to many
 		return AnnotationInstances.manyToManyBuilder()
 			.cascade(fieldCascade, fieldCascades)
 			.fetch(FetchType.LAZY)
-			.mappedBy(primaryAttribute.getName())
+			.mappedBy(primaryFieldName)
 			.build();
 	    } else {// many to one
 		return AnnotationInstances.manyToOneBuilder()
@@ -180,14 +181,14 @@ public class AttributeToFieldTranslator {
 		return AnnotationInstances.oneToManyBuilder()
 			.cascade(fieldCascade, fieldCascades)
 			.fetch(FetchType.LAZY)
-			.mappedBy(primaryAttribute.getName())
+			.mappedBy(primaryFieldName)
 			.build();
 	    } else {// one to one
 		return AnnotationInstances.oneToOneBuilder()
 			.cascade(fieldCascade, fieldCascades)
 			.fetch(FetchType.EAGER)
 			.optional(arity.getRight().equals(AttributeArity.AT_MOST_ONE))
-			.mappedBy(primaryAttribute.getName())
+			.mappedBy(primaryFieldName)
 			.build();
 	    }
 	}

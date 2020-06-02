@@ -3,31 +3,56 @@ package net.atlassian.cmathtutor.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.nio.file.Path;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.Version;
-import net.atlassian.cmathtutor.domain.persistence.translate.changelog.DatabaseChangeLog;
 import net.atlassian.cmathtutor.model.Project;
 
 @Slf4j
-@Getter
 public class ProjectService {
     private static final String SF_PROJECT_FILENAME = ".startled-frog";
     private static final String SF_PROJECT_FOLDER_NAME = ".sf-project";
     private static final Version CURRENT_VERSION = Version.V_0_0_1_a;
-    private static final String CHANGELOG_MASTER_XML = "src/main/resources/db/changelog/changelog-master.xml";
-    public static final String CURRENT_DEPENDENCY_VERSION = "0.0.1a";
+    public static final String CURRENT_DEPENDENCY_VERSION = "0.0.1-a";
 
     private Project currentProject;
 
     public void setCurrentProject(@NonNull Project project) {
 	currentProject = project;
+    }
+
+    public Project getCurrentProject() {
+	assertCurrentProjectIsNotNull();
+	return currentProject;
+    }
+
+    public Path getCurrentStartledFrogProjectFolderPath() {
+	assertCurrentProjectIsNotNull();
+	return getStartledFrogProjectFolder(currentProject);
+    }
+
+    private Path getStartledFrogProjectFolder(Project project) {
+	return project.getProjectFolder().toPath().resolve(SF_PROJECT_FOLDER_NAME);
+    }
+
+    public Path getCurrentProjectResourceFolderPath() {
+	assertCurrentProjectIsNotNull();
+	String resourceFolderSubpath = currentProject.getProjectBuildFramework().getResourcesSubpath();
+	Path resourceFolderPath = currentProject.getProjectFolder().toPath().resolve(resourceFolderSubpath);
+	return resourceFolderPath;
+    }
+
+    public Path getCurrentProjectJavaFolderPath() {
+	assertCurrentProjectIsNotNull();
+	String javaSourcesSubpath = currentProject.getProjectBuildFramework().getJavaSourcesSubpath();
+	Path javaSourceFolderPath = currentProject.getProjectFolder().toPath().resolve(javaSourcesSubpath);
+	return javaSourceFolderPath;
     }
 
     public void persistCurrentProject() {
@@ -53,7 +78,7 @@ public class ProjectService {
 	    log.error("Unable to persist the project using JAXB", e);
 	    return;
 	}
-	project.getProjectFolder().toPath().resolve(SF_PROJECT_FOLDER_NAME).toFile().mkdir();
+	getStartledFrogProjectFolder(project).toFile().mkdir();
     }
 
     public Project loadProject(@NonNull File projectFile) {
@@ -72,21 +97,4 @@ public class ProjectService {
     public String getProjectExtension() {
 	return SF_PROJECT_FILENAME;
     }
-
-    public void persistLiquibaseChangeLog(DatabaseChangeLog changeLog) {
-	assertCurrentProjectIsNotNull();
-	try {
-	    JAXBContext context = JAXBContext.newInstance(DatabaseChangeLog.class);
-	    Marshaller marshaller = context.createMarshaller();
-	    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-	    marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
-		    "http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd");
-	    marshaller.marshal(changeLog,
-		    currentProject.getProjectFolder().toPath().resolve(CHANGELOG_MASTER_XML).toFile());
-	} catch (JAXBException e) {
-	    log.error("Unable to persist the liquibase changelog using JAXB", e);
-	    return;
-	}
-    }
-
 }

@@ -1,9 +1,8 @@
 package net.atlassian.cmathtutor.domain.persistence.translate.java;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.AnnotationInstances;
-import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.PrimitiveInstances;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Application;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.ContainableEntity;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Entity;
