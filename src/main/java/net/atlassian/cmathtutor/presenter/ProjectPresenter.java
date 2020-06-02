@@ -1,12 +1,5 @@
 package net.atlassian.cmathtutor.presenter;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Objects;
@@ -14,6 +7,9 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
+import de.fxdiagram.core.XRoot;
+import de.fxdiagram.core.command.AddRemoveCommand;
+import de.fxdiagram.lib.simple.SimpleNode;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -84,7 +80,7 @@ public class ProjectPresenter implements Initializable {
 
     private ChangeListenerRegistryHelper changeListenerRegistryHelper = new ChangeListenerRegistryHelper();
     private Stage stage;
-//    private XRoot xRoot;
+    private XRoot xRoot;
 
     @Override
     public void initialize(URL var1, ResourceBundle var2) {
@@ -106,8 +102,8 @@ public class ProjectPresenter implements Initializable {
 	stage = new Stage(StageStyle.UNDECORATED);
 	stage.initModality(Modality.NONE);
 	PersistenceDiagramView view = new PersistenceDiagramView();
-//	xRoot = (XRoot) view.getView();
-	Scene persistentViewScene = new Scene(view.getView());
+	xRoot = (XRoot) view.getView();
+	Scene persistentViewScene = new Scene(xRoot);
 	PerspectiveCamera perspectiveCamera = new PerspectiveCamera();
 	persistentViewScene.setCamera(perspectiveCamera);
 	stage.setScene(persistentViewScene);
@@ -134,7 +130,10 @@ public class ProjectPresenter implements Initializable {
 	}));
 	stage.initOwner(window);
 
-	saveModels();// TODO: extract to generateSFProject fx service
+	persistenceModel = persistenceDomainService.loadPersistenceModel();// TODO: consider extracting these lines to
+									   // fx service
+	configurationModel = configurationDomainService.loadConfigurationModel();
+
     }
 
     @FXML
@@ -163,11 +162,11 @@ public class ProjectPresenter implements Initializable {
 
     @FXML
     public void addNewDiagram() {
-//	SimpleNode newNode = new SimpleNode("New node!");
-//	newNode.setLayoutX(300);
-//	newNode.setLayoutY(300);
-//	AddRemoveCommand addNewNodeCommand = AddRemoveCommand.newAddCommand(xRoot.getDiagram(), newNode);
-//	xRoot.getCommandStack().execute(addNewNodeCommand);
+	SimpleNode newNode = new SimpleNode("New node!");
+	newNode.setLayoutX(300);
+	newNode.setLayoutY(300);
+	AddRemoveCommand addNewNodeCommand = AddRemoveCommand.newAddCommand(xRoot.getDiagram(), newNode);
+	xRoot.getCommandStack().execute(addNewNodeCommand);
     }
 
     @FXML
@@ -183,37 +182,6 @@ public class ProjectPresenter implements Initializable {
 	}
 	configurationDomainService.persistModel(configurationModel);
     }
-
-//    private PersistenceModel createSomePersistenceModel() {
-//	PersistenceFacade persistenceFacade = PersistenceFacade.newInstance();
-//	PersistenceUnitDescriptor bulb = persistenceFacade.persistenceUnitBuilder("bulb")
-//		.withPrimitiveAttribute()
-//		.name("power")
-//		.type(PrimitiveType.INTEGER)
-//		.withConstraint(ConstraintType.NON_NULL)
-//		.build()
-//		.build();
-//	PersistenceUnitDescriptor chandelier = persistenceFacade.persistenceUnitBuilder("chandelier")
-//		.withPrimitiveAttribute()
-//		.name("color")
-//		.type(PrimitiveType.STRING)
-//		.build()
-//		.build();
-//	persistenceFacade.associationBuilder(chandelier, bulb)
-//		.aggregationKind(AggregationKind.COMPOSITE)
-//		.containerAttribute()
-//		.arity(AttributeArity.AT_LEAST_ZERO)
-//		.navigable(true)
-//		.ownerType(OwnerType.CLASSIFIER)
-//		.build()
-//		.elementAttribute()
-//		.arity(AttributeArity.AT_MOST_ONE)
-//		.navigable(true)
-//		.ownerType(OwnerType.ASSOCIATION)
-//		.build()
-//		.build();
-//	return persistenceFacade.getWrappedPersistence();
-//    }
 
     @FXML
     public void generateProgram() {

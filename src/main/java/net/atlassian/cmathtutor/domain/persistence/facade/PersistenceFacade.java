@@ -34,19 +34,21 @@ public class PersistenceFacade {
     private PersistenceFacade(PersistenceDescriptor persistenceDescriptor) {
 	this.persistenceDescriptor = persistenceDescriptor;
     }
+
     public PersistenceModel getWrappedPersistence() {
 	return persistenceDescriptor.getPersistence();
     }
-    
+
     public static PersistenceFacade newInstance() {
 	return new PersistenceFacade(PersistenceDescriptor.newInstance());
     }
-    
+
     public static PersistenceFacade loadFromFile(File persistenceModelFile) {
 	PersistenceModel persistence = null;
 	try {
 	    JAXBContext context = JAXBContext.newInstance(PersistenceModel.class);
-	    persistence = (PersistenceModel) context.createUnmarshaller().unmarshal(new FileReader(persistenceModelFile));
+	    persistence = (PersistenceModel) context.createUnmarshaller()
+		    .unmarshal(new FileReader(persistenceModelFile));
 	} catch (JAXBException | FileNotFoundException e) {
 	    throw new RuntimeException("Unable to load persistence model using JAXB", e);
 	}
@@ -177,7 +179,8 @@ public class PersistenceFacade {
 	}
 
 	public PersistenceUnitDescriptor build() {
-	    return persistenceUnitDescriptor;// TODO: here we have already ADDED unit to persistence
+	    return persistenceUnitDescriptor;// TODO: here we have already ADDED unit to persistence: builder
+					     // enhancement proposal
 	}
 
 	public class PrimitiveAttributeBuilder {

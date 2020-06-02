@@ -1,5 +1,10 @@
 package net.atlassian.cmathtutor.domain.persistence.descriptor;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
 
@@ -159,18 +164,42 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 
     private void addEdgeToPersistenceUnitGraph(ReferentialAttributeModel containerAttribute,
 	    ReferentialAttributeModel elementAttribute) throws IllegalOperationException {
-	if (containerAttribute.getParentClassifier().equals(elementAttribute.getParentClassifier())) {
+	PersistenceUnitModel containerClassifier = containerAttribute.getParentClassifier();
+	PersistenceUnitModel elementClassifier = elementAttribute.getParentClassifier();
+	if (containerClassifier.equals(elementClassifier)) {
 	    throw new IllegalOperationException("Container classifier must not be equal to element classifier");
 	}
-	if (persistenceUnitGraph.nodes().contains(elementAttribute.getParentClassifier())
-		&& persistenceUnitGraph.inDegree(elementAttribute.getParentClassifier()) > 0) {
+	if (persistenceUnitGraph.nodes().contains(elementClassifier)
+		&& persistenceUnitGraph.inDegree(elementClassifier) > 0) {
 	    throw new IllegalOperationException("Element can only have one parent container");
-	}//TODO: add directed cycle check
-	boolean isNewEdge = persistenceUnitGraph.putEdge(containerAttribute.getParentClassifier(),
-		elementAttribute.getParentClassifier());
+	}
+	if (false == assertNodesDontHaveCommonPath(elementClassifier, containerClassifier)) {
+	    throw new IllegalOperationException(
+		    "There must be no path existed between element and container classifiers");
+	}
+	boolean isNewEdge = persistenceUnitGraph.putEdge(containerClassifier,
+		elementClassifier);
 	if (false == isNewEdge) {
 	    throw new IllegalStateException("The edge added must be a new one");
 	}
+    }
+
+    private boolean assertNodesDontHaveCommonPath(PersistenceUnitModel firstClassifier,
+	    PersistenceUnitModel lastClassifier) {
+	return assertNoNodesAreLinkedTo(Collections.singleton(firstClassifier), new HashSet<>(), lastClassifier);
+    }
+
+    private boolean assertNoNodesAreLinkedTo(Set<PersistenceUnitModel> nodes, Set<PersistenceUnitModel> processedNodes,
+	    PersistenceUnitModel lastNode) {
+	for (PersistenceUnitModel node : nodes) {
+	    if (persistenceUnitGraph.hasEdgeConnecting(node, lastNode)) {
+		return false;
+	    }
+	}
+	processedNodes.addAll(nodes);
+	return assertNoNodesAreLinkedTo(nodes.stream().flatMap(
+		node -> persistenceUnitGraph.successors(node).stream().filter(sNode -> !processedNodes.contains(sNode)))
+		.collect(Collectors.toSet()), processedNodes, lastNode);
     }
 
     @Override
