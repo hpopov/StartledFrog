@@ -60,7 +60,7 @@ public abstract class AbstractCreateStartledFrogProjectService extends Service<P
 				.append("&dependencies=lombok,web,data-jpa,liquibase,mysql,data-rest,data-rest-hal")
 				.toString();
 		try {
-		    updateProgress(0.5, 1);
+		    updateProgress(0.1, 1);
 		    updateMessage("Downloading project skeleton");
 		    downloadAndUnzipSpringBootSkeletonProject(downloadSpringBootProjectUrl);
 		} catch (Exception e) {
@@ -68,7 +68,7 @@ public abstract class AbstractCreateStartledFrogProjectService extends Service<P
 		    log.error("Failed to download & unzip Spring Boot skeleton project", e);
 		    throw e;
 		}
-		updateProgress(0.75, 1);
+		updateProgress(0.6, 1);
 		updateMessage("Amending pom file");
 		File projectRoot = createProjectProperties.getProjectDestinationFolder().toPath()
 			.resolve(createProjectProperties.getApplicationName()).toFile();
@@ -79,16 +79,20 @@ public abstract class AbstractCreateStartledFrogProjectService extends Service<P
 			.rootPackage(createProjectProperties.getRootPackage())
 			.build();
 		alterProjectPom(project);
-		updateProgress(0.95, 1);
+		updateProgress(0.7, 1);
 		updateMessage("Creating Startled Frog auxiliary files");
 		projectService.setCurrentProject(project);
 		projectService.persistCurrentProject();
+		updateProgress(0.8, 1);
+		updateMessage("Creating default models");
+		createProjectDefaultModels();
 		updateProgress(1, 1);
 		updateMessage("Completed successfully");
 		return project;
 	    }
 	};
     }
+
 
     private String urlEncode(String value) {
 	try {
@@ -170,6 +174,8 @@ public abstract class AbstractCreateStartledFrogProjectService extends Service<P
 	transformer.transform(domSource, streamResult);
 	log.info("Project {} pom transformation completed successfully", project.getApplicationName());
     }
+
+    protected abstract void createProjectDefaultModels();
 
     private static Node getNodeByTextContent(NodeList nodes, String textContent) {
 	for (int i = nodes.getLength() - 1; i >= 0; i--) {

@@ -95,7 +95,7 @@ public class LoadProjectPresenter implements Initializable {
     @FXML
     public void loadProject() {
 	log.debug("Loading project using service...");
-	loadService.start();
+	loadService.restart();
     }
 
     @FXML
