@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.*?>
@@ -80,10 +81,34 @@
 					</children>
 				</StackPane>
 				<TilePane fx:id="persistenceToolbarTilePane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0"
-					prefWidth="316.0" visible="false">
+					prefWidth="316.0">
 					<children>
-						<Button mnemonicParsing="false" onAction="#addNewDiagram" prefHeight="100.0" prefWidth="100.0" text="New Diagram"
-							textAlignment="CENTER" wrapText="true" />
+						<Button contentDisplay="TOP" onAction="#addNewDiagram" prefHeight="220.0" prefWidth="316.0"
+							text="New Persistence Unit" textAlignment="CENTER" wrapText="true">
+							<graphic>
+								<ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../images/entity.png" />
+									</image>
+								</ImageView>
+							</graphic>
+							<font>
+								<Font name="System Bold Italic" size="20.0" />
+							</font>
+						</Button>
+						<Button contentDisplay="TOP" onAction="#addNewDiagram" prefHeight="220.0" prefWidth="316.0" text="New Association"
+							textAlignment="CENTER" wrapText="true">
+							<graphic>
+								<ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../images/Associations.png" />
+									</image>
+								</ImageView>
+							</graphic>
+							<font>
+								<Font name="System Bold Italic" size="20.0" />
+							</font>
+						</Button>
 					</children>
 				</TilePane>
 			</items>
