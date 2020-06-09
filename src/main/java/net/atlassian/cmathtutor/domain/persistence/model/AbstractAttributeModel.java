@@ -31,6 +31,7 @@ public abstract class AbstractAttributeModel extends AbstractIdentifyableModel i
 	super(id);
     }
 
+    @Override
     public StringProperty nameProperty() {
 	return this.name;
     }
@@ -45,7 +46,8 @@ public abstract class AbstractAttributeModel extends AbstractIdentifyableModel i
 	this.nameProperty().set(name);
     }
 
-    public ReadOnlyObjectProperty<PersistenceUnitModel> parentClassifierProperty() {
+    @Override
+    public ReadOnlyObjectProperty<? extends PersistenceUnitModel> parentClassifierProperty() {
 	return this.parentClassifier;
     }
 

@@ -1,7 +1,11 @@
 package net.atlassian.cmathtutor.domain.persistence.descriptor;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -9,10 +13,10 @@ import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
 
 import javafx.collections.ObservableSet;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.AggregationKind;
 import net.atlassian.cmathtutor.domain.persistence.Association;
 import net.atlassian.cmathtutor.domain.persistence.Persistence;
@@ -23,11 +27,15 @@ import net.atlassian.cmathtutor.domain.persistence.model.PersistenceUnitModel;
 import net.atlassian.cmathtutor.domain.persistence.model.ReferentialAttributeModel;
 import net.atlassian.cmathtutor.util.UidUtil;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@NoArgsConstructor
 public class PersistenceDescriptor extends AbstractDescriptor implements Persistence {
 
     @Getter
     private PersistenceModel persistence;
+
+    private Map<String, PersistenceUnitDescriptor> idToPersistenceUnitDescriptors = new HashMap<>();
+    private Map<String, AssociationDescriptor> idToAssociationDescriptors = new HashMap<>();
 
     private MutableGraph<PersistenceUnitModel> persistenceUnitGraph = GraphBuilder.directed()
 	    .allowsSelfLoops(false)
@@ -49,12 +57,10 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	}
 	PersistenceDescriptor persistenceDescriptor = new PersistenceDescriptor(persistence.getId(), persistence);
 	for (PersistenceUnitModel persistenceUnit : persistence.getPersistenceUnits()) {
-	    PersistenceUnitDescriptor.wrap(persistenceUnit, persistenceDescriptor);// TODO: descriptors are missed as
-										   // well + units are
-	    // not fully validated
+	    persistenceDescriptor.addPersistenceUnitInner(persistenceUnit);
 	}
 	for (AssociationModel association : persistence.getAssociations()) {
-	    persistenceDescriptor.addAssociationInner(association);// TODO: association descriptors are missed now...
+	    persistenceDescriptor.addAssociationInner(association);
 	}
 	return persistenceDescriptor;
     }
@@ -66,8 +72,13 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	if (persistence.getPersistenceUnits().contains(persistenceUnit)) {
 	    throw new IllegalOperationException("Equal persistence unit already exists");
 	}
+	return addPersistenceUnitInner(persistenceUnit);
+    }
+
+    private PersistenceUnitDescriptor addPersistenceUnitInner(PersistenceUnitModel persistenceUnit) {
 	PersistenceUnitDescriptor persistenceUnitDescriptor = PersistenceUnitDescriptor.wrap(persistenceUnit, this);
 	persistence.getPersistenceUnits().add(persistenceUnit);
+	idToPersistenceUnitDescriptors.put(persistenceUnitDescriptor.getId(), persistenceUnitDescriptor);
 	return persistenceUnitDescriptor;
     }
 
@@ -133,10 +144,7 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	if (persistence.getAssociations().contains(association)) {
 	    throw new IllegalOperationException("Equal association already exists");
 	}
-	AssociationDescriptor associationDescriptor = addAssociationInner(association);
-	persistence.getAssociations().add(association);
-
-	return associationDescriptor;
+	return addAssociationInner(association);
     }
 
     private AssociationDescriptor addAssociationInner(AssociationModel association) throws IllegalOperationException {
@@ -147,6 +155,8 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 		|| association.getAggregationKind().equals(AggregationKind.COMPOSITE)) {
 	    addEdgeToPersistenceUnitGraph(association.getContainerAttribute(), association.getElementAttribute());
 	}
+	persistence.getAssociations().add(association);
+	idToAssociationDescriptors.put(associationDescriptor.getId(), associationDescriptor);
 	return associationDescriptor;
     }
 
@@ -186,6 +196,10 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 
     private boolean assertNodesDontHaveCommonPath(PersistenceUnitModel firstClassifier,
 	    PersistenceUnitModel lastClassifier) {
+//	Graphs.hasCycle( ) or Graphs.reachableNodes(graph, node) TODO!!
+	if (false == persistenceUnitGraph.nodes().containsAll(Arrays.asList(firstClassifier, lastClassifier))) {
+	    return true;
+	}
 	return assertNoNodesAreLinkedTo(Collections.singleton(firstClassifier), new HashSet<>(), lastClassifier);
     }
 
@@ -202,6 +216,14 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 		.collect(Collectors.toSet()), processedNodes, lastNode);
     }
 
+    public PersistenceUnitDescriptor getPersistenceUnitDescriptorById(String id) {
+	return idToPersistenceUnitDescriptors.get(id);
+    }
+
+    public AssociationDescriptor getAssociationDescriptorById(String id) {
+	return idToAssociationDescriptors.get(id);
+    }
+
     @Override
     public ObservableSet<? extends PersistenceUnit> getUnmodifiablePersistenceUnits() {
 	return persistence.getUnmodifiablePersistenceUnits();
@@ -212,4 +234,11 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	return persistence.getUnmodifiableAssociations();
     }
 
+    public Collection<PersistenceUnitDescriptor> getPersistenceUnitDescriptors() {
+	return idToPersistenceUnitDescriptors.values();
+    }
+
+    public Collection<AssociationDescriptor> getAssociationDescriptors() {
+	return idToAssociationDescriptors.values();
+    }
 }

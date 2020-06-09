@@ -37,6 +37,7 @@ import net.atlassian.cmathtutor.util.UidUtil;
 @Slf4j
 public class PersistenceDomainService {
 
+    private static final String PERSISTENCE_DIAGRAM_FILE_NAME = "diagram.fxd";
     private static final String INVALID_PACKAGE_MSG = "Default %1$ package for project {} is {}, but got %1$ with package {}";
     private static final String DOT_JAVA = ".java";
     private static final String ENTITY_SUBPACKAGE = "entity";
@@ -194,5 +195,9 @@ public class PersistenceDomainService {
 	APPLICATION("application"), ENTITY("entity"), REPOSITORY("repository");
 
 	private String name;
+    }
+
+    public File getPersistenceDiagramFile() {
+	return projectService.getCurrentStartledFrogProjectFolderPath().resolve(PERSISTENCE_DIAGRAM_FILE_NAME).toFile();
     }
 }
