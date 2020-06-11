@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.*?>
@@ -15,7 +16,11 @@
 			<menus>
 				<Menu mnemonicParsing="false" text="File">
 					<items>
-						<MenuItem mnemonicParsing="false" text="Close" />
+						<MenuItem mnemonicParsing="false" onAction="#saveModels" text="Save models" />
+						<MenuItem mnemonicParsing="false" onAction="#generateProgram" text="Generate program" />
+						<MenuItem mnemonicParsing="false" onAction="#runGeneratedProgram" text="Run" />
+						<MenuItem mnemonicParsing="false" onAction="#exitStartledFrog" onMenuValidation="#onCloseMenuValidation"
+							text="Close" />
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false" text="Edit">
@@ -55,19 +60,55 @@
 								</ImageView>
 							</graphic>
 						</Button>
+						<Button fx:id="launchViewButton" contentDisplay="TOP" layoutX="10.0" layoutY="166.0" mnemonicParsing="false"
+							onAction="#switchToLaunchView" prefHeight="156.0" prefWidth="156.0" text="Launch View" textAlignment="CENTER"
+							wrapText="true">
+							<graphic>
+								<ImageView fitHeight="89.0" fitWidth="103.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../images/lunch_view.png" />
+									</image>
+								</ImageView>
+							</graphic>
+						</Button>
 					</children>
 				</VBox>
 				<StackPane fx:id="viewPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0" prefWidth="1110.0">
 					<children>
 						<!-- <fx:include source="persistence.fxml" fx:id="persistence" /> -->
 						<fx:include fx:id="configuration" source="configuration.fxml" />
+						<fx:include fx:id="launch" source="launch.fxml" />
 					</children>
 				</StackPane>
-				<TilePane fx:id="persistenceToolbarTilePane" visible="false" minHeight="-Infinity" minWidth="-Infinity"
-					prefHeight="877.0" prefWidth="316.0">
+				<TilePane fx:id="persistenceToolbarTilePane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0"
+					prefWidth="316.0">
 					<children>
-						<Button mnemonicParsing="false" onAction="#addNewDiagram" prefHeight="100.0" prefWidth="100.0" text="New Diagram"
-							textAlignment="CENTER" wrapText="true" />
+						<Button contentDisplay="TOP" onAction="#addNewDiagram" prefHeight="220.0" prefWidth="316.0"
+							text="New Persistence Unit" textAlignment="CENTER" wrapText="true">
+							<graphic>
+								<ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../images/entity.png" />
+									</image>
+								</ImageView>
+							</graphic>
+							<font>
+								<Font name="System Bold Italic" size="20.0" />
+							</font>
+						</Button>
+						<Button contentDisplay="TOP" onAction="#addNewDiagram" prefHeight="220.0" prefWidth="316.0" text="New Association"
+							textAlignment="CENTER" wrapText="true">
+							<graphic>
+								<ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../images/Associations.png" />
+									</image>
+								</ImageView>
+							</graphic>
+							<font>
+								<Font name="System Bold Italic" size="20.0" />
+							</font>
+						</Button>
 					</children>
 				</TilePane>
 			</items>

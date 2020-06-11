@@ -1,0 +1,31 @@
+package $entity.PackageName;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import lombok.Data;
+#foreach( $importType in $entity.TypesToImport )
+import ${importType.TypeUri};
+#end
+
+import ua.cmathtutor.startledfrog.entity.Containable;
+
+@Entity
+@Table(name = "$entity.TableName")
+@Data
+public class $entity.Name implements Containable {
+    #foreach( $field in $entity.Fields)
+    
+    	#foreach( $annotation in $field.Annotations )
+    $annotation.toString()
+    	#end
+    private $field.Type.Name#if( $field.Type.isGeneric() )<$field.Type.displayParametersList()>#end $field.Name;
+    #end
+
+    #foreach( $annotation in $entity.CompositeParentAnnotations )
+    $annotation.toString()
+    #end
+    @Override
+    public Object getContainer() {
+        return ${entity.ContainerGetterName}();
+    }
+}

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistenceModel id="1342163e-6c6e-43e9-9b3c-efdc44ed8b37">
+    <persistence-units>
+        <persistence-unit id="a64617a7-fa67-436c-b96f-1edfec7be844">
+            <name>Medical card</name>
+            <primitive-attributes>
+                <primitive-attribute id="85a1e774-1eb0-4e78-ba2a-41e836b86d84">
+                    <name>creation year</name>
+                    <constraint>NON_NULL</constraint>
+                    <type>INTEGER</type>
+                </primitive-attribute>
+            </primitive-attributes>
+            <referential-attributes>
+                <referential-attribute arity="ONE_EXACTLY" id="c46ce78c-f19e-475d-963f-3fec1c890448">
+                    <name>patient</name>
+                    <navigable>true</navigable>
+                    <ownerType>CLASSIFIER</ownerType>
+                </referential-attribute>
+                <referential-attribute arity="AT_MOST_ONE" id="4e4e00b5-80c0-4ce0-85aa-9a38b9dbc963">
+                    <name>creator</name>
+                    <navigable>true</navigable>
+                    <ownerType>CLASSIFIER</ownerType>
+                </referential-attribute>
+                <referential-attribute arity="AT_LEAST_ZERO" id="5f74258e-dc25-4467-9962-fdefcb12d1ee">
+                    <name>entries</name>
+                    <navigable>true</navigable>
+                    <ownerType>ASSOCIATION</ownerType>
+                </referential-attribute>
+            </referential-attributes>
+            <repository-operations/>
+        </persistence-unit>
+        <persistence-unit id="427f6785-270a-4db7-8ecd-40ed75711b91">
+            <name>Health index</name>
+            <primitive-attributes>
+                <primitive-attribute id="8eb41f6d-9fc7-4491-bff0-5e5c35ed6129">
+                    <name>name</name>
+                    <constraint>NON_NULL</constraint>
+                    <type>STRING</type>
+                </primitive-attribute>
+                <primitive-attribute id="6ba954c7-71e3-4f5e-9e51-7c470213ba18">
+                    <name>value</name>
+                    <constraint>NON_NULL</constraint>
+                    <type>STRING</type>
+                </primitive-attribute>
+            </primitive-attributes>
+            <referential-attributes>
+                <referential-attribute arity="ONE_EXACTLY" id="95229480-f94c-4f46-8a4f-c93ad53da813">
+                    <name>medical card entry</name>
+                    <navigable>true</navigable>
+                    <ownerType>CLASSIFIER</ownerType>
+                </referential-attribute>
+            </referential-attributes>
+            <repository-operations/>
+        </persistence-unit>
+        <persistence-unit id="12116c02-2cf7-4ce0-88e9-6468f0fe22a3">
+            <name>Patient</name>
+            <primitive-attributes>
+                <primitive-attribute id="247001bf-07f1-41ba-aa8e-394d6abfe099">
+                    <name>user UID</name>
+                    <constraint>NON_NULL</constraint>
+                    <constraint>UNIQUE</constraint>
+                    <type>STRING</type>
+                </primitive-attribute>
+                <primitive-attribute id="3d0d4ccf-2a48-4d18-9ebd-2c73f976788b">
+                    <name>full name</name>
+                    <constraint>NON_NULL</constraint>
+                    <type>STRING</type>
+                </primitive-attribute>
+                <primitive-attribute id="93e61cf7-52ec-446f-ac5f-dd14c3c404fb">
+                    <name>birth year</name>
+                    <type>INTEGER</type>
+                </primitive-attribute>
+            </primitive-attributes>
+            <referential-attributes>
+                <referential-attribute arity="AT_MOST_ONE" id="7a8963e2-0784-492c-a52d-5778ee59e99d">
+                    <name>medical card</name>
+                    <navigable>true</navigable>
+                    <ownerType>ASSOCIATION</ownerType>
+                </referential-attribute>
+            </referential-attributes>
+            <repository-operations/>
+        </persistence-unit>
+        <persistence-unit id="3a3d7a11-eab3-49e8-b0d2-fa0c55aee4d8">
+            <name>Medical card entry</name>
+            <primitive-attributes>
+                <primitive-attribute id="48fa3cc2-9e10-4ac9-b0f5-0d266a2b760d">
+                    <name>date</name>
+                    <constraint>NON_NULL</constraint>
+                    <type>STRING</type>
+                </primitive-attribute>
+                <primitive-attribute id="829e7089-3ba8-4c39-b51e-ce4fdf933bce">
+                    <name>message</name>
+                    <type>TEXT</type>
+                </primitive-attribute>
+            </primitive-attributes>
+            <referential-attributes>
+                <referential-attribute arity="ONE_EXACTLY" id="c67a266d-24ae-4a1f-bf03-c8c85d561431">
+                    <name>medical card</name>
+                    <navigable>true</navigable>
+                    <ownerType>CLASSIFIER</ownerType>
+                </referential-attribute>
+                <referential-attribute arity="AT_LEAST_ZERO" id="5950eb26-81eb-4ac1-93e5-93e32e749f8e">
+                    <name>health indices</name>
+                    <navigable>true</navigable>
+                    <ownerType>ASSOCIATION</ownerType>
+                </referential-attribute>
+                <referential-attribute arity="ONE_EXACTLY" id="7bb49c85-fb24-4c76-b946-ec1baa538bca">
+                    <name>entry creator</name>
+                    <navigable>true</navigable>
+                    <ownerType>CLASSIFIER</ownerType>
+                </referential-attribute>
+            </referential-attributes>
+            <repository-operations/>
+        </persistence-unit>
+        <persistence-unit id="07e75a3c-7c73-4de5-95d5-533ebbba9e1e">
+            <name>Doctor</name>
+            <primitive-attributes>
+                <primitive-attribute id="0bf305e2-4d94-45af-97a8-80d7d295d945">
+                    <name>user UID</name>
+                    <constraint>NON_NULL</constraint>
+                    <constraint>UNIQUE</constraint>
+                    <type>STRING</type>
+                </primitive-attribute>
+                <primitive-attribute id="0dbeec28-105f-4511-94b9-bd197fe4df13">
+                    <name>full name</name>
+                    <constraint>NON_NULL</constraint>
+                    <type>STRING</type>
+                </primitive-attribute>
+                <primitive-attribute id="fb2851fa-e4b8-4505-833d-d31eb871062d">
+                    <name>main specialization</name>
+                    <constraint>NON_NULL</constraint>
+                    <type>STRING</type>
+                </primitive-attribute>
+            </primitive-attributes>
+            <referential-attributes>
+                <referential-attribute arity="AT_LEAST_ZERO" id="51b32b0a-e4e5-4a04-a33b-2d9b6df64ddd">
+                    <name>created Medical cards</name>
+                    <navigable>true</navigable>
+                    <ownerType>ASSOCIATION</ownerType>
+                </referential-attribute>
+                <referential-attribute arity="AT_LEAST_ZERO" id="7fd102ad-c670-4619-8c9a-d722786ca7a3">
+                    <name>created entries</name>
+                    <navigable>true</navigable>
+                    <ownerType>ASSOCIATION</ownerType>
+                </referential-attribute>
+            </referential-attributes>
+            <repository-operations/>
+        </persistence-unit>
+    </persistence-units>
+    <associations>
+        <association id="7a1cb5a4-ec40-41fe-b7d3-ee9477a3ec49">
+            <aggregationKind>SHARED</aggregationKind>
+            <containerAttribute>51b32b0a-e4e5-4a04-a33b-2d9b6df64ddd</containerAttribute>
+            <elementAttribute>4e4e00b5-80c0-4ce0-85aa-9a38b9dbc963</elementAttribute>
+        </association>
+        <association id="32e4ec1b-06f3-4869-a25c-67ab7aab61cf">
+            <aggregationKind>NONE</aggregationKind>
+            <containerAttribute>7a8963e2-0784-492c-a52d-5778ee59e99d</containerAttribute>
+            <elementAttribute>c46ce78c-f19e-475d-963f-3fec1c890448</elementAttribute>
+        </association>
+        <association id="4bdcf24c-c9f3-4d0f-a769-09f2b2276cf7">
+            <aggregationKind>NONE</aggregationKind>
+            <containerAttribute>7bb49c85-fb24-4c76-b946-ec1baa538bca</containerAttribute>
+            <elementAttribute>7fd102ad-c670-4619-8c9a-d722786ca7a3</elementAttribute>
+        </association>
+        <association id="3df006a6-08ce-4361-954a-c65b0ce72426">
+            <aggregationKind>COMPOSITE</aggregationKind>
+            <containerAttribute>5950eb26-81eb-4ac1-93e5-93e32e749f8e</containerAttribute>
+            <elementAttribute>95229480-f94c-4f46-8a4f-c93ad53da813</elementAttribute>
+        </association>
+        <association id="965419b9-7c3e-4178-87ff-9e61f209126e">
+            <aggregationKind>COMPOSITE</aggregationKind>
+            <containerAttribute>5f74258e-dc25-4467-9962-fdefcb12d1ee</containerAttribute>
+            <elementAttribute>c67a266d-24ae-4a1f-bf03-c8c85d561431</elementAttribute>
+        </association>
+    </associations>
+</persistenceModel>
