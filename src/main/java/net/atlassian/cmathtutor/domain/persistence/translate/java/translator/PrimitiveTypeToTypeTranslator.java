@@ -17,6 +17,7 @@ public class PrimitiveTypeToTypeTranslator {
 	case REAL:
 	    return net.atlassian.cmathtutor.domain.persistence.translate.java.PrimitiveType.DOUBLE;
 	case STRING:
+	case TEXT:
 	    return net.atlassian.cmathtutor.domain.persistence.translate.java.PrimitiveType.STRING;
 	default:
 	    throw new UnimplementedEnumConstantException(primitiveType);

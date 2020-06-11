@@ -18,6 +18,8 @@ public class PrimitiveTypeToColumnTypeTranslator {
 	    return ColumnType.DOUBLE;
 	case STRING:
 	    return ColumnType.VARCHAR;
+	case TEXT:
+	    return ColumnType.BIG_VARCHAR;
 	default:
 	    throw new UnimplementedEnumConstantException(type);
 	}

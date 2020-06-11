@@ -9,7 +9,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum ColumnType {
 
-    INT("INT"), BIGINT("BIGINT"), TINYINT("TINYINT(1)"), VARCHAR("VARCHAR(64)"), DOUBLE("DOUBLE");
+    INT("INT"), BIGINT("BIGINT"), TINYINT("TINYINT(1)"), VARCHAR("VARCHAR(64)"), DOUBLE("DOUBLE"),
+    BIG_VARCHAR("VARCHAR(1024)");
 
     private String sqlName;
 

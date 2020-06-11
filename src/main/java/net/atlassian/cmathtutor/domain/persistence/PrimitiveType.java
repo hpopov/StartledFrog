@@ -10,7 +10,8 @@ public enum PrimitiveType {
     INTEGER("Integer"),
     BIG_INTEGER("Big integer"),
     REAL("Real"),
-    STRING("String");
+    STRING("String"),
+    TEXT("Text");
 
     private String appearance;
 }

@@ -40,4 +40,8 @@ public class CompositionTranslationManager extends AbstractAssociationTranslatio
 	return secondaryAttribute.isNavigable() || secondaryAttribute == association.getElementAttribute();
     }
 
+    @Override
+    public boolean isAssociationContainable() {
+	return true;
+    }
 }

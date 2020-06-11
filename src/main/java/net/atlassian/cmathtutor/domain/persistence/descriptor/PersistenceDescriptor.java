@@ -2,14 +2,11 @@ package net.atlassian.cmathtutor.domain.persistence.descriptor;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.google.common.graph.GraphBuilder;
+import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableGraph;
 
 import javafx.collections.ObservableSet;
@@ -72,12 +69,13 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	if (persistence.getPersistenceUnits().contains(persistenceUnit)) {
 	    throw new IllegalOperationException("Equal persistence unit already exists");
 	}
-	return addPersistenceUnitInner(persistenceUnit);
+	PersistenceUnitDescriptor persistenceUnitDescriptor = addPersistenceUnitInner(persistenceUnit);
+	persistence.getPersistenceUnits().add(persistenceUnit);
+	return persistenceUnitDescriptor;
     }
 
     private PersistenceUnitDescriptor addPersistenceUnitInner(PersistenceUnitModel persistenceUnit) {
 	PersistenceUnitDescriptor persistenceUnitDescriptor = PersistenceUnitDescriptor.wrap(persistenceUnit, this);
-	persistence.getPersistenceUnits().add(persistenceUnit);
 	idToPersistenceUnitDescriptors.put(persistenceUnitDescriptor.getId(), persistenceUnitDescriptor);
 	return persistenceUnitDescriptor;
     }
@@ -144,7 +142,9 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	if (persistence.getAssociations().contains(association)) {
 	    throw new IllegalOperationException("Equal association already exists");
 	}
-	return addAssociationInner(association);
+	AssociationDescriptor associationDescriptor = addAssociationInner(association);
+	persistence.getAssociations().add(association);
+	return associationDescriptor;
     }
 
     private AssociationDescriptor addAssociationInner(AssociationModel association) throws IllegalOperationException {
@@ -155,7 +155,6 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 		|| association.getAggregationKind().equals(AggregationKind.COMPOSITE)) {
 	    addEdgeToPersistenceUnitGraph(association.getContainerAttribute(), association.getElementAttribute());
 	}
-	persistence.getAssociations().add(association);
 	idToAssociationDescriptors.put(associationDescriptor.getId(), associationDescriptor);
 	return associationDescriptor;
     }
@@ -196,25 +195,29 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 
     private boolean assertNodesDontHaveCommonPath(PersistenceUnitModel firstClassifier,
 	    PersistenceUnitModel lastClassifier) {
-//	Graphs.hasCycle( ) or Graphs.reachableNodes(graph, node) TODO!!
 	if (false == persistenceUnitGraph.nodes().containsAll(Arrays.asList(firstClassifier, lastClassifier))) {
 	    return true;
 	}
-	return assertNoNodesAreLinkedTo(Collections.singleton(firstClassifier), new HashSet<>(), lastClassifier);
+//	Graphs.hasCycle( ) or Graphs.reachableNodes(graph, node) TODO!!
+	if (Graphs.reachableNodes(persistenceUnitGraph, lastClassifier).contains(firstClassifier)) {
+	    return false;
+	}
+	return true;
+//	return assertNoNodesAreLinkedTo(Collections.singleton(firstClassifier), new HashSet<>(), lastClassifier);
     }
 
-    private boolean assertNoNodesAreLinkedTo(Set<PersistenceUnitModel> nodes, Set<PersistenceUnitModel> processedNodes,
-	    PersistenceUnitModel lastNode) {
-	for (PersistenceUnitModel node : nodes) {
-	    if (persistenceUnitGraph.hasEdgeConnecting(node, lastNode)) {
-		return false;
-	    }
-	}
-	processedNodes.addAll(nodes);
-	return assertNoNodesAreLinkedTo(nodes.stream().flatMap(
-		node -> persistenceUnitGraph.successors(node).stream().filter(sNode -> !processedNodes.contains(sNode)))
-		.collect(Collectors.toSet()), processedNodes, lastNode);
-    }
+//    private boolean assertNoNodesAreLinkedTo(Set<PersistenceUnitModel> nodes, Set<PersistenceUnitModel> processedNodes,
+//	    PersistenceUnitModel lastNode) {
+//	for (PersistenceUnitModel node : nodes) {
+//	    if (persistenceUnitGraph.hasEdgeConnecting(node, lastNode)) {
+//		return false;
+//	    }
+//	}
+//	processedNodes.addAll(nodes);
+//	return assertNoNodesAreLinkedTo(nodes.stream().flatMap(
+//		node -> persistenceUnitGraph.successors(node).stream().filter(sNode -> !processedNodes.contains(sNode)))
+//		.collect(Collectors.toSet()), processedNodes, lastNode);
+//    }
 
     public PersistenceUnitDescriptor getPersistenceUnitDescriptorById(String id) {
 	return idToPersistenceUnitDescriptors.get(id);

@@ -195,12 +195,14 @@ public class PersistenceModelTranslator {
 			    SECONDARY_CASCADE_TYPES);
 	    secondaryEntity.getFields().add(secondaryReferenceField);
 	}
-	if (primaryEntity instanceof ContainableEntity) {
-	    ContainableEntity containablePrimaryEntity = (ContainableEntity) primaryEntity;
-	    containablePrimaryEntity.selectCompositeParentField(primaryReferenceField.getName());
-	} else if (secondaryEntity instanceof ContainableEntity) {
-	    ContainableEntity containableSecondaryEntity = (ContainableEntity) secondaryEntity;
-	    containableSecondaryEntity.selectCompositeParentField(secondaryReferenceField.getName());
+	if (translationManager.isAssociationContainable()) {
+	    if (primaryEntity instanceof ContainableEntity) {
+		ContainableEntity containablePrimaryEntity = (ContainableEntity) primaryEntity;
+		containablePrimaryEntity.selectCompositeParentField(primaryReferenceField.getName());
+	    } else if (secondaryEntity instanceof ContainableEntity) {
+		ContainableEntity containableSecondaryEntity = (ContainableEntity) secondaryEntity;
+		containableSecondaryEntity.selectCompositeParentField(secondaryReferenceField.getName());
+	    }
 	}
     }
 

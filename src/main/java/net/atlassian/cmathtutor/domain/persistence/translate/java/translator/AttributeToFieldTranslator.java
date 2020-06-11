@@ -133,7 +133,7 @@ public class AttributeToFieldTranslator {
 	    } else {// one to one
 		return AnnotationInstances.oneToOneBuilder()
 			.cascade(fieldCascade, fieldCascades)
-			.fetch(FetchType.EAGER)
+			.fetch(FetchType.LAZY)// changed from eager
 			.optional(arity.getRight().equals(AttributeArity.AT_MOST_ONE))
 			.build();
 	    }
@@ -186,7 +186,7 @@ public class AttributeToFieldTranslator {
 	    } else {// one to one
 		return AnnotationInstances.oneToOneBuilder()
 			.cascade(fieldCascade, fieldCascades)
-			.fetch(FetchType.EAGER)
+			.fetch(FetchType.LAZY)// changed from EAGER
 			.optional(arity.getRight().equals(AttributeArity.AT_MOST_ONE))
 			.mappedBy(primaryFieldName)
 			.build();

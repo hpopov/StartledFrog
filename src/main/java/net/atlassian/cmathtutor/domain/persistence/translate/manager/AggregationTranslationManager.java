@@ -36,4 +36,8 @@ public class AggregationTranslationManager extends AbstractAssociationTranslatio
 	return secondaryAttribute.isNavigable() || secondaryAttribute == association.getElementAttribute();
     }
 
+    @Override
+    public boolean isAssociationContainable() {
+	return true;
+    }
 }

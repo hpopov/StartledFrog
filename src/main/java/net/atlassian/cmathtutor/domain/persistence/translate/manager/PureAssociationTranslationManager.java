@@ -35,4 +35,8 @@ public class PureAssociationTranslationManager extends AbstractAssociationTransl
 	return secondaryAttribute.isNavigable();
     }
 
+    @Override
+    public boolean isAssociationContainable() {
+	return false;
+    }
 }

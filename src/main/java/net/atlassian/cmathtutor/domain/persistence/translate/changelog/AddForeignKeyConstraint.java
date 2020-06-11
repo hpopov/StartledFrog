@@ -3,6 +3,7 @@ package net.atlassian.cmathtutor.domain.persistence.translate.changelog;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,10 +37,12 @@ public class AddForeignKeyConstraint {
     private boolean initiallyDeferred = false;
 
     @XmlAttribute(required = true)
+    @XmlJavaTypeAdapter(FkCascadeActionType.Adapter.class)
     private FkCascadeActionType onDelete;
 
     @Builder.Default
     @XmlAttribute(required = true)
+    @XmlJavaTypeAdapter(FkCascadeActionType.Adapter.class)
     private FkCascadeActionType onUpdate = FkCascadeActionType.RESTRICT;
 
     @XmlAttribute(required = true)

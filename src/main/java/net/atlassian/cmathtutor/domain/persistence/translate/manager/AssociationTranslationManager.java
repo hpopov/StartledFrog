@@ -35,4 +35,6 @@ public interface AssociationTranslationManager {
     boolean isTableJoin();
 
     boolean isSecondaryReferenceFieldToBeCreated();
+    
+    boolean isAssociationContainable();
 }

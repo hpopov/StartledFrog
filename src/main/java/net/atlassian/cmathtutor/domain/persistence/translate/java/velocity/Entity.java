@@ -12,7 +12,7 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.PackagedType;
 @Getter
 public class Entity extends AbstractDeclaration implements PackagedType {
 
-    private List<Variable> fields = new LinkedList<>();
+    protected List<Variable> fields = new LinkedList<>();
     private String tableName;
 
     public Entity(String name, String packageName, String tableName) {
