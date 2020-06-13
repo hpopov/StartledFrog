@@ -8,11 +8,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.AbstractDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceUnitDescriptor;
 import net.atlassian.cmathtutor.util.Lazy;
 import net.atlassian.cmathtutor.view.diagram.PersistenceUnitNodeView;
 
+@Slf4j
 @NoArgsConstructor
 public class PersistenceUnitNode extends XNode {
 
@@ -40,6 +42,15 @@ public class PersistenceUnitNode extends XNode {
     public void populate(ModelElementImpl modelElement) {
 	super.populate(modelElement);
 	modelElement.addProperty(persistenceUnitDescriptorId, String.class);
+    }
+
+    @Override
+    public String getName() {
+	if (persistenceUnitDescriptor == null) {
+	    log.warn("Returning id as persistence unit node name...");
+	    return getPersistenceUnitDescriptorId();
+	}
+	return persistenceUnitDescriptor.getName();
     }
 
     public PersistenceUnitDescriptor getPersistenceUnitDescriptor() {

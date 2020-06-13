@@ -53,6 +53,7 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
 	elementAttributeProperty().addListener(attributeChangeListener);
     }
 
+    @Override
     public ObjectProperty<AggregationKind> aggregationKindProperty() {
 	return this.aggregationKind;
     }

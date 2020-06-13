@@ -34,10 +34,12 @@ import javafx.fxml.Initializable;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.atlassian.cmathtutor.domain.persistence.descriptor.AssociationDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.IllegalOperationException;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceUnitDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.model.PersistenceModel;
+import net.atlassian.cmathtutor.fxdiagram.AssociationConnection;
 import net.atlassian.cmathtutor.fxdiagram.PersistenceUnitNode;
 import net.atlassian.cmathtutor.fxdiagram.StartledFrogDiagram;
 import net.atlassian.cmathtutor.service.PersistenceDomainService;
@@ -79,6 +81,13 @@ public class PersistenceDiagramPresenter implements Initializable {
 		.filter(pud -> !assignedPersistenceUnitDescriptorIds.contains(pud.getId()))
 		.forEach(pud -> createNewPersistenceUnitNode(diagram, pud));
 
+	Set<String> assignedAssociationDescriptorIds = diagram.getAssociationConnections().stream()
+		.map(AssociationConnection::getAssociationDescriptorId)
+		.collect(Collectors.toSet());
+	wrappedModel.getAssociationDescriptors().stream()
+		.filter(ad -> !assignedAssociationDescriptorIds.contains(ad.getId()))
+		.forEach(ad -> createNewAssociationConnection(diagram, ad));
+
 //	attemptToUseMapping(diagram);
 //	OpenableDiagramNode persistenceView = new OpenableDiagramNode("Persistence View");
 //	persistenceView.setLayoutX(300);
@@ -114,12 +123,40 @@ public class PersistenceDiagramPresenter implements Initializable {
 //			new CloseAction,
 //			new UndoRedoPlayerAction
 	));
+
+//	final Task<Void> _function = new Task<Void>() {
+//	    @Override
+//	    protected Void call() throws Exception {
+//		Object _xblockexpression = null;
+//		{
+//		    new Layouter();
+//		    _xblockexpression = null;
+//		}
+//		return ((Void) _xblockexpression);
+//	    }
+//	};
+//	final Task<Void> task = _function;
+//	task.run();
 	root.sceneProperty().addListener(new AutoDisposableListener<>(Objects::nonNull, () -> root.activate()));
     }
 
     private void createNewPersistenceUnitNode(StartledFrogDiagram diagram, PersistenceUnitDescriptor descriptor) {
 	XNode persistenceunitNode = new PersistenceUnitNode(descriptor);
 	diagram.getNodes().add(persistenceunitNode);
+    }
+
+    private void createNewAssociationConnection(StartledFrogDiagram diagram,
+	    AssociationDescriptor associationDescriptor) {
+	XNode sourceNode = diagram.getPersistenceUnitNodeById(
+		associationDescriptor.getContainerAttribute().getParentClassifier().getId());
+	XNode targetNode = diagram
+		.getPersistenceUnitNodeById(associationDescriptor.getElementAttribute().getParentClassifier().getId());
+	if (sourceNode == null || targetNode == null) {
+	    throw new IllegalStateException(
+		    "Both source and target nodes must exist at diagram before association creation");
+	}
+	AssociationConnection connection = new AssociationConnection(sourceNode, targetNode, associationDescriptor);
+	diagram.getConnections().add(connection);
     }
 
     private StartledFrogDiagram loadDiagramFromFile(File file, PersistenceDescriptor persistenceDescriptor) {
@@ -134,7 +171,7 @@ public class PersistenceDiagramPresenter implements Initializable {
 	    throw new IllegalStateException("Loaded diagram must be startledFrog diagram!");
 	}
 	StartledFrogDiagram frogDiagram = (StartledFrogDiagram) diagram;
-	log.info("Loaded startled frog diagram {}", diagram);
+//	log.info("Loaded startled frog diagram {}", diagram);
 	String persistenceDescriptorId = frogDiagram.getPersistenceDescriptorId();
 	if (false == persistenceDescriptor.getId().equals(persistenceDescriptorId)) {
 	    throw new IllegalStateException("loaded descriptor id and model id must be equal!");

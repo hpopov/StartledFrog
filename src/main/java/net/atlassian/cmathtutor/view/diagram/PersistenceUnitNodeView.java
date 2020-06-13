@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import net.atlassian.cmathtutor.domain.persistence.OwnerType;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveAttribute;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceUnitDescriptor;
@@ -119,7 +120,7 @@ public class PersistenceUnitNodeView extends RectangleBorderPane {
 	ObservableSet<? extends ReferentialAttribute> referentialAttributes = persistenceUnitDescriptor
 		.getUnmodifiableReferentialAttributes();
 	for (ReferentialAttribute attribute : referentialAttributes) {
-	    addReferentialAttributeToEntries(attribute);
+	    addReferentialAttributeToEntriesIfNavigableOrMain(attribute);
 	}
 	referentialAttributes.addListener(new SetChangeListener<ReferentialAttribute>() {
 
@@ -134,15 +135,17 @@ public class PersistenceUnitNodeView extends RectangleBorderPane {
 		    }
 		}
 		if (change.wasAdded()) {
-		    addReferentialAttributeToEntries(change.getElementAdded());
+		    addReferentialAttributeToEntriesIfNavigableOrMain(change.getElementAdded());
 		}
 	    }
 	});
     }
 
-    private void addReferentialAttributeToEntries(ReferentialAttribute attribute) {
-	ReferentialAttributeEntryView entryView = new ReferentialAttributeEntryView(attribute);
-	referentialAttributeEntriesVBox.getChildren().add(entryView);
-	idToReferentialAttributeEntries.put(attribute.getId(), entryView);
+    private void addReferentialAttributeToEntriesIfNavigableOrMain(ReferentialAttribute attribute) {
+	if (attribute.isNavigable() || attribute.getOwnerType() == OwnerType.CLASSIFIER) {
+	    ReferentialAttributeEntryView entryView = new ReferentialAttributeEntryView(attribute);
+	    referentialAttributeEntriesVBox.getChildren().add(entryView);
+	    idToReferentialAttributeEntries.put(attribute.getId(), entryView);
+	}
     }
 }

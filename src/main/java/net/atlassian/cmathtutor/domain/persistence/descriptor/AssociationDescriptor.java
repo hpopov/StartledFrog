@@ -53,6 +53,7 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
 	}
     }
 
+    @Override
     public ReadOnlyObjectProperty<AggregationKind> aggregationKindProperty() {
 	return association.aggregationKindProperty();
     }

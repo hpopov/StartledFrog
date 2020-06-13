@@ -58,6 +58,7 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
 	this.association.set(association);
     }
 
+    @Override
     public ObjectProperty<OwnerType> ownerTypeProperty() {
 	return this.ownerType;
     }
@@ -72,6 +73,7 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
 	this.ownerTypeProperty().set(ownerType);
     }
 
+    @Override
     public BooleanProperty navigableProperty() {
 	return this.navigable;
     }
@@ -99,5 +101,4 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
     public void setArity(final AttributeArity arity) {
 	this.arityProperty().set(arity);
     }
-
 }

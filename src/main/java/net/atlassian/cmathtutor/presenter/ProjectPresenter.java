@@ -44,10 +44,10 @@ import net.atlassian.cmathtutor.view.PersistenceDiagramView;
 public class ProjectPresenter implements Initializable {
 
     private static final int SPLIT_PANE_BORDER_WIDTH = 5;
-    private static final double SPLIT_PANE_FIRST_WIDTH_COEFFICIENT = 0.1;
+    private static final double SPLIT_PANE_FIRST_WIDTH_COEFFICIENT = 0.17;
     private static final double MENU_BAR_BORDERS = 2;
     private static final double SCREEN_Y_CORRECTION = -4;
-    private static final double SCREEN_X_CORRECTION = +7;
+    private static final double SCREEN_X_CORRECTION = -6;
 
     @FXML
     StackPane viewPane;
