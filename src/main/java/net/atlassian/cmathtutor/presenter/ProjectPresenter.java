@@ -31,6 +31,7 @@ import net.atlassian.cmathtutor.domain.configuration.model.GlobalConfigurationMo
 import net.atlassian.cmathtutor.domain.persistence.descriptor.IllegalOperationException;
 import net.atlassian.cmathtutor.domain.persistence.model.PersistenceModel;
 import net.atlassian.cmathtutor.domain.persistence.translate.PersistenceModelTranslator;
+import net.atlassian.cmathtutor.fxdiagram.CreateAssociationConnectionTool;
 import net.atlassian.cmathtutor.fxdiagram.CreatePersistenceUnitTool;
 import net.atlassian.cmathtutor.helper.ChangeListenerRegistryHelper;
 import net.atlassian.cmathtutor.model.Project;
@@ -82,7 +83,7 @@ public class ProjectPresenter implements Initializable {
     private Stage stage;
     private XRoot xRoot;
     private CreatePersistenceUnitTool createPersistenceUnitTool;
-//    private XDiagramTool createAssociationTool;
+    private CreateAssociationConnectionTool createAssociationTool;
 
     @Override
     public void initialize(URL var1, ResourceBundle var2) {
@@ -138,6 +139,7 @@ public class ProjectPresenter implements Initializable {
 	configurationModel = configurationDomainService.loadConfigurationModel();
 //	StartledFrogDiagram diagram = (StartledFrogDiagram) xRoot.getDiagram();
 	createPersistenceUnitTool = new CreatePersistenceUnitTool(xRoot);
+	createAssociationTool = new CreateAssociationConnectionTool(xRoot);
     }
 
     @FXML
@@ -233,7 +235,7 @@ public class ProjectPresenter implements Initializable {
 
     @FXML
     public void selectNewAssociationTool() {
-	xRoot.restoreDefaultTool();
+	xRoot.setCurrentTool(createAssociationTool);
     }
 
 }

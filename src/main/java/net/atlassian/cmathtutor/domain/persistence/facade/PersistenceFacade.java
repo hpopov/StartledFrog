@@ -7,7 +7,9 @@ import java.io.FileReader;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.domain.persistence.AggregationKind;
 import net.atlassian.cmathtutor.domain.persistence.AttributeArity;
@@ -26,9 +28,11 @@ import net.atlassian.cmathtutor.domain.persistence.model.RepositoryOperationMode
 import net.atlassian.cmathtutor.util.UidUtil;
 
 @Slf4j
+@NoArgsConstructor
 public class PersistenceFacade {
 
     private static final int REFERENTIAL_ATTRIBUTE_DEFAULT_NAME_TRESHOLD = 3;
+    @Setter
     private PersistenceDescriptor persistenceDescriptor;
 
     private PersistenceFacade(PersistenceDescriptor persistenceDescriptor) {

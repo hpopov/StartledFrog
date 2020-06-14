@@ -37,6 +37,11 @@ public class StartledFrogAddRemoveCommand extends AddRemoveCommand {
 	return new StartledFrogAddRemoveCommand(false, diagram, shapes);
     }
 
+    public static AnimationCommand newStartledFrogAddCommand(StartledFrogDiagram diagram,
+	    AssociationConnection associationConnection) {
+	return newStartledFrogAddCommand(diagram, new XShape[] { associationConnection });
+    }
+
     protected StartledFrogAddRemoveCommand(boolean isAdd, XDiagram diagram, XShape[] shapes) {
 	super(isAdd, diagram, shapes);
 	log.debug("Creating new instance, isAdd={}", isAdd);
@@ -83,5 +88,4 @@ public class StartledFrogAddRemoveCommand extends AddRemoveCommand {
 	associationDescriptors.forEach(AssociationDescriptor::detachFromParent);
 	return super.remove(context);
     }
-
 }

@@ -124,12 +124,12 @@ public class StartledFrogDeleteAction extends DeleteAction {
 	    if (_not) {
 		it.operator_add(connectionMorphCommands);
 	    }
-
 	};
 	ParallelAnimationCommand _doubleArrow = (ParallelAnimationCommand) ObjectExtensions
 		.operator_doubleArrow(_parallelAnimationCommand, _function_7);
 	_commandStack.execute(_doubleArrow);
 
+	
 	ImmutableList<XShape> removedShapes = diagram2shape.get(root.getRootDiagram());
 	StreamSupport.stream(Iterables.filter(removedShapes, AssociationConnection.class).spliterator(), false)
 		.map(AssociationConnection::getAssociationDescriptor)

@@ -8,6 +8,7 @@ import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -18,47 +19,41 @@ import net.atlassian.cmathtutor.presenter.NewPersistenceUnitPresenter;
 import net.atlassian.cmathtutor.view.NewPersistenceUnitView;
 
 @Slf4j
-public class CreatePersistenceUnitTool implements XDiagramTool {
+public class CreatePersistenceUnitTool extends AbstractCreateShapeTool implements XDiagramTool {
 
-    private XRoot xRoot;
-    private EventHandler<MouseEvent> eventHandler;
-    private StartledFrogDiagram diagram;
+    private EventHandler<MouseEvent> eventHandler = this::handleMouseEvent;
 
     private ImageCursor createPersistenceUnitCursor = new ImageCursor(new Image("/images/entity.png"));
 
     public CreatePersistenceUnitTool(XRoot xRoot) {
-	this.xRoot = xRoot;
-	diagram = (StartledFrogDiagram) xRoot.getDiagram();
+	super(xRoot);
     }
 
     @Override
     public boolean activate() {
 	log.debug("Activating...");
-	eventHandler = this::handleMouseEvent;
+	super.activate();
 	xRoot.getScene().addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	xRoot.getScene().setCursor(createPersistenceUnitCursor);
 	return true;
     }
 
     private void handleMouseEvent(MouseEvent event) {
-	log.debug("Mouse clicked at {},{}", event.getX(), event.getY());
-	PersistenceUnitDescriptor persistenceUnitDescriptor = createPersistenceUnitDescriptor();
-//	try {
-//	    persistenceUnitDescriptor = diagram.getPersistenceDescriptor().addNewPersistenceUnit("New Unit!");
-//	} catch (IllegalOperationException e) {
-//	    log.error("Unable to create new unit: {}", e.getMessage());
-//	    return;
-//	}
-	if (persistenceUnitDescriptor == null) {
-	    log.info("Persistence unit descriptor has not been created. Nothing to do");
-	    return;
+	if (MouseButton.PRIMARY == event.getButton()) {
+	    log.debug("Mouse clicked at {},{}", event.getX(), event.getY());
+	    PersistenceUnitDescriptor persistenceUnitDescriptor = createPersistenceUnitDescriptor();
+	    if (persistenceUnitDescriptor == null) {
+		log.info("Persistence unit descriptor has not been created. Nothing to do");
+		return;
+	    }
+	    PersistenceUnitNode persistenceUnitNode = new PersistenceUnitNode(persistenceUnitDescriptor);
+	    persistenceUnitNode.setLayoutX(event.getX());
+	    persistenceUnitNode.setLayoutY(event.getY());
+	    AnimationCommand command = StartledFrogAddRemoveCommand.newStartledFrogAddCommand(diagram,
+		    persistenceUnitNode);
+	    xRoot.getCommandStack().execute(command);
+	    xRoot.restoreDefaultTool();
 	}
-	PersistenceUnitNode persistenceUnitNode = new PersistenceUnitNode(persistenceUnitDescriptor);
-	persistenceUnitNode.setLayoutX(event.getX());
-	persistenceUnitNode.setLayoutY(event.getY());
-	AnimationCommand command = StartledFrogAddRemoveCommand.newStartledFrogAddCommand(diagram, persistenceUnitNode);
-	xRoot.getCommandStack().execute(command);
-	xRoot.restoreDefaultTool();
     }
 
     private PersistenceUnitDescriptor createPersistenceUnitDescriptor() {
@@ -77,6 +72,7 @@ public class CreatePersistenceUnitTool implements XDiagramTool {
     @Override
     public boolean deactivate() {
 	log.debug("Deactivating...");
+	super.deactivate();
 	xRoot.getScene().removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	xRoot.getScene().setCursor(Cursor.DEFAULT);
 	return true;
