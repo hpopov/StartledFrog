@@ -1,10 +1,15 @@
 package net.atlassian.cmathtutor.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.file.Path;
 
@@ -15,10 +20,17 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.velocity.app.VelocityEngine;
 
+import de.fxdiagram.core.XDiagram;
+import de.fxdiagram.core.XRoot;
+import de.fxdiagram.core.model.DomainObjectProvider;
+import de.fxdiagram.core.model.ModelLoad;
+import de.fxdiagram.core.model.ModelSave;
+import javafx.collections.ObservableList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.model.PersistenceModel;
 import net.atlassian.cmathtutor.domain.persistence.translate.changelog.DatabaseChangeLog;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.Named;
@@ -29,6 +41,7 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Conta
 import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Entity;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.JavaClassComposer;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Repository;
+import net.atlassian.cmathtutor.fxdiagram.StartledFrogDiagram;
 import net.atlassian.cmathtutor.helper.VelocityEngineConfig;
 import net.atlassian.cmathtutor.model.Project;
 import net.atlassian.cmathtutor.util.FileUtil;
@@ -197,7 +210,76 @@ public class PersistenceDomainService {
 	private String name;
     }
 
-    public File getPersistenceDiagramFile() {
+    public StartledFrogDiagram getProjectDiagram(XRoot root, PersistenceDescriptor persistenceDescriptor) {
+	File file = getPersistenceDiagramFile();
+	if (file.exists()) {
+	    return loadDiagramFromFile(root, persistenceDescriptor, file);
+	} else {
+	    log.warn("FXDiagram file does not exist. Creating entirely new diagram..");
+	    return createNewEmptyDiagram(root, persistenceDescriptor, file);
+	}
+    }
+
+    private File getPersistenceDiagramFile() {
 	return projectService.getCurrentStartledFrogProjectFolderPath().resolve(PERSISTENCE_DIAGRAM_FILE_NAME).toFile();
+    }
+
+    private StartledFrogDiagram loadDiagramFromFile(XRoot root, PersistenceDescriptor persistenceDescriptor,
+	    File file) {
+	Object node = loadDiagram(file);
+	if (false == node instanceof XRoot) {
+	    throw new IllegalStateException("Loaded diagram node must be successor of XRoot!");
+	}
+	ObservableList<DomainObjectProvider> domainObjectProviders = ((XRoot) node).getDomainObjectProviders();
+	root.replaceDomainObjectProviders(domainObjectProviders);
+	XDiagram diagram = ((XRoot) node).getDiagram();
+	if (false == diagram instanceof StartledFrogDiagram) {
+	    throw new IllegalStateException("Loaded diagram must be startledFrog diagram!");
+	}
+	StartledFrogDiagram frogDiagram = (StartledFrogDiagram) diagram;
+	String persistenceDescriptorId = frogDiagram.getPersistenceDescriptorId();
+	if (false == persistenceDescriptor.getId().equals(persistenceDescriptorId)) {
+	    throw new IllegalStateException("loaded descriptor id and model id must be equal!");
+	}
+	frogDiagram.setPersistenceDescriptor(persistenceDescriptor);
+	root.setRootDiagram(frogDiagram);
+	String path = file.getPath();
+	root.setFileName(path);
+	return frogDiagram;
+    }
+
+    private Object loadDiagram(@NonNull File file) {
+	ModelLoad modelLoad = new ModelLoad();
+	FileInputStream fileInputStream;
+	try {
+	    fileInputStream = new FileInputStream(file);
+	    InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+	    return modelLoad.load(inputStreamReader);
+	} catch (FileNotFoundException | UnsupportedEncodingException e) {
+	    throw new IllegalStateException(e);
+	}
+    }
+
+    private StartledFrogDiagram createNewEmptyDiagram(XRoot root, PersistenceDescriptor persistenceDescriptor,
+	    File file) {
+	StartledFrogDiagram diagram;
+	diagram = new StartledFrogDiagram();
+	diagram.setPersistenceDescriptor(persistenceDescriptor);
+	root.setRootDiagram(diagram);
+
+	OutputStreamWriter outputStreamWriter;
+	try {
+	    FileOutputStream _fileOutputStream = new FileOutputStream(file);
+	    outputStreamWriter = new OutputStreamWriter(_fileOutputStream, "UTF-8");
+	} catch (UnsupportedEncodingException | FileNotFoundException e) {
+	    log.error("Unable to save new diagrm file: ", e);
+	    return diagram;
+	}
+	ModelSave modelSave = new ModelSave();
+	modelSave.save(root, outputStreamWriter);
+	root.setFileName(file.getPath());
+	root.setNeedsSave(false);
+
+	return diagram;
     }
 }

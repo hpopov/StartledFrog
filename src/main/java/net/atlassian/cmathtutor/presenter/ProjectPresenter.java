@@ -8,8 +8,6 @@ import java.util.ResourceBundle;
 import javax.inject.Inject;
 
 import de.fxdiagram.core.XRoot;
-import de.fxdiagram.core.command.AddRemoveCommand;
-import de.fxdiagram.lib.simple.SimpleNode;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -30,8 +28,10 @@ import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.VplApplication;
 import net.atlassian.cmathtutor.domain.configuration.model.GlobalConfigurationModel;
+import net.atlassian.cmathtutor.domain.persistence.descriptor.IllegalOperationException;
 import net.atlassian.cmathtutor.domain.persistence.model.PersistenceModel;
 import net.atlassian.cmathtutor.domain.persistence.translate.PersistenceModelTranslator;
+import net.atlassian.cmathtutor.fxdiagram.CreatePersistenceUnitTool;
 import net.atlassian.cmathtutor.helper.ChangeListenerRegistryHelper;
 import net.atlassian.cmathtutor.model.Project;
 import net.atlassian.cmathtutor.service.ConfigurationDomainService;
@@ -81,6 +81,8 @@ public class ProjectPresenter implements Initializable {
     private ChangeListenerRegistryHelper changeListenerRegistryHelper = new ChangeListenerRegistryHelper();
     private Stage stage;
     private XRoot xRoot;
+    private CreatePersistenceUnitTool createPersistenceUnitTool;
+//    private XDiagramTool createAssociationTool;
 
     @Override
     public void initialize(URL var1, ResourceBundle var2) {
@@ -130,10 +132,12 @@ public class ProjectPresenter implements Initializable {
 	}));
 	stage.initOwner(window);
 
-	persistenceModel = persistenceDomainService.loadPersistenceModel();// TODO: consider extracting these lines to
-									   // fx service
+	PersistenceDiagramPresenter presenter = view.getPresenter();
+	persistenceModel = presenter.getPersistenceModel();// TODO: consider extracting these lines to
+							   // fx service
 	configurationModel = configurationDomainService.loadConfigurationModel();
-
+//	StartledFrogDiagram diagram = (StartledFrogDiagram) xRoot.getDiagram();
+	createPersistenceUnitTool = new CreatePersistenceUnitTool(xRoot);
     }
 
     @FXML
@@ -158,15 +162,6 @@ public class ProjectPresenter implements Initializable {
 	launch.setVisible(true);
 	configuration.setVisible(false);
 	persistenceToolbarTilePane.setVisible(false);
-    }
-
-    @FXML
-    public void addNewDiagram() {
-	SimpleNode newNode = new SimpleNode("New node!");
-	newNode.setLayoutX(300);
-	newNode.setLayoutY(300);
-	AddRemoveCommand addNewNodeCommand = AddRemoveCommand.newAddCommand(xRoot.getDiagram(), newNode);
-	xRoot.getCommandStack().execute(addNewNodeCommand);
     }
 
     @FXML
@@ -227,4 +222,18 @@ public class ProjectPresenter implements Initializable {
     public void onCloseMenuValidation(Event event) {
 	log.debug("onCloseMenu validation triggered");
     }
+
+    @FXML
+    public void selectNewPersistenceUnitTool() throws IllegalOperationException {
+//	CarusselChoice graphics = new CarusselChoice();
+//	NodeChooser tool = new NodeChooser(diagram, new Point2D(200, 200), graphics, false);
+//	tool.addChoice(new PersistenceUnitNode(diagram.getPersistenceDescriptor().addNewPersistenceUnit("New Unit")));
+	xRoot.setCurrentTool(createPersistenceUnitTool);
+    }
+
+    @FXML
+    public void selectNewAssociationTool() {
+	xRoot.restoreDefaultTool();
+    }
+
 }

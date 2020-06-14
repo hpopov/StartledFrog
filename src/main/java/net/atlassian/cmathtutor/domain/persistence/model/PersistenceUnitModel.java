@@ -20,7 +20,6 @@ import javafx.collections.SetChangeListener.Change;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
-import net.atlassian.cmathtutor.domain.persistence.PrimitiveAttribute;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
 import net.atlassian.cmathtutor.domain.persistence.RepositoryOperation;
 
@@ -112,7 +111,7 @@ public class PersistenceUnitModel extends AbstractIdentifyableModel implements P
     }
 
     @Override
-    public ObservableSet<? extends PrimitiveAttribute> getUnmodifiablePrimitiveAttributes() {
+    public ObservableSet<PrimitiveAttributeModel> getUnmodifiablePrimitiveAttributes() {
 	return unmodifiablePrimitiveAttributes;
     }
 

@@ -92,7 +92,7 @@
 				<TilePane fx:id="persistenceToolbarTilePane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0"
 					prefWidth="180.0" tileAlignment="CENTER_LEFT">
 					<children>
-						<Button contentDisplay="TOP" onAction="#addNewDiagram" prefHeight="220.0" prefWidth="180.0"
+						<Button contentDisplay="TOP" onAction="#selectNewPersistenceUnitTool" prefHeight="220.0" prefWidth="180.0"
 							text="New Persistence Unit" textAlignment="CENTER" wrapText="true">
 							<graphic>
 								<ImageView fitHeight="115.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
@@ -105,8 +105,8 @@
 								<Font name="System Bold Italic" size="20.0" />
 							</font>
 						</Button>
-						<Button contentDisplay="TOP" onAction="#addNewDiagram" prefHeight="221.0" prefWidth="180.0" text="New Association"
-							textAlignment="CENTER" wrapText="true">
+						<Button contentDisplay="TOP" onAction="#selectNewAssociationTool" prefHeight="221.0" prefWidth="180.0"
+							text="New Association" textAlignment="CENTER" wrapText="true">
 							<graphic>
 								<ImageView fitHeight="100.0" fitWidth="126.0" pickOnBounds="true" preserveRatio="true">
 									<image>

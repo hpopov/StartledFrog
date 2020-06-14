@@ -15,6 +15,7 @@ import de.fxdiagram.core.model.ModelElementImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener.Change;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.AbstractDescriptor;
@@ -25,6 +26,7 @@ import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceDescrip
 public class StartledFrogDiagram extends XDiagram {
 
     private StringProperty persistenceDescriptorId = new SimpleStringProperty(this, "id");
+    @Getter
     private PersistenceDescriptor persistenceDescriptor;
 
     private Map<String, PersistenceUnitNode> idToPersistenceUnitNodes = new HashMap<>();

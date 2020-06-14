@@ -12,6 +12,7 @@ import net.atlassian.cmathtutor.view.StartView;
 public class VplApplication extends Application {
 
     public static final String MAIN_TITLE = "Startled Frog";
+    private StartView view;
 
     public static void main(String[] args) throws Exception {
 	launch(args);
@@ -19,7 +20,7 @@ public class VplApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-	StartView view = new StartView();
+	view = new StartView();
 	Scene scene = new Scene(view.getView());
 	stage.setScene(scene);
 	stage.setTitle(MAIN_TITLE + " -- " + view.getTitle());

@@ -103,14 +103,14 @@ public class PersistenceFacade {
 		    builder.element.getName());
 	} else {
 	    executeInExceptionWrapper(
-		    () -> builder.container.initializeNewReferentialAttribute(builder.containerAttribute));
+		    () -> builder.container.addReferentialAttribute(builder.containerAttribute));
 	}
 	if (builder.elementAttribute.getName() == null) {
 	    initializeReferentialAttributeWithDefaultName(builder.element, builder.elementAttribute,
 		    builder.container.getName());
 	} else {
 	    executeInExceptionWrapper(
-		    () -> builder.element.initializeNewReferentialAttribute(builder.elementAttribute));
+		    () -> builder.element.addReferentialAttribute(builder.elementAttribute));
 	}
 
 	return executeInExceptionWrapper(persistenceDescriptor::addNewAssociation, builder.association);
@@ -124,7 +124,7 @@ public class PersistenceFacade {
 	boolean isAttributeInitialized = false;
 	for (int i = 1; i <= REFERENTIAL_ATTRIBUTE_DEFAULT_NAME_TRESHOLD && !isAttributeInitialized; i++) {
 	    try {
-		persistenceUnitDescriptor.initializeNewReferentialAttribute(referentialAttribute);
+		persistenceUnitDescriptor.addReferentialAttribute(referentialAttribute);
 		isAttributeInitialized = true;
 	    } catch (IllegalOperationException e) {
 		log.warn("Unable to initialize referential attribute : {}", e.getMessage());

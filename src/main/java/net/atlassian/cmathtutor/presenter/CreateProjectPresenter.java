@@ -12,6 +12,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Service;
+import javafx.concurrent.Worker.State;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -110,6 +111,14 @@ public class CreateProjectPresenter implements Initializable {
 			}
 		    }
 		}));
+
+	projectDescriptionTextField.focusedProperty()
+		.addListener(listenerRegistryHelper.registerChangeListener((observable, oldValue, newValue) -> {
+		    if (Boolean.FALSE.equals(newValue)) {
+			String replaceAll = projectDescriptionTextField.getText().replaceAll("[&]", "and");
+			projectDescriptionTextField.setText(replaceAll);
+		    }
+		}));
     }
 
     private String convertToCamelCase(String applicationName) {
@@ -135,7 +144,11 @@ public class CreateProjectPresenter implements Initializable {
 	    log.error("Create project service failed", event.getSource().getException());
 	});
 	progressHBox.setVisible(true);
-	createProjectService.start();
+	if (State.READY == createProjectService.getState()) {
+	    createProjectService.start();
+	} else {
+	    createProjectService.restart();
+	}
     }
 
     public final ReadOnlyBooleanProperty readyToStartModellingPropertyProperty() {

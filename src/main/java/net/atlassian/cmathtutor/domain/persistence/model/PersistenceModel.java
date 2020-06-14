@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
@@ -15,6 +16,7 @@ import net.atlassian.cmathtutor.domain.persistence.Persistence;
 import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
 
 @XmlRootElement
+@XmlType(propOrder = { "persistenceUnits", "associations" })
 @XmlAccessorType(XmlAccessType.NONE)
 @ToString(callSuper = true)
 public class PersistenceModel extends AbstractIdentifyableModel implements Persistence {

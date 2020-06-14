@@ -2,8 +2,11 @@ package net.atlassian.cmathtutor.domain.persistence.descriptor;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.domain.persistence.AggregationKind;
 import net.atlassian.cmathtutor.domain.persistence.Association;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
@@ -11,17 +14,15 @@ import net.atlassian.cmathtutor.domain.persistence.descriptor.validator.Associat
 import net.atlassian.cmathtutor.domain.persistence.model.AssociationModel;
 import net.atlassian.cmathtutor.domain.persistence.model.ReferentialAttributeModel;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AssociationDescriptor extends AbstractDescriptor implements Association {
 
     private AssociationModel association;
     private PersistenceDescriptor parentDescriptor;
 
-    private AssociationDescriptor(AssociationModel association, PersistenceDescriptor parentDescriptor) {
-	super(association.getId());
-	this.association = association;
-	this.parentDescriptor = parentDescriptor;
-    }
+    private boolean detached = false;
+    private Memento memento;
 
     public static AssociationDescriptor wrap(@NonNull AssociationModel association,
 	    @NonNull PersistenceDescriptor parentDescriptor) throws IllegalOperationException {
@@ -51,6 +52,46 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
 	    throw new IllegalArgumentException(
 		    "Both container and element attributes must have non-null parent classifier");
 	}
+    }
+
+    private AssociationDescriptor(AssociationModel association, PersistenceDescriptor parentDescriptor) {
+	super(association.getId());
+	this.association = association;
+	this.parentDescriptor = parentDescriptor;
+    }
+
+    public void detachFromParent() {
+	if (true == detached) {
+	    log.warn("detachFromParent() was called, but descriptor {} is ALREADY detached", getId());
+	    return;
+	}
+	detached = true;
+	memento = Memento.of(this);
+	parentDescriptor.detachAssociation(this);
+	ReferentialAttributeModel containerAttribute = association.getContainerAttribute();
+	containerAttribute.getParentClassifier().getReferentialAttributes().remove(containerAttribute);
+	ReferentialAttributeModel elementAttribute = association.getElementAttribute();
+	elementAttribute.getParentClassifier().getReferentialAttributes().remove(elementAttribute);
+    }
+
+    public void attachToParent() throws IllegalOperationException {
+	if (false == detached) {
+	    log.warn("attachToParent() was called, but descriptor {} is NOT detached", getId());
+	    return;
+	}
+	PersistenceUnitDescriptor containerPersistenceUnitDescriptor = parentDescriptor
+		.getPersistenceUnitDescriptorById(memento.getContainerPersistenceUnitId());
+	PersistenceUnitDescriptor elementPersistenceUnitDescriptor = parentDescriptor
+		.getPersistenceUnitDescriptorById(memento.getElementPersistenceUnitId());
+	containerPersistenceUnitDescriptor.addReferentialAttribute(association.getContainerAttribute());
+	elementPersistenceUnitDescriptor.addReferentialAttribute(association.getElementAttribute());
+	parentDescriptor.attachAssociation(this);
+	memento = null;
+	detached = false;
+    }
+
+    public AssociationModel getWrappedAssociation() {
+	return association;
     }
 
     @Override
@@ -84,6 +125,18 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
     @Override
     public PersistenceDescriptor getPersistence() {
 	return parentDescriptor;
+    }
+
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    private static class Memento {
+	private String containerPersistenceUnitId;
+	private String elementPersistenceUnitId;
+
+	public static Memento of(AssociationDescriptor descriptor) {
+	    return new Memento(descriptor.getContainerAttribute().getParentClassifier().getId(),
+		    descriptor.getElementAttribute().getParentClassifier().getId());
+	}
     }
 
 }
