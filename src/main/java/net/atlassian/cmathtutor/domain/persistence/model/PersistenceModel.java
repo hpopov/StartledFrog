@@ -31,14 +31,15 @@ public class PersistenceModel extends AbstractIdentifyableModel implements Persi
 
     public PersistenceModel() {
 	super();
-	initBindings();
+//	initBindings();
     }
 
     public PersistenceModel(String id) {
 	super(id);
-	initBindings();
+//	initBindings();
     }
 
+    @SuppressWarnings("unused")
     private void initBindings() {
 	persistenceUnits.addListener((Change<? extends PersistenceUnitModel> change) -> {
 	    if (change.wasRemoved()) {

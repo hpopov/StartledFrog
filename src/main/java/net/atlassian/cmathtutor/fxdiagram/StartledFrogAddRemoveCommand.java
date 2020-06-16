@@ -1,7 +1,8 @@
 package net.atlassian.cmathtutor.fxdiagram;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.fxdiagram.core.XDiagram;
 import de.fxdiagram.core.XShape;
@@ -19,8 +20,8 @@ public class StartledFrogAddRemoveCommand extends AddRemoveCommand {
 
     private static final String UNABLE_TO_ATTACH__ASSOCIATION_MESAGE_FORMAT = "Unable to execute attach command for association %s->%s: %s";
     private static final String UNABLE_TO_ATTACH_UNIT_MESSAGE_FORMAT = "Unable to execute attach command for persistence unit %s: %s";
-    private Set<PersistenceUnitDescriptor> persistenceUnitDescriptors = new HashSet<>();
-    private Set<AssociationDescriptor> associationDescriptors = new HashSet<>();
+    private List<PersistenceUnitDescriptor> persistenceUnitDescriptors;
+    private List<AssociationDescriptor> associationDescriptors;
 
     public static StartledFrogAddRemoveCommand newStartledFrogAddCommand(StartledFrogDiagram diagram,
 	    XShape[] shapes) {
@@ -45,17 +46,18 @@ public class StartledFrogAddRemoveCommand extends AddRemoveCommand {
     protected StartledFrogAddRemoveCommand(boolean isAdd, XDiagram diagram, XShape[] shapes) {
 	super(isAdd, diagram, shapes);
 	log.debug("Creating new instance, isAdd={}", isAdd);
-	for (XShape shape : shapes) {
-	    if (shape instanceof PersistenceUnitNode) {
-		log.debug("Adding persistence unit node {}", shape);
-		PersistenceUnitNode puNode = (PersistenceUnitNode) shape;
-		persistenceUnitDescriptors.add(puNode.getPersistenceUnitDescriptor());
-	    } else if (shape instanceof AssociationConnection) {
-		log.debug("Adding association connection {}", shape);
-		AssociationConnection aConnection = (AssociationConnection) shape;
-		associationDescriptors.add(aConnection.getAssociationDescriptor());
-	    }
-	}
+	persistenceUnitDescriptors = Stream.of(shapes)
+		.filter(PersistenceUnitNode.class::isInstance)
+		.map(PersistenceUnitNode.class::cast)
+		.map(PersistenceUnitNode::getPersistenceUnitDescriptor)
+		.distinct()
+		.collect(Collectors.toList());
+	associationDescriptors = Stream.of(shapes)
+		.filter(AssociationConnection.class::isInstance)
+		.map(AssociationConnection.class::cast)
+		.map(AssociationConnection::getAssociationDescriptor)
+		.distinct()
+		.collect(Collectors.toList());
     }
 
     @Override
@@ -84,8 +86,8 @@ public class StartledFrogAddRemoveCommand extends AddRemoveCommand {
 
     @Override
     protected ParallelTransition remove(CommandContext context) {
-	persistenceUnitDescriptors.forEach(PersistenceUnitDescriptor::detachFromParent);
 	associationDescriptors.forEach(AssociationDescriptor::detachFromParent);
+	persistenceUnitDescriptors.forEach(PersistenceUnitDescriptor::detachFromParent);
 	return super.remove(context);
     }
 }

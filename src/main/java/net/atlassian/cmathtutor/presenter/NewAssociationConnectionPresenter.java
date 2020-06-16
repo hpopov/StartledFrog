@@ -32,6 +32,7 @@ import net.atlassian.cmathtutor.domain.persistence.model.AssociationModel;
 import net.atlassian.cmathtutor.domain.persistence.model.ReferentialAttributeModel;
 import net.atlassian.cmathtutor.fxdiagram.PersistenceUnitNode;
 import net.atlassian.cmathtutor.helper.ChangeListenerRegistryHelper;
+import net.atlassian.cmathtutor.util.CaseUtil;
 import net.atlassian.cmathtutor.util.UidUtil;
 
 public class NewAssociationConnectionPresenter implements Initializable {
@@ -112,6 +113,21 @@ public class NewAssociationConnectionPresenter implements Initializable {
 	containerArityChoiceBox.setValue(containerArityChoiceBox.getItems().get(0));
 	elementArityChoiceBox.getItems().addAll(attributeArities);
 	elementArityChoiceBox.setValue(elementArityChoiceBox.getItems().get(0));
+
+	containerAttributeNameTextLabel.focusedProperty()
+		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
+		    if (Boolean.FALSE.equals(newV)) {
+			containerAttributeNameTextLabel
+				.setText(toAttributeName(containerAttributeNameTextLabel.getText()));
+		    }
+		}));
+	elementAttributeNameTextLabel.focusedProperty()
+		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
+		    if (Boolean.FALSE.equals(newV)) {
+			elementAttributeNameTextLabel
+				.setText(toAttributeName(elementAttributeNameTextLabel.getText()));
+		    }
+		}));
     }
 
     @FXML
@@ -119,6 +135,8 @@ public class NewAssociationConnectionPresenter implements Initializable {
 	aggregationKindChoiceBox.getScene().getWindow().hide();
     }
 
+    // TODO: extract shallow model and save data in it instead, then map it to
+    // association model here
     @FXML
     public void createAssociation() {
 	AssociationModel associationModel = new AssociationModel(UidUtil.getUId());
@@ -126,17 +144,19 @@ public class NewAssociationConnectionPresenter implements Initializable {
 	associationModel.setAggregationKind(aggregationKindChoiceBox.getValue());
 	ReferentialAttributeModel containerAttribute = new ReferentialAttributeModel(UidUtil.getUId());
 	containerAttribute.setArity(defineAttributeArity(elementArityChoiceBox));
-	containerAttribute.setName(elementAttributeNameTextLabel.getText());
+	containerAttribute.setName(toAttributeName(elementAttributeNameTextLabel.getText()));
 	containerAttribute.setNavigable(elementNavigabilityCheckBox.isSelected());
 	containerAttribute.setOwnerType(defineOwnerType(toElementPrimaryReferenceRadioButton.isSelected()));
+	containerAttribute.setAssociation(associationModel);
 	containerAttribute
 		.setParentClassifier(containerNode.getPersistenceUnitDescriptor().getWrappedPersistenceUnit());
 	associationModel.setContainerAttribute(containerAttribute);
 	ReferentialAttributeModel elementAttribute = new ReferentialAttributeModel(UidUtil.getUId());
 	elementAttribute.setArity(defineAttributeArity(containerArityChoiceBox));
-	elementAttribute.setName(containerAttributeNameTextLabel.getText());
+	elementAttribute.setName(toAttributeName(containerAttributeNameTextLabel.getText()));
 	elementAttribute.setNavigable(containerNavigabilityCheckBox.isSelected());
 	elementAttribute.setOwnerType(defineOwnerType(toContainerPrimaryReferenceRadioButton.isSelected()));
+	elementAttribute.setAssociation(associationModel);
 	elementAttribute.setParentClassifier(elementNode.getPersistenceUnitDescriptor().getWrappedPersistenceUnit());
 	associationModel.setElementAttribute(elementAttribute);
 
@@ -149,6 +169,10 @@ public class NewAssociationConnectionPresenter implements Initializable {
 	    alert.setContentText(e.getMessage());
 	    alert.showAndWait();
 	}
+    }
+
+    private String toAttributeName(String string) {
+	return CaseUtil.trimAndLowercaseFirstLetter(string);
     }
 
     private AttributeArity defineAttributeArity(ChoiceBox<String> arityChoiceBox) {
@@ -167,12 +191,14 @@ public class NewAssociationConnectionPresenter implements Initializable {
 	this.containerNode = containerNode;
 	WritableImage snapshot = containerNode.snapshot(new SnapshotParameters(), null);
 	containerNodeImageView.setImage(snapshot);
+	containerAttributeNameTextLabel.setText(CaseUtil.trimAndLowercaseFirstLetter(containerNode.getName()));
     }
 
     public void setElementNode(PersistenceUnitNode elementNode) {
 	this.elementNode = elementNode;
 	WritableImage snapshot = elementNode.snapshot(new SnapshotParameters(), null);
 	elementNodeImageView.setImage(snapshot);
+	elementAttributeNameTextLabel.setText(CaseUtil.trimAndLowercaseFirstLetter(elementNode.getName()));
     }
 
 }

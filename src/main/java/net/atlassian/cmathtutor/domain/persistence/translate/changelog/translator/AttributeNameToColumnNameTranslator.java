@@ -16,9 +16,9 @@ public class AttributeNameToColumnNameTranslator {
 
     private String amendTranslatedAttrNameByTableName(String translatedAttrName, String referencedTableName) {
 	if (translatedAttrName.equals(referencedTableName)) {
-	    return translatedAttrName;
+	    return referencedTableName;
 	} else {
-	    return referencedTableName + DELIMITER + translatedAttrName;
+	    return translatedAttrName + DELIMITER + referencedTableName;
 	}
     }
 }

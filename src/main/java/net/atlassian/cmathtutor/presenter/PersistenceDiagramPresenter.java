@@ -12,16 +12,15 @@ import javax.inject.Inject;
 import de.fxdiagram.core.XNode;
 import de.fxdiagram.core.XRoot;
 import de.fxdiagram.core.tools.actions.CenterAction;
-import de.fxdiagram.core.tools.actions.LoadAction;
 import de.fxdiagram.core.tools.actions.RedoAction;
 import de.fxdiagram.core.tools.actions.RevealAction;
-import de.fxdiagram.core.tools.actions.SaveAction;
 import de.fxdiagram.core.tools.actions.SelectAllAction;
 import de.fxdiagram.core.tools.actions.UndoAction;
 import de.fxdiagram.core.tools.actions.ZoomToFitAction;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.AssociationDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.IllegalOperationException;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceDescriptor;
@@ -31,9 +30,11 @@ import net.atlassian.cmathtutor.fxdiagram.AssociationConnection;
 import net.atlassian.cmathtutor.fxdiagram.PersistenceUnitNode;
 import net.atlassian.cmathtutor.fxdiagram.StartledFrogDeleteAction;
 import net.atlassian.cmathtutor.fxdiagram.StartledFrogDiagram;
+import net.atlassian.cmathtutor.fxdiagram.StartledFrogSaveAction;
 import net.atlassian.cmathtutor.service.PersistenceDomainService;
 import net.atlassian.cmathtutor.util.AutoDisposableListener;
 
+@Slf4j
 @Getter
 public class PersistenceDiagramPresenter implements Initializable {
 
@@ -65,6 +66,7 @@ public class PersistenceDiagramPresenter implements Initializable {
 
 	Set<String> assignedAssociationDescriptorIds = diagram.getAssociationConnections().stream()
 		.map(AssociationConnection::getAssociationDescriptorId)
+		.peek(id -> log.debug("Assigned association connection ID is {}", id))
 		.collect(Collectors.toSet());
 	wrappedModel.getAssociationDescriptors().stream()
 		.filter(ad -> !assignedAssociationDescriptorIds.contains(ad.getId()))
@@ -78,8 +80,8 @@ public class PersistenceDiagramPresenter implements Initializable {
 		new RedoAction(),
 		new UndoAction(),
 		new RevealAction(),
-		new LoadAction(),
-		new SaveAction(),
+//		new LoadAction(),
+		new StartledFrogSaveAction(persistenceService, persistenceModel),
 		new SelectAllAction(),
 		new ZoomToFitAction()// ,
 //			new NavigatePreviousAction,
@@ -98,6 +100,8 @@ public class PersistenceDiagramPresenter implements Initializable {
 
     private void createNewAssociationConnection(StartledFrogDiagram diagram,
 	    AssociationDescriptor associationDescriptor) {
+	log.info("Creating new association connection: id ({}), {}->{}", associationDescriptor.getId(),
+		associationDescriptor.getElementAttribute(), associationDescriptor.getContainerAttribute());
 	XNode sourceNode = diagram.getPersistenceUnitNodeById(
 		associationDescriptor.getContainerAttribute().getParentClassifier().getId());
 	XNode targetNode = diagram

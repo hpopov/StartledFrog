@@ -23,10 +23,12 @@ import net.atlassian.cmathtutor.domain.persistence.PersistenceUnit;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
 import net.atlassian.cmathtutor.domain.persistence.RepositoryOperation;
 
+@ToString(callSuper = false, onlyExplicitlyIncluded = true)
 @XmlAccessorType(XmlAccessType.NONE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class PersistenceUnitModel extends AbstractIdentifyableModel implements PersistenceUnit {
 
+    @ToString.Include
     @EqualsAndHashCode.Include
     private StringProperty name = new SimpleStringProperty();
     private ObservableSet<PrimitiveAttributeModel> primitiveAttributes = FXCollections
@@ -43,19 +45,21 @@ public class PersistenceUnitModel extends AbstractIdentifyableModel implements P
     private ObservableSet<RepositoryOperationModel> unmodifiableRepositoryOperations = FXCollections
 	    .unmodifiableObservableSet(repositoryOperations);
 
-    @ToString.Exclude
     private ObjectProperty<PersistenceModel> persistence = new SimpleObjectProperty<>();
 
     public PersistenceUnitModel() {
 	super();
-	initBindings();
+//	initBindings();
     }
 
     public PersistenceUnitModel(String id) {
 	super(id);
-	initBindings();
+//	initBindings();
     }
 
+    @SuppressWarnings("unused")
+    // You thought you are the smartest one...
+//    But as a result you ended  modifying element within the HashSet already
     private void initBindings() {
 	SetChangeListener<AbstractAttributeModel> attributesChangeListener = (
 		Change<? extends AbstractAttributeModel> change) -> {

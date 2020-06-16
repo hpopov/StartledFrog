@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javafx.collections.FXCollections;
 import javafx.collections.SetChangeListener.Change;
 import javafx.fxml.FXML;
@@ -27,11 +29,17 @@ import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceDescrip
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceUnitDescriptor;
 import net.atlassian.cmathtutor.domain.persistence.model.PersistenceUnitModel;
 import net.atlassian.cmathtutor.domain.persistence.model.PrimitiveAttributeModel;
+import net.atlassian.cmathtutor.helper.ChangeListenerRegistryHelper;
+import net.atlassian.cmathtutor.util.CaseUtil;
 import net.atlassian.cmathtutor.util.UidUtil;
 
 public class NewPersistenceUnitPresenter implements Initializable {
 
+    private static final String UNABLE_TO_CREATE_PRIMITIVE_ATTRIBUTE_MESSAGE = "Unable to create primitive attribute";
+    private static final String ATTRIBUTE_NAME_MUST_NOT_BE_BLANK_MESSAGE = "Attribute name must not be blank";
     private static final String UNABLE_TO_CREATE_PERSISTENCE_UNIT_MESSAGE = "Unable to create persistence unit";
+    private static final String PERSISTENCE_UNIT_NAME_MUST_NOT_BE_BLANK_MESSAGE = "Persistence unit name must not be blank";
+
     @FXML
     TextField unitNameTextField;
     @FXML
@@ -48,6 +56,8 @@ public class NewPersistenceUnitPresenter implements Initializable {
     Button createPersistenceUnitButton;
     @FXML
     Button addNewPrimitiveAttributeButton;
+    @FXML
+    Button closeButton;
 
     @Setter
     private PersistenceDescriptor persistenceDescriptor;
@@ -56,8 +66,7 @@ public class NewPersistenceUnitPresenter implements Initializable {
     @Getter
     private PersistenceUnitDescriptor persistenceUnitDescriptor;
 
-    @FXML
-    Button closeButton;
+    private ChangeListenerRegistryHelper listenerRegistryHelper = new ChangeListenerRegistryHelper();
 
     public NewPersistenceUnitPresenter() {
 	persistenceUnitModel = new PersistenceUnitModel(UidUtil.getUId());
@@ -80,7 +89,15 @@ public class NewPersistenceUnitPresenter implements Initializable {
 			primitiveAttributesTable.getItems().remove(change.getElementRemoved());
 		    }
 		});
-	persistenceUnitModel.nameProperty().bind(unitNameTextField.textProperty());
+	unitNameTextField.focusedProperty()
+		.addListener(listenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
+		    if (Boolean.FALSE.equals(newV)) {
+			String persistenceUnitName = toPersistenceUnitName(unitNameTextField.getText());
+			unitNameTextField.setText(persistenceUnitName);
+			persistenceUnitModel.setName(persistenceUnitName);
+		    }
+		}));
+//	persistenceUnitModel.nameProperty().bind(unitNameTextField.textProperty());
     }
 
     @SuppressWarnings("unchecked")
@@ -99,9 +116,18 @@ public class NewPersistenceUnitPresenter implements Initializable {
 
     @FXML
     public void createPersistenceUnit() {
+	String persistenceUnitName = toPersistenceUnitName(unitNameTextField.getText());
+	persistenceUnitModel.setName(persistenceUnitName);
+	if (StringUtils.isBlank(persistenceUnitName)) {
+	    Alert alert = new Alert(AlertType.ERROR);
+	    alert.setHeaderText(UNABLE_TO_CREATE_PERSISTENCE_UNIT_MESSAGE);
+	    alert.setContentText(PERSISTENCE_UNIT_NAME_MUST_NOT_BE_BLANK_MESSAGE);
+	    alert.showAndWait();
+	    return;
+	}
 	try {
 	    persistenceUnitDescriptor = persistenceDescriptor.addNewPersistenceUnit(persistenceUnitModel);
-	    persistenceUnitModel.nameProperty().unbind();
+//	    persistenceUnitModel.nameProperty().unbind();
 	    close();
 	} catch (IllegalOperationException e) {
 	    Alert alert = new Alert(AlertType.ERROR);
@@ -113,8 +139,16 @@ public class NewPersistenceUnitPresenter implements Initializable {
 
     @FXML
     public void addNewPrimitiveAttribute() {
+	String primitiveAttributeName = toPrimitiveAttributeName();
+	if (StringUtils.isBlank(primitiveAttributeName)) {
+	    Alert alert = new Alert(AlertType.WARNING);
+	    alert.setHeaderText(UNABLE_TO_CREATE_PRIMITIVE_ATTRIBUTE_MESSAGE);
+	    alert.setContentText(ATTRIBUTE_NAME_MUST_NOT_BE_BLANK_MESSAGE);
+	    alert.showAndWait();
+	    return;
+	}
 	PrimitiveAttributeModel primitiveAttributeModel = new PrimitiveAttributeModel(UidUtil.getUId());
-	primitiveAttributeModel.setName(newAttributeNameTextField.getText());
+	primitiveAttributeModel.setName(primitiveAttributeName);
 	String value = typeChoiceBox.getValue();
 	primitiveAttributeModel.setType(Arrays.stream(PrimitiveType.values())
 		.filter(pt -> pt.getAppearance().equals(value))
@@ -128,6 +162,14 @@ public class NewPersistenceUnitPresenter implements Initializable {
 	    primitiveAttributeModel.getConstraints().add(ConstraintType.UNIQUE);
 	}
 	persistenceUnitModel.getPrimitiveAttributes().add(primitiveAttributeModel);
+    }
+
+    private String toPrimitiveAttributeName() {
+	return CaseUtil.trimAndLowercaseFirstLetter(newAttributeNameTextField.getText());
+    }
+
+    private String toPersistenceUnitName(String string) {
+	return CaseUtil.trimAndUppercaseFirstLetter(string);
     }
 
     @FXML

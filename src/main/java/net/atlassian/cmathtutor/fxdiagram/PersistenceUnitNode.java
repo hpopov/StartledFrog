@@ -35,6 +35,8 @@ public class PersistenceUnitNode extends XNode {
     @Override
     public void doActivate() {
 	super.doActivate();
+	log.debug("Setting persistence unit descriptor to the view during doActivate(): {}",
+		persistenceUnitDescriptor.getId());
 	lazyPersistenceUnitNodeView.get().setPersistenceUnitDescriptor(persistenceUnitDescriptor);
     }
 
@@ -58,6 +60,7 @@ public class PersistenceUnitNode extends XNode {
     }
 
     public void setPersistenceUnitDescriptor(PersistenceUnitDescriptor persistenceUnitDescriptor) {
+	log.debug("Setting persistence unit descriptor to PU Node: {}", persistenceUnitDescriptor.getId());
 	this.persistenceUnitDescriptor = persistenceUnitDescriptor;
 	persistenceUnitDescriptorId
 		.setValue(Optional.ofNullable(persistenceUnitDescriptor).map(AbstractDescriptor::getId).orElse(null));

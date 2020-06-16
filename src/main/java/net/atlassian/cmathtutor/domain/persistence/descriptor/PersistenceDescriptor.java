@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.domain.persistence.AggregationKind;
 import net.atlassian.cmathtutor.domain.persistence.Association;
 import net.atlassian.cmathtutor.domain.persistence.Persistence;
@@ -25,6 +26,7 @@ import net.atlassian.cmathtutor.domain.persistence.model.PersistenceUnitModel;
 import net.atlassian.cmathtutor.domain.persistence.model.ReferentialAttributeModel;
 import net.atlassian.cmathtutor.util.UidUtil;
 
+@Slf4j
 @ToString
 @NoArgsConstructor
 public class PersistenceDescriptor extends AbstractDescriptor implements Persistence {
@@ -58,7 +60,9 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	    persistenceDescriptor.addPersistenceUnitInner(persistenceUnit);
 	}
 	for (AssociationModel association : persistence.getAssociations()) {
-	    persistenceDescriptor.addAssociationInner(association);
+	    AssociationDescriptor associationDescriptor = AssociationDescriptor.wrap(association,
+		    persistenceDescriptor);
+	    persistenceDescriptor.addExistedAssociationDescriptor(associationDescriptor, association);
 	}
 	return persistenceDescriptor;
     }
@@ -75,10 +79,15 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 
     public PersistenceUnitDescriptor addNewPersistenceUnit(@NonNull PersistenceUnitModel persistenceUnit)
 	    throws IllegalOperationException {
+	assertPersistenceUnitNameIsNotNull(persistenceUnit.getName());
 	validatePersistenceUnitIsNotAddedToPersistence(persistenceUnit);
 	PersistenceUnitDescriptor persistenceUnitDescriptor = addPersistenceUnitInner(persistenceUnit);
+	persistenceUnit.setPersistence(persistence);
 	persistence.getPersistenceUnits().add(persistenceUnit);
 	return persistenceUnitDescriptor;
+    }
+
+    private void assertPersistenceUnitNameIsNotNull(@NonNull String persistenceUnitName) {
     }
 
     private void validatePersistenceUnitIsNotAddedToPersistence(PersistenceUnitModel persistenceUnit)
@@ -91,7 +100,7 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
     private PersistenceUnitDescriptor addPersistenceUnitInner(PersistenceUnitModel persistenceUnit)
 	    throws IllegalOperationException {
 	PersistenceUnitDescriptor persistenceUnitDescriptor = PersistenceUnitDescriptor.wrap(persistenceUnit, this);
-	addPersistenceUnitDescriptor(persistenceUnitDescriptor, persistenceUnitDescriptor.getWrappedPersistenceUnit());
+	addPersistenceUnitDescriptor(persistenceUnitDescriptor, persistenceUnit);
 	return persistenceUnitDescriptor;
     }
 
@@ -103,6 +112,7 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 
     private void validatePersistenceUnitReferentialAttributes(Set<ReferentialAttributeModel> referentialAttributes)
 	    throws IllegalOperationException {
+	log.debug("Validating persistence unit referential attributes: {}", referentialAttributes);
 	for (ReferentialAttributeModel referentialAttribute : referentialAttributes) {
 	    if (false == persistence.getAssociations().contains(referentialAttribute.getAssociation())) {
 		throw new IllegalOperationException(
@@ -114,7 +124,11 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
     public AssociationDescriptor addNewAssociation(@NonNull AssociationModel association)
 	    throws IllegalOperationException {
 	validateAssociationIsNotAddedToPersistence(association);
-	AssociationDescriptor associationDescriptor = addAssociationInner(association);
+
+	AssociationDescriptor associationDescriptor = AssociationDescriptor.wrap(association, this);
+	addNewAssociationDescriptor(associationDescriptor, association);
+
+	association.setPersistence(persistence);
 	persistence.getAssociations().add(association);
 	return associationDescriptor;
     }
@@ -126,33 +140,79 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	}
     }
 
-    private AssociationDescriptor addAssociationInner(AssociationModel association) throws IllegalOperationException {
-	AssociationDescriptor associationDescriptor = AssociationDescriptor.wrap(association, this);
-	addAssociationDescriptor(associationDescriptor, association);
-	return associationDescriptor;
-    }
-
-    private void addAssociationDescriptor(AssociationDescriptor associationDescriptor, AssociationModel association)
+    private void addNewAssociationDescriptor(AssociationDescriptor associationDescriptor, AssociationModel association)
 	    throws IllegalOperationException {
-	validateAssociationReferentialAttributes(association.getContainerAttribute(),
-		association.getElementAttribute());
+	ReferentialAttributeModel containerAttribute = association.getContainerAttribute();
+	ReferentialAttributeModel elementAttribute = association.getElementAttribute();
+	validateAssociationReferentialAttributes(containerAttribute, elementAttribute);
+	PersistenceUnitDescriptor containerUnitDescriptor = idToPersistenceUnitDescriptors
+		.get(containerAttribute.getParentClassifier().getId());
+	PersistenceUnitDescriptor elementUnitDescriptor = idToPersistenceUnitDescriptors
+		.get(elementAttribute.getParentClassifier().getId());
+
+	containerUnitDescriptor.addReferentialAttribute(containerAttribute);
+
+	try {
+	    elementUnitDescriptor.addReferentialAttribute(elementAttribute);
+	} catch (IllegalOperationException e) {
+	    log.info("Failed to add association element attribute, but container attribute has already been added."
+		    + " Reverting the change back...");
+	    containerUnitDescriptor.removeReferentialAttribute(containerAttribute);
+	    throw e;
+	}
+
 	if (association.getAggregationKind().equals(AggregationKind.SHARED)
 		|| association.getAggregationKind().equals(AggregationKind.COMPOSITE)) {
-	    addEdgeToPersistenceUnitGraph(association.getContainerAttribute(), association.getElementAttribute());
+	    try {
+		addEdgeToPersistenceUnitGraph(containerAttribute, elementAttribute);
+	    } catch (IllegalOperationException e) {
+		log.info("Failed to add association to the graph,"
+			+ " but both attributes have already been added to descriptor. Reverting the change back...");
+		containerUnitDescriptor.removeReferentialAttribute(containerAttribute);
+		elementUnitDescriptor.removeReferentialAttribute(elementAttribute);
+		throw e;
+	    }
 	}
 	idToAssociationDescriptors.put(associationDescriptor.getId(), associationDescriptor);
     }
 
-    private void validateAssociationReferentialAttributes(ReferentialAttributeModel containerAttribute,
-	    ReferentialAttributeModel elementAttribute) throws IllegalOperationException {
+    private void addExistedAssociationDescriptor(AssociationDescriptor associationDescriptor,
+	    AssociationModel association)
+	    throws IllegalOperationException {
+	ReferentialAttributeModel containerAttribute = association.getContainerAttribute();
+	ReferentialAttributeModel elementAttribute = association.getElementAttribute();
+	validateAssociationReferentialAttributes(containerAttribute, elementAttribute);
+	if (association.getAggregationKind().equals(AggregationKind.SHARED)
+		|| association.getAggregationKind().equals(AggregationKind.COMPOSITE)) {
+	    addEdgeToPersistenceUnitGraph(containerAttribute, elementAttribute);
+	}
+	idToAssociationDescriptors.put(associationDescriptor.getId(), associationDescriptor);
+    }
+
+    private void validateAssociationReferentialAttributes(@NonNull ReferentialAttributeModel containerAttribute,
+	    @NonNull ReferentialAttributeModel elementAttribute) throws IllegalOperationException {
+	assertAttributeParentClassifiersAreNotNull(containerAttribute.getParentClassifier(),
+		elementAttribute.getParentClassifier());
 	if (false == persistence.getPersistenceUnits().contains(containerAttribute.getParentClassifier())) {
-	    throw new IllegalOperationException("Container attribute of the associtation to add must already be "
-		    + "registered within persistence descriptor");
+//	    log.debug("Container parent classifier was not found at registered persistence unit using contains(..)");
+//	    if (false == persistence.getPersistenceUnits().stream()
+//		    .anyMatch(containerAttribute.getParentClassifier()::equals)) {
+	    throw new IllegalOperationException("Container attribute persistence unit of the associtation to add"
+		    + " must already be registered within persistence descriptor");
+//	    }
 	}
 	if (false == persistence.getPersistenceUnits().contains(elementAttribute.getParentClassifier())) {
-	    throw new IllegalOperationException("Element attribute of the associtation to add must already be "
-		    + "registered within persistence descriptor");
+//	    log.debug("Element parent classifier was not found at registered persistence unit using contains(..)");
+//	    if (false == persistence.getPersistenceUnits().stream()
+//		    .anyMatch(elementAttribute.getParentClassifier()::equals)) {
+	    throw new IllegalOperationException("Element attribute persistence unit of the associtation to add"
+		    + " must already be registered within persistence descriptor");
+//	    }
 	}
+    }
+
+    private void assertAttributeParentClassifiersAreNotNull(@NonNull PersistenceUnitModel containerParentClassifier,
+	    @NonNull PersistenceUnitModel elementParentClassifier) {
     }
 
     private void addEdgeToPersistenceUnitGraph(ReferentialAttributeModel containerAttribute,
@@ -213,7 +273,7 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
     public void attachAssociation(AssociationDescriptor associationDescriptor) throws IllegalOperationException {
 	AssociationModel association = associationDescriptor.getWrappedAssociation();
 	validateAssociationIsNotAddedToPersistence(association);
-	addAssociationDescriptor(associationDescriptor, association);
+	addExistedAssociationDescriptor(associationDescriptor, association);
 
 	persistence.getAssociations().add(association);
     }
@@ -231,7 +291,8 @@ public class PersistenceDescriptor extends AbstractDescriptor implements Persist
 	PersistenceUnitModel wrappedPersistenceUnit = persistenceUnitDescriptor.getWrappedPersistenceUnit();
 	validatePersistenceUnitIsNotAddedToPersistence(wrappedPersistenceUnit);
 	addPersistenceUnitDescriptor(persistenceUnitDescriptor, wrappedPersistenceUnit);
-
+	// assuming that descritor is right after detachment, i.e. it has a reference to
+	// underlying persistence
 	persistence.getPersistenceUnits().add(wrappedPersistenceUnit);
     }
 

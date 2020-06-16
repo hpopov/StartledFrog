@@ -2,8 +2,6 @@ package net.atlassian.cmathtutor.domain.persistence.descriptor;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +20,7 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
     private PersistenceDescriptor parentDescriptor;
 
     private boolean detached = false;
-    private Memento memento;
+//    private Memento memento;
 
     public static AssociationDescriptor wrap(@NonNull AssociationModel association,
 	    @NonNull PersistenceDescriptor parentDescriptor) throws IllegalOperationException {
@@ -52,6 +50,9 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
 	    throw new IllegalArgumentException(
 		    "Both container and element attributes must have non-null parent classifier");
 	}
+	if (containerAttribute.getAssociation() == null || elementAttribute.getAssociation() == null) {
+	    throw new IllegalArgumentException("Both container and element attributes must have non-null association");
+	}
     }
 
     private AssociationDescriptor(AssociationModel association, PersistenceDescriptor parentDescriptor) {
@@ -66,12 +67,18 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
 	    return;
 	}
 	detached = true;
-	memento = Memento.of(this);
 	parentDescriptor.detachAssociation(this);
 	ReferentialAttributeModel containerAttribute = association.getContainerAttribute();
-	containerAttribute.getParentClassifier().getReferentialAttributes().remove(containerAttribute);
 	ReferentialAttributeModel elementAttribute = association.getElementAttribute();
-	elementAttribute.getParentClassifier().getReferentialAttributes().remove(elementAttribute);
+	PersistenceUnitDescriptor containerDescriptor = parentDescriptor
+		.getPersistenceUnitDescriptorById(containerAttribute.getParentClassifier().getId());
+	PersistenceUnitDescriptor elementDescriptor = parentDescriptor
+		.getPersistenceUnitDescriptorById(elementAttribute.getParentClassifier().getId());
+	boolean containerRemoved = containerDescriptor.removeReferentialAttribute(containerAttribute);
+	log.debug("Detaching association {} from parent, container attribute was removed? {}", getId(),
+		containerRemoved);
+	boolean elementRemoved = elementDescriptor.removeReferentialAttribute(elementAttribute);
+	log.debug("Detaching association {} from parent, element attribute was removed? {}", getId(), elementRemoved);
     }
 
     public void attachToParent() throws IllegalOperationException {
@@ -79,14 +86,17 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
 	    log.warn("attachToParent() was called, but descriptor {} is NOT detached", getId());
 	    return;
 	}
+	ReferentialAttributeModel containerAttribute = association.getContainerAttribute();
+	ReferentialAttributeModel elementAttribute = association.getElementAttribute();
 	PersistenceUnitDescriptor containerPersistenceUnitDescriptor = parentDescriptor
-		.getPersistenceUnitDescriptorById(memento.getContainerPersistenceUnitId());
+		.getPersistenceUnitDescriptorById(containerAttribute.getParentClassifier().getId());
+	log.debug("Attaching association: container PU descriptor is {}", containerPersistenceUnitDescriptor);
 	PersistenceUnitDescriptor elementPersistenceUnitDescriptor = parentDescriptor
-		.getPersistenceUnitDescriptorById(memento.getElementPersistenceUnitId());
-	containerPersistenceUnitDescriptor.addReferentialAttribute(association.getContainerAttribute());
-	elementPersistenceUnitDescriptor.addReferentialAttribute(association.getElementAttribute());
+		.getPersistenceUnitDescriptorById(elementAttribute.getParentClassifier().getId());
+	log.debug("Attaching association: element PU descriptor is {}", containerPersistenceUnitDescriptor);
+	containerPersistenceUnitDescriptor.addReferentialAttribute(containerAttribute);
+	elementPersistenceUnitDescriptor.addReferentialAttribute(elementAttribute);
 	parentDescriptor.attachAssociation(this);
-	memento = null;
 	detached = false;
     }
 
@@ -126,17 +136,16 @@ public class AssociationDescriptor extends AbstractDescriptor implements Associa
     public PersistenceDescriptor getPersistence() {
 	return parentDescriptor;
     }
-
-    @Getter
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class Memento {
-	private String containerPersistenceUnitId;
-	private String elementPersistenceUnitId;
-
-	public static Memento of(AssociationDescriptor descriptor) {
-	    return new Memento(descriptor.getContainerAttribute().getParentClassifier().getId(),
-		    descriptor.getElementAttribute().getParentClassifier().getId());
-	}
-    }
-
+//
+//    @Getter
+//    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+//    private static class Memento {
+//	private String containerPersistenceUnitId;
+//	private String elementPersistenceUnitId;
+//
+//	public static Memento of(AssociationDescriptor descriptor) {
+//	    return new Memento(descriptor.getContainerAttribute().getParentClassifier().getId(),
+//		    descriptor.getElementAttribute().getParentClassifier().getId());
+//	}
+//    }
 }

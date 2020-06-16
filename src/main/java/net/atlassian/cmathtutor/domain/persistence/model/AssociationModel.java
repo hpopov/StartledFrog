@@ -31,14 +31,15 @@ public class AssociationModel extends AbstractIdentifyableModel implements Assoc
 
     public AssociationModel(String id) {
 	super(id);
-	initBindings();
+//	initBindings();
     }
 
     public AssociationModel() {
 	super();
-	initBindings();
+//	initBindings();
     }
 
+    @SuppressWarnings("unused")
     private void initBindings() {
 	ChangeListener<? super ReferentialAttributeModel> attributeChangeListener = (observable, oldValue,
 		newValue) -> {

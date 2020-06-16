@@ -16,7 +16,6 @@ import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.ConstraintType;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveAttribute;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveType;
-import net.atlassian.cmathtutor.util.UidUtil;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @ToString(callSuper = true)
@@ -32,7 +31,7 @@ public class PrimitiveAttributeModel extends AbstractAttributeModel implements P
 	    .unmodifiableObservableSet(constraints);
 
     public static PrimitiveAttributeModel makeIdentifiableInstance(String name, PersistenceUnitModel parentClassifier) {
-	PrimitiveAttributeModel primitiveAttributeModel = new PrimitiveAttributeModel(UidUtil.getUId());
+	PrimitiveAttributeModel primitiveAttributeModel = new PrimitiveAttributeModel();
 	primitiveAttributeModel.setName(name);
 	primitiveAttributeModel.setParentClassifier(parentClassifier);
 	return primitiveAttributeModel;

@@ -12,11 +12,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.domain.persistence.OwnerType;
 import net.atlassian.cmathtutor.domain.persistence.PrimitiveAttribute;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceUnitDescriptor;
 
+@Slf4j
 public class PersistenceUnitNodeView extends RectangleBorderPane {
 
     @FXML
@@ -119,6 +121,8 @@ public class PersistenceUnitNodeView extends RectangleBorderPane {
     private void bindReferentialAttributes(PersistenceUnitDescriptor persistenceUnitDescriptor) {
 	ObservableSet<? extends ReferentialAttribute> referentialAttributes = persistenceUnitDescriptor
 		.getUnmodifiableReferentialAttributes();
+	log.debug("HashCode {}: Binding referential attributes to the view VBox: {}", hashCode(),
+		referentialAttributes);
 	for (ReferentialAttribute attribute : referentialAttributes) {
 	    addReferentialAttributeToEntriesIfNavigableOrMain(attribute);
 	}
@@ -135,6 +139,7 @@ public class PersistenceUnitNodeView extends RectangleBorderPane {
 		    }
 		}
 		if (change.wasAdded()) {
+		    log.debug("HashCode {}: Referential attribute was added in listener: {}", hashCode(), change.getElementAdded());
 		    addReferentialAttributeToEntriesIfNavigableOrMain(change.getElementAdded());
 		}
 	    }
@@ -142,7 +147,9 @@ public class PersistenceUnitNodeView extends RectangleBorderPane {
     }
 
     private void addReferentialAttributeToEntriesIfNavigableOrMain(ReferentialAttribute attribute) {
+	log.debug("HashCode {}: Attempting to add referential attribute to view: {}", hashCode(), attribute);
 	if (attribute.isNavigable() || attribute.getOwnerType() == OwnerType.CLASSIFIER) {
+	    log.debug("HashCode {}: Referential attribute has been added", hashCode());
 	    ReferentialAttributeEntryView entryView = new ReferentialAttributeEntryView(attribute);
 	    referentialAttributeEntriesVBox.getChildren().add(entryView);
 	    idToReferentialAttributeEntries.put(attribute.getId(), entryView);

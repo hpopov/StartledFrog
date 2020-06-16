@@ -12,6 +12,9 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXBContext;
@@ -31,7 +34,12 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceDescriptor;
+import net.atlassian.cmathtutor.domain.persistence.model.AbstractAttributeModel;
+import net.atlassian.cmathtutor.domain.persistence.model.AssociationModel;
 import net.atlassian.cmathtutor.domain.persistence.model.PersistenceModel;
+import net.atlassian.cmathtutor.domain.persistence.model.PersistenceUnitModel;
+import net.atlassian.cmathtutor.domain.persistence.model.PrimitiveAttributeModel;
+import net.atlassian.cmathtutor.domain.persistence.model.ReferentialAttributeModel;
 import net.atlassian.cmathtutor.domain.persistence.translate.changelog.DatabaseChangeLog;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.Named;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.Packaged;
@@ -119,7 +127,48 @@ public class PersistenceDomainService {
 	    log.error("Unable to load persistence model using JAXB", e);
 	    return null;
 	}
+	populateBackwardReferences(persistenceModel);
 	return persistenceModel;
+    }
+
+    private void populateBackwardReferences(PersistenceModel persistenceModel) {
+	Collection<PersistenceUnitModel> persistenceUnitsSnapshot = new ArrayList<>(
+		persistenceModel.getPersistenceUnits());
+	Collection<AssociationModel> associationsSnapshot = new ArrayList<>(persistenceModel.getAssociations());
+
+	persistenceModel.getPersistenceUnits().clear();
+	persistenceModel.getAssociations().clear();
+	associationsSnapshot.forEach(a -> {
+	    populateBackwardReferences(a);
+	    a.setPersistence(persistenceModel);
+	});
+	persistenceUnitsSnapshot.forEach(pu -> {
+	    populateBackwardReferences(pu);
+	    pu.setPersistence(persistenceModel);
+	});
+	persistenceModel.getPersistenceUnits().addAll(persistenceUnitsSnapshot);
+	persistenceModel.getAssociations().addAll(associationsSnapshot);
+    }
+
+    private void populateBackwardReferences(PersistenceUnitModel persistenceUnitModel) {
+	Consumer<AbstractAttributeModel> attributeParentClassifierPropagator = a -> a
+		.setParentClassifier(persistenceUnitModel);
+	Collection<PrimitiveAttributeModel> primitiveAttributesSnapshot = new ArrayList<>(
+		persistenceUnitModel.getPrimitiveAttributes());
+	Collection<ReferentialAttributeModel> referentialAttributesSnapshot = new ArrayList<>(
+		persistenceUnitModel.getReferentialAttributes());
+
+	persistenceUnitModel.getPrimitiveAttributes().clear();
+	persistenceUnitModel.getReferentialAttributes().clear();
+	primitiveAttributesSnapshot.forEach(attributeParentClassifierPropagator);
+	referentialAttributesSnapshot.forEach(attributeParentClassifierPropagator);
+	persistenceUnitModel.getPrimitiveAttributes().addAll(primitiveAttributesSnapshot);
+	persistenceUnitModel.getReferentialAttributes().addAll(referentialAttributesSnapshot);
+    }
+
+    private void populateBackwardReferences(AssociationModel associationModel) {
+	associationModel.getContainerAttribute().setAssociation(associationModel);
+	associationModel.getElementAttribute().setAssociation(associationModel);
     }
 
     public void persistLiquibaseChangeLog(@NonNull DatabaseChangeLog changeLog) {

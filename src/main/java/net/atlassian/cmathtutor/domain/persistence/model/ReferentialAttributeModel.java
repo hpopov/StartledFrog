@@ -17,7 +17,6 @@ import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.AttributeArity;
 import net.atlassian.cmathtutor.domain.persistence.OwnerType;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
-import net.atlassian.cmathtutor.util.UidUtil;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @ToString(callSuper = true)
@@ -38,7 +37,7 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
 
     public static ReferentialAttributeModel makeIdentifiableInstance(String name,
 	    PersistenceUnitModel parentClassifier) {
-	ReferentialAttributeModel referentialAttributeModel = new ReferentialAttributeModel(UidUtil.getUId());
+	ReferentialAttributeModel referentialAttributeModel = new ReferentialAttributeModel();
 	referentialAttributeModel.setName(name);
 	referentialAttributeModel.setParentClassifier(parentClassifier);
 	return referentialAttributeModel;

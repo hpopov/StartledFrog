@@ -86,11 +86,11 @@
 					<children>
 						<!-- <fx:include source="persistence.fxml" fx:id="persistence" /> -->
 						<fx:include fx:id="configuration" source="configuration.fxml" />
-						<fx:include fx:id="launch" source="launch.fxml" />
+						<fx:include fx:id="launch" visible="false" source="launch.fxml" />
 					</children>
 				</StackPane>
 				<TilePane fx:id="persistenceToolbarTilePane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0"
-					prefWidth="180.0" tileAlignment="CENTER_LEFT">
+					prefWidth="180.0" tileAlignment="CENTER_LEFT" visible="false">
 					<children>
 						<Button contentDisplay="TOP" onAction="#selectNewPersistenceUnitTool" prefHeight="220.0" prefWidth="180.0"
 							text="New Persistence Unit" textAlignment="CENTER" wrapText="true">

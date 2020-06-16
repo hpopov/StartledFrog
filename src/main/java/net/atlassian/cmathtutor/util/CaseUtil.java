@@ -48,4 +48,30 @@ public class CaseUtil {
 	}
 	return Character.toUpperCase(string.charAt(0)) + string.substring(1);
     }
+
+    public static String trimAndUppercaseFirstLetter(String name) {
+	name = name.trim();
+	name = name.replaceAll("[ ]+", " ");
+	if (name.isEmpty()) {
+	    return name;
+	}
+	char firstLetter = name.charAt(0);
+	if (false == Character.isUpperCase(firstLetter)) {
+	    name = Character.toUpperCase(firstLetter) + name.substring(1);
+	}
+	return name;
+    }
+
+    public static String trimAndLowercaseFirstLetter(String name) {
+	name = name.trim();
+	name = name.replaceAll("[ ]+", " ");
+	if (name.isEmpty()) {
+	    return name;
+	}
+	char firstLetter = name.charAt(0);
+	if (false == Character.isLowerCase(firstLetter)) {
+	    name = Character.toLowerCase(firstLetter) + name.substring(1);
+	}
+	return name;
+    }
 }

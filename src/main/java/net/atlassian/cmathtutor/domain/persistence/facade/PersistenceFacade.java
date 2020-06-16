@@ -25,6 +25,7 @@ import net.atlassian.cmathtutor.domain.persistence.model.PersistenceModel;
 import net.atlassian.cmathtutor.domain.persistence.model.PrimitiveAttributeModel;
 import net.atlassian.cmathtutor.domain.persistence.model.ReferentialAttributeModel;
 import net.atlassian.cmathtutor.domain.persistence.model.RepositoryOperationModel;
+import net.atlassian.cmathtutor.util.CaseUtil;
 import net.atlassian.cmathtutor.util.UidUtil;
 
 @Slf4j
@@ -62,7 +63,7 @@ public class PersistenceFacade {
 
     public PersistenceUnitBuilder persistenceUnitBuilder(@NonNull String name) {
 	assertNameContainsAllowableCharactersOnly(name);
-	name = trimAndUppercaseFirstLetter(name);
+	name = CaseUtil.trimAndUppercaseFirstLetter(name);
 	PersistenceUnitDescriptor persistenceUnitDescriptor = executeInExceptionWrapper(
 		persistenceDescriptor::addNewPersistenceUnit, name);
 	return new PersistenceUnitBuilder(persistenceUnitDescriptor);
@@ -73,26 +74,6 @@ public class PersistenceFacade {
 	    throw new IllegalArgumentException(
 		    "Name must start with latin letter and contain only letters, digits, dashes, underscores or spaces");
 	}
-    }
-
-    private String trimAndUppercaseFirstLetter(String name) {
-	name = name.trim();
-	name = name.replaceAll("[ ]+", " ");
-	char firstLetter = name.charAt(0);
-	if (false == Character.isUpperCase(firstLetter)) {
-	    name = Character.toUpperCase(firstLetter) + name.substring(1);
-	}
-	return name;
-    }
-
-    private String trimAndLowercaseFirstLetter(String name) {
-	name = name.trim();
-	name = name.replaceAll("[ ]+", " ");
-	char firstLetter = name.charAt(0);
-	if (false == Character.isLowerCase(firstLetter)) {
-	    name = Character.toLowerCase(firstLetter) + name.substring(1);
-	}
-	return name;
     }
 
     public AssociationBuilder associationBuilder(PersistenceUnitDescriptor container,
@@ -123,7 +104,7 @@ public class PersistenceFacade {
     private void initializeReferentialAttributeWithDefaultName(PersistenceUnitDescriptor persistenceUnitDescriptor,
 	    ReferentialAttributeModel referentialAttribute,
 	    String referencedPersistenceUnitName) {
-	String defaultAttributeName = trimAndLowercaseFirstLetter(referencedPersistenceUnitName);
+	String defaultAttributeName = CaseUtil.trimAndLowercaseFirstLetter(referencedPersistenceUnitName);
 	referentialAttribute.setName(defaultAttributeName);
 	boolean isAttributeInitialized = false;
 	for (int i = 1; i <= REFERENTIAL_ATTRIBUTE_DEFAULT_NAME_TRESHOLD && !isAttributeInitialized; i++) {
@@ -203,7 +184,7 @@ public class PersistenceFacade {
 
 	    public PrimitiveAttributeBuilder name(String name) {
 		assertNameContainsAllowableCharactersOnly(name);
-		primitiveAttributeModel.setName(trimAndLowercaseFirstLetter(name));
+		primitiveAttributeModel.setName(CaseUtil.trimAndLowercaseFirstLetter(name));
 		return this;
 	    }
 
@@ -229,7 +210,7 @@ public class PersistenceFacade {
 
 	    public RepositoryOperationBuilder name(String name) {
 		assertNameContainsAllowableCharactersOnly(name);
-		repositoryOperationModel.setName(trimAndLowercaseFirstLetter(name));
+		repositoryOperationModel.setName(CaseUtil.trimAndLowercaseFirstLetter(name));
 		return this;
 	    }
 
@@ -288,7 +269,7 @@ public class PersistenceFacade {
 
 	    public ReferentialAttributeBuilder name(String name) {
 		assertNameContainsAllowableCharactersOnly(name);
-		referentialAttribute.setName(trimAndLowercaseFirstLetter(name));
+		referentialAttribute.setName(CaseUtil.trimAndLowercaseFirstLetter(name));
 		return this;
 	    }
 

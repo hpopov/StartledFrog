@@ -1,7 +1,9 @@
 package net.atlassian.cmathtutor.domain.persistence.descriptor;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.collections.ObservableSet;
@@ -27,7 +29,7 @@ public class PersistenceUnitDescriptor extends AbstractDescriptor implements Per
     private PersistenceDescriptor parentDescriptor;
 
     private boolean detached = false;
-    private Set<AssociationDescriptor> detachedAssociations;
+    private List<AssociationDescriptor> detachedAssociations;
 
     private PersistenceUnitDescriptor(PersistenceUnitModel persistenceUnit,
 	    PersistenceDescriptor parentDescriptor) {
@@ -46,27 +48,108 @@ public class PersistenceUnitDescriptor extends AbstractDescriptor implements Per
 
     public void addNewPrimitiveAttribute(@NonNull PrimitiveAttributeModel primitiveAttribute)
 	    throws IllegalOperationException {
+	assertAttributeNameIsNotBlank(primitiveAttribute.getName());
 	assertPersistenceUnitNotContainAttributeWithName(primitiveAttribute.getName());
 	persistenceUnit.getPrimitiveAttributes().add(primitiveAttribute);
     }
 
     public void addReferentialAttribute(@NonNull ReferentialAttributeModel referentialAttribute)
 	    throws IllegalOperationException {
+	log.debug(
+		"Id: {} | Trying to add referential attribute (id: {}, name: {}, parent: {}) to existing attriburtes",
+		getId(), referentialAttribute.getId(), referentialAttribute.getName(),
+		referentialAttribute.getParentClassifier());
+	log.debug("Existed attributes are: {}, their parents are: {}", persistenceUnit.getReferentialAttributes(),
+		persistenceUnit.getReferentialAttributes().stream().map(ReferentialAttributeModel::getParentClassifier)
+			.collect(Collectors.toList()));
+	assertAttributeNameIsNotBlank(referentialAttribute.getName());
 	assertPersistenceUnitNotContainAttributeWithName(referentialAttribute.getName());
-	persistenceUnit.getReferentialAttributes().add(referentialAttribute);
+	referentialAttribute.setParentClassifier(persistenceUnit);
+	log.debug("Referential attribute was added? {}",
+		persistenceUnit.getReferentialAttributes().add(referentialAttribute));
+    }
+
+    private void assertAttributeNameIsNotBlank(String name) throws IllegalOperationException {
+	if (StringUtils.isBlank(name)) {
+	    throw new IllegalOperationException("Attribute name bust not be blank");
+	}
+    }
+
+    public boolean removeReferentialAttribute(@NonNull ReferentialAttributeModel referentialAttribute) {
+	log.debug("Going to remove attribute {} from attributes {}", referentialAttribute,
+		persistenceUnit.getReferentialAttributes());
+	if (false == persistenceUnit.getReferentialAttributes().remove(referentialAttribute)) {
+//	    log.debug("Tried to remove referential attribute using remove(..) method UNSUCCESSFULLY");
+//	    Optional<ReferentialAttributeModel> foundEqualReferentialAttribute = persistenceUnit
+//		    .getReferentialAttributes().stream().filter(referentialAttribute::equals).findAny();
+//	    if (foundEqualReferentialAttribute.isPresent()) {
+//		log.debug("Found equal referential attribute {}", foundEqualReferentialAttribute.get());
+//		if (false == persistenceUnit.getReferentialAttributes().remove(foundEqualReferentialAttribute.get())) {
+//		    log.debug("Tried to remove found equal attribute using remove(..) UNSUCCESSFULLY");
+//		    Iterator<ReferentialAttributeModel> it = persistenceUnit.getReferentialAttributes().iterator();
+//		    while (it.hasNext()) {
+//			ReferentialAttributeModel next = it.next();
+//			if (referentialAttribute.equals(next)) {
+//			    log.debug("Found equal attribute using iterator. Going to remove it using iterator...");
+//			    it.remove();
+//			    if (false == persistenceUnit.getReferentialAttributes().stream()
+//				    .anyMatch(referentialAttribute::equals)) {
+//				log.debug("UNABLE to remove attribute using iterator.remove()");
+//				return false;
+//			    }
+//			    return true;
+//			}
+//		    }
+//		}
+//		return true;
+//	    }
+	    log.debug("Equal referential attribute was not found.");
+	    return false;
+	}
+	return true;
     }
 
     private void assertPersistenceUnitNotContainAttributeWithName(@NonNull String attributeName)
 	    throws IllegalOperationException {
-	if (persistenceUnit.getPrimitiveAttributes()
-		.contains(PrimitiveAttributeModel.makeIdentifiableInstance(attributeName, persistenceUnit))) {
+	String name = persistenceUnit.getName();
+	log.debug("Id: {} | Asserting there are no existed attribute with name {}", getId(), attributeName);
+	PrimitiveAttributeModel primitiveIdentifiableInstance = PrimitiveAttributeModel
+		.makeIdentifiableInstance(attributeName, persistenceUnit);
+	if (persistenceUnit.getPrimitiveAttributes().contains(primitiveIdentifiableInstance)
+	/*
+	 * || persistenceUnit.getPrimitiveAttributes().stream().anyMatch(
+	 * primitiveIdentifiableInstance::equals)
+	 */) {
 	    throw new IllegalOperationException(
-		    "Persistence unit already contains primitive attribute with name " + attributeName);
+		    "Persistence unit " + name + " already contains primitive attribute with name " + attributeName);
 	}
-	if (persistenceUnit.getReferentialAttributes()
-		.contains(ReferentialAttributeModel.makeIdentifiableInstance(attributeName, persistenceUnit))) {
+	ReferentialAttributeModel referentialIdentifiableAttribute = ReferentialAttributeModel
+		.makeIdentifiableInstance(attributeName, persistenceUnit);
+	log.debug("Id: {} | Referential identifiable attribute hash: {}", getId(),
+		referentialIdentifiableAttribute.hashCode());
+
+	ObservableSet<ReferentialAttributeModel> referentialAttributes = persistenceUnit.getReferentialAttributes();
+	log.debug("Id: {} | PU referential attributes hashCodes: {}", getId(),
+		referentialAttributes.stream().map(Object::hashCode).collect(Collectors.toList()));
+	if (referentialAttributes.size() == 1) {
+	    ReferentialAttributeModel existedElement = referentialAttributes.iterator().next();
+	    boolean existedElementEqualsIdentifiable = existedElement.equals(referentialIdentifiableAttribute);
+	    boolean identifiableAttributeEqualsExistedElement = referentialIdentifiableAttribute.equals(existedElement);
+	    log.debug("Id: {} | existed referential attribute equal identifiable one? {}", getId(),
+		    existedElementEqualsIdentifiable);
+	    log.debug("Id: {} | identifiable referential attribute equal existed one? {}", getId(),
+		    identifiableAttributeEqualsExistedElement);
+	}
+	boolean contains = referentialAttributes
+		.contains(referentialIdentifiableAttribute);
+	log.debug("Id: {} | PU referential attributes contains identifiable one? {}", getId(), contains);
+
+	if (contains
+//		||
+//		referentialAttributes.stream().anyMatch(referentialIdentifiableAttribute::equals)
+	) {
 	    throw new IllegalOperationException(
-		    "Persistence unit already contains referential attribute with name " + attributeName);
+		    "Persistence unit " + name + " already contains referential attribute with name " + attributeName);
 	}
     }
 
@@ -95,7 +178,8 @@ public class PersistenceUnitDescriptor extends AbstractDescriptor implements Per
 		.map(ReferentialAttribute::getAssociation)
 		.map(Association::getId)
 		.map(parentDescriptor::getAssociationDescriptorById)
-		.collect(Collectors.toSet());
+		.distinct()
+		.collect(Collectors.toList());
 	detachedAssociations.forEach(AssociationDescriptor::detachFromParent);
 	parentDescriptor.detachPersistenceUnit(this);
     }
@@ -110,7 +194,6 @@ public class PersistenceUnitDescriptor extends AbstractDescriptor implements Per
 	for (AssociationDescriptor detachedAssociation : detachedAssociations) {
 	    detachedAssociation.attachToParent();
 	}
-	detachedAssociations = null;
 	detached = false;
 	log.debug("attachToParent finished successfully");
     }
@@ -147,18 +230,4 @@ public class PersistenceUnitDescriptor extends AbstractDescriptor implements Per
     public PersistenceDescriptor getPersistence() {
 	return parentDescriptor;
     }
-
-//    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-//    private static class Memento {
-//	private Map<String, AssociationBelongType> associationIdToAssociationBelongType;
-//	
-//	public static Memento of(PersistenceUnitDescriptor descriptor) {
-//	    descriptor.getUnmodifiableReferentialAttributes().stream()
-//	    .collect(Collectors.toM)
-//	}
-//	
-//	private enum AssociationBelongType {
-//	    CONTAINER_ONLY, ELEMENT_ONLY, BOTH;
-//	}
-//    }
 }

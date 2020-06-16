@@ -69,6 +69,9 @@ public class ProjectPresenter implements Initializable {
     @FXML
     Button launchViewButton;
 
+    @FXML
+    ConfigurationPresenter configurationController;
+
     @Inject
     private ProjectService projectService;
     @Inject
@@ -136,7 +139,8 @@ public class ProjectPresenter implements Initializable {
 	PersistenceDiagramPresenter presenter = view.getPresenter();
 	persistenceModel = presenter.getPersistenceModel();// TODO: consider extracting these lines to
 							   // fx service
-	configurationModel = configurationDomainService.loadConfigurationModel();
+	configurationModel = configurationController.getGlobalConfigurationModel();
+//	configurationModel = configurationDomainService.loadConfigurationModel();
 //	StartledFrogDiagram diagram = (StartledFrogDiagram) xRoot.getDiagram();
 	createPersistenceUnitTool = new CreatePersistenceUnitTool(xRoot);
 	createAssociationTool = new CreateAssociationConnectionTool(xRoot);
@@ -169,12 +173,12 @@ public class ProjectPresenter implements Initializable {
     @FXML
     public void saveModels() {
 	if (persistenceModel == null) {
-	    log.info("persistence model is null. Going to load it...");
+	    log.warn("persistence model is null. Going to load it...");
 	    persistenceModel = persistenceDomainService.loadPersistenceModel();
 	}
 	persistenceDomainService.persistModel(persistenceModel);
 	if (configurationModel == null) {
-	    log.info("global configuration model is null. Going to load it...");
+	    log.warn("global configuration model is null. Going to load it...");
 	    configurationModel = configurationDomainService.loadConfigurationModel();
 	}
 	configurationDomainService.persistModel(configurationModel);
