@@ -121,6 +121,7 @@ public class AttributeToFieldTranslator {
 	    } else {// many to one
 		return AnnotationInstances.manyToOneBuilder()
 			.cascade(fieldCascade, fieldCascades)
+			.fetch(FetchType.LAZY)
 			.optional(arity.getRight().equals(AttributeArity.AT_MOST_ONE))
 			.build();
 	    }
@@ -173,6 +174,7 @@ public class AttributeToFieldTranslator {
 	    } else {// many to one
 		return AnnotationInstances.manyToOneBuilder()
 			.cascade(fieldCascade, fieldCascades)
+			.fetch(FetchType.LAZY)
 			.optional(arity.getRight().equals(AttributeArity.AT_MOST_ONE))
 			.build();
 	    }

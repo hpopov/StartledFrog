@@ -1,5 +1,6 @@
 package $entity.PackageName;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.Data;
 import ${importType.TypeUri};
 #end
 
+@JsonIgnoreProperties({ "hibernateLazyInitializer" })
 @Entity
 @Table(name = "$entity.tableName")
 @Data

@@ -72,6 +72,29 @@
 
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>net.atlassian.cmathtutor.VplApplication</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -130,98 +153,98 @@
 
 		<!-- FXDiagram dependencies... -->
 		<!-- Transitive dependency to required xbase.lib -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.eclipse.xtend</groupId> -->
-<!-- 			<artifactId>org.eclipse.xtend.lib</artifactId> -->
-<!-- 			<version>${xtext-version}</version> -->
-<!-- 		</dependency> -->
-	<!-- <dependency> -->
-			<!-- <groupId>org.eclipse.xtend</groupId> -->
-			<!-- <artifactId>org.eclipse.xtend.lib.macro</artifactId> -->
-			<!-- <version>${xtext-version}</version> -->
-			<!-- </dependency> -->
-			<!-- <dependency> -->
-			<!-- <groupId>com.oracle</groupId> -->
-			<!-- <artifactId>javafx.embedd.swt</artifactId> -->
-			<!-- <version>8.0.0-SNAPSHOT</version> -->
-			<!-- <scope>system</scope> -->
-			<!-- <systemPath>${java.home}/lib/jfxswt.jar</systemPath> -->
-			<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.eclipse.xtend</groupId> -->
+		<!-- <artifactId>org.eclipse.xtend.lib</artifactId> -->
+		<!-- <version>${xtext-version}</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.eclipse.xtend</groupId> -->
+		<!-- <artifactId>org.eclipse.xtend.lib.macro</artifactId> -->
+		<!-- <version>${xtext-version}</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.oracle</groupId> -->
+		<!-- <artifactId>javafx.embedd.swt</artifactId> -->
+		<!-- <version>8.0.0-SNAPSHOT</version> -->
+		<!-- <scope>system</scope> -->
+		<!-- <systemPath>${java.home}/lib/jfxswt.jar</systemPath> -->
+		<!-- </dependency> -->
 
-			<!-- Dependencies from "lib" folder -->
-			<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
-			<dependency>
-				<groupId>javax.json</groupId>
-				<artifactId>javax.json-api</artifactId>
-				<version>1.1</version>
-			</dependency>
+		<!-- Dependencies from "lib" folder -->
+		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+			<groupId>javax.json</groupId>
+			<artifactId>javax.json-api</artifactId>
+			<version>1.1</version>
+		</dependency>
 
-			<dependency>
-				<groupId>org.glassfish</groupId>
-				<artifactId>javax.json</artifactId>
-				<version>1.1</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-			<dependency>
-				<groupId>javax.xml.bind</groupId>
-				<artifactId>jaxb-api</artifactId>
-				<version>${jaxb.version}</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/javax.xml.parsers/jaxp-api -->
-			<dependency>
-				<groupId>javax.xml.parsers</groupId>
-				<artifactId>jaxp-api</artifactId>
-				<version>${jaxp.version}</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.leangen.geantyref</groupId>
-				<artifactId>geantyref</artifactId>
-				<version>${geantyref.version}</version>
-			</dependency>
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>${jaxb.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.xml.parsers/jaxp-api -->
+		<dependency>
+			<groupId>javax.xml.parsers</groupId>
+			<artifactId>jaxp-api</artifactId>
+			<version>${jaxp.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.leangen.geantyref</groupId>
+			<artifactId>geantyref</artifactId>
+			<version>${geantyref.version}</version>
+		</dependency>
 
-			<dependency>
-				<groupId>javax.persistence</groupId>
-				<artifactId>javax.persistence-api</artifactId>
-				<version>2.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.data</groupId>
-				<artifactId>spring-data-rest-core</artifactId>
-				<version>${spring-data-rest.version}</version>
-			</dependency>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>javax.persistence-api</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-core</artifactId>
+			<version>${spring-data-rest.version}</version>
+		</dependency>
 
-			<dependency>
-				<groupId>ua.cmathtutor.startledfrog</groupId>
-				<artifactId>SpringBoot-dependencies</artifactId>
-				<version>${startled-frog.version}</version>
-			</dependency>
+		<dependency>
+			<groupId>ua.cmathtutor.startledfrog</groupId>
+			<artifactId>SpringBoot-dependencies</artifactId>
+			<version>${startled-frog.version}</version>
+		</dependency>
 
 
-			<!-- Test dependencies -->
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter</artifactId>
-				<version>${junit.jupiter.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hamcrest</groupId>
-				<artifactId>hamcrest</artifactId>
-				<version>${hamcrest.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-junit-jupiter</artifactId>
-				<version>${mockito.jupiter.version}</version>
-				<scope>test</scope>
-			</dependency>
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest</artifactId>
+			<version>${hamcrest.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<version>${mockito.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- Local JAR dependencies for FXDiagram -->
 		<dependency>
