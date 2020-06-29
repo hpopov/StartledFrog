@@ -40,8 +40,8 @@ public class AssociationValidator {
 
     private static void associationMustNotBeOneToOne(ReferentialAttributeModel containerAttribute,
 	    ReferentialAttributeModel elementAttribute) throws IllegalOperationException {
-	if (containerAttribute.arityProperty().equals(AttributeArity.ONE_EXACTLY)
-		&& elementAttribute.arityProperty().equals(AttributeArity.ONE_EXACTLY)) {
+	if (containerAttribute.getArity().equals(AttributeArity.ONE_EXACTLY)
+		&& elementAttribute.getArity().equals(AttributeArity.ONE_EXACTLY)) {
 	    throw new IllegalOperationException("One-to-one association is not supported");
 	}
     }
