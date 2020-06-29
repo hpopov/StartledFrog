@@ -32,115 +32,114 @@ public class PersistenceUnitModel extends AbstractIdentifyableModel implements P
     @EqualsAndHashCode.Include
     private StringProperty name = new SimpleStringProperty();
     private ObservableSet<PrimitiveAttributeModel> primitiveAttributes = FXCollections
-	    .observableSet(new LinkedHashSet<>());
+            .observableSet(new LinkedHashSet<>());
     private ObservableSet<ReferentialAttributeModel> referentialAttributes = FXCollections
-	    .observableSet(new LinkedHashSet<>());
+            .observableSet(new LinkedHashSet<>());
     private ObservableSet<RepositoryOperationModel> repositoryOperations = FXCollections
-	    .observableSet(new LinkedHashSet<>());
+            .observableSet(new LinkedHashSet<>());
 
     private ObservableSet<PrimitiveAttributeModel> unmodifiablePrimitiveAttributes = FXCollections
-	    .unmodifiableObservableSet(primitiveAttributes);
+            .unmodifiableObservableSet(primitiveAttributes);
     private ObservableSet<ReferentialAttributeModel> unmodifiableReferentialAttributes = FXCollections
-	    .unmodifiableObservableSet(referentialAttributes);
+            .unmodifiableObservableSet(referentialAttributes);
     private ObservableSet<RepositoryOperationModel> unmodifiableRepositoryOperations = FXCollections
-	    .unmodifiableObservableSet(repositoryOperations);
+            .unmodifiableObservableSet(repositoryOperations);
 
     private ObjectProperty<PersistenceModel> persistence = new SimpleObjectProperty<>();
 
     public PersistenceUnitModel() {
-	super();
-//	initBindings();
+        super();
+        // initBindings();
     }
 
     public PersistenceUnitModel(String id) {
-	super(id);
-//	initBindings();
+        super(id);
+        // initBindings();
     }
 
     @SuppressWarnings("unused")
     // You thought you are the smartest one...
-//    But as a result you ended  modifying element within the HashSet already
+    // But as a result you ended modifying element within the HashSet already
     private void initBindings() {
-	SetChangeListener<AbstractAttributeModel> attributesChangeListener = (
-		Change<? extends AbstractAttributeModel> change) -> {
-	    if (change.wasRemoved()) {
-		change.getElementRemoved().setParentClassifier(null);
-	    }
-	    if (change.wasAdded()) {
-		change.getElementAdded().setParentClassifier(this);
-	    }
-	};
-	referentialAttributes.addListener(attributesChangeListener);
-	primitiveAttributes.addListener(attributesChangeListener);
-	repositoryOperations.addListener((Change<? extends RepositoryOperationModel> change) -> {
-	    if (change.wasRemoved()) {
-		change.getElementRemoved().setParentClassifier(null);
-	    }
-	    if (change.wasAdded()) {
-		change.getElementAdded().setParentClassifier(this);
-	    }
-	});
+        SetChangeListener<AbstractAttributeModel> attributesChangeListener = (
+                Change<? extends AbstractAttributeModel> change) -> {
+            if (change.wasRemoved()) {
+                change.getElementRemoved().setParentClassifier(null);
+            }
+            if (change.wasAdded()) {
+                change.getElementAdded().setParentClassifier(this);
+            }
+        };
+        referentialAttributes.addListener(attributesChangeListener);
+        primitiveAttributes.addListener(attributesChangeListener);
+        repositoryOperations.addListener((Change<? extends RepositoryOperationModel> change) -> {
+            if (change.wasRemoved()) {
+                change.getElementRemoved().setParentClassifier(null);
+            }
+            if (change.wasAdded()) {
+                change.getElementAdded().setParentClassifier(this);
+            }
+        });
     }
 
     public StringProperty nameProperty() {
-	return this.name;
+        return this.name;
     }
 
     @XmlElement(required = true)
     @Override
     public String getName() {
-	return this.nameProperty().get();
+        return this.nameProperty().get();
     }
 
     public void setName(final String name) {
-	this.nameProperty().set(name);
+        this.nameProperty().set(name);
     }
 
     @XmlElementWrapper(required = true, name = "primitive-attributes")
     @XmlElement(required = false, name = "primitive-attribute")
     public ObservableSet<PrimitiveAttributeModel> getPrimitiveAttributes() {
-	return primitiveAttributes;
+        return primitiveAttributes;
     }
 
     @XmlElementWrapper(required = true, name = "referential-attributes")
     @XmlElement(required = false, name = "referential-attribute")
     public ObservableSet<ReferentialAttributeModel> getReferentialAttributes() {
-	return referentialAttributes;
+        return referentialAttributes;
     }
 
     @XmlElementWrapper(required = true, name = "repository-operations")
     @XmlElement(required = false, name = "repository-operation")
     public ObservableSet<RepositoryOperationModel> getRepositoryOperations() {
-	return repositoryOperations;
+        return repositoryOperations;
     }
 
     @Override
     public ObservableSet<PrimitiveAttributeModel> getUnmodifiablePrimitiveAttributes() {
-	return unmodifiablePrimitiveAttributes;
+        return unmodifiablePrimitiveAttributes;
     }
 
     @Override
     public ObservableSet<? extends ReferentialAttribute> getUnmodifiableReferentialAttributes() {
-	return unmodifiableReferentialAttributes;
+        return unmodifiableReferentialAttributes;
     }
 
     @Override
     public ObservableSet<? extends RepositoryOperation> getUnmodifiableRepositoryOperations() {
-	return unmodifiableRepositoryOperations;
+        return unmodifiableRepositoryOperations;
     }
 
     public ReadOnlyObjectProperty<PersistenceModel> persistenceProperty() {
-	return this.persistence;
+        return this.persistence;
     }
 
     @XmlTransient
     @Override
     public PersistenceModel getPersistence() {
-	return this.persistenceProperty().get();
+        return this.persistenceProperty().get();
     }
 
     public void setPersistence(PersistenceModel persistence) {
-	this.persistence.set(persistence);
+        this.persistence.set(persistence);
     }
-
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PrimitiveType {
+
     BOOLEAN("Boolean"),
     INTEGER("Integer"),
     BIG_INTEGER("Big integer"),

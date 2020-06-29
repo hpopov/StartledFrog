@@ -56,61 +56,60 @@ public class LoadProjectPresenter implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-	loadService = new LoadStartledFrogProjectService(loadProjectProperties.startledFrogProjectFileProperty(),
-		projectService);
-	loadService.setOnScheduled(event -> loadProgressBar.setVisible(true));
-	loadService.setOnSucceeded(event -> {
-	    Project project = (Project) event.getSource().getValue();
-	    loadProjectProperties.setApplicationName(project.getApplicationName());
-	    loadProjectProperties.setRootPackage(project.getRootPackage());
-	    loadProjectProperties.setStartledFrogVersion(project.getVersion());
-	    loadedProjectProperty.set(project);
-	});
-	loadService.setOnFailed(event -> {
-	    log.warn("LoadService execution failed");
-	    loadProgressBar.setVisible(false);
-	});
-	loadProgressBar.progressProperty().bind(loadService.progressProperty());
-	projectFileChooser.getExtensionFilters().add(
-		new ExtensionFilter("Startled Frog project", "*" + projectService.getProjectExtension()));
-	projectFileChooser.setTitle("Choose Startled Frog project");
-	loadProjectProperties.startledFrogProjectFileProperty().addListener(listenerRegistryHelper
-		.registerChangeListener(new FileNameChangeListener(projectFileNameLabel.textProperty())));
-	applicationNameLabel.textProperty().bind(loadProjectProperties.applicationNameProperty());
-	rootPackageLabel.textProperty().bind(loadProjectProperties.rootPackageProperty());
-	sfVersionLabel.textProperty().bind(loadProjectProperties.startledFrogVersionProperty().asString());
-	loadProjectButton.disableProperty().bind(
-		loadProjectProperties.startledFrogProjectFileProperty().isNull().or(loadService.runningProperty()));
-	startModellingButton.disableProperty().bind(loadedProjectProperty.isNull());
+        loadService = new LoadStartledFrogProjectService(loadProjectProperties.startledFrogProjectFileProperty(),
+                projectService);
+        loadService.setOnScheduled(event -> loadProgressBar.setVisible(true));
+        loadService.setOnSucceeded(event -> {
+            Project project = (Project) event.getSource().getValue();
+            loadProjectProperties.setApplicationName(project.getApplicationName());
+            loadProjectProperties.setRootPackage(project.getRootPackage());
+            loadProjectProperties.setStartledFrogVersion(project.getVersion());
+            loadedProjectProperty.set(project);
+        });
+        loadService.setOnFailed(event -> {
+            log.warn("LoadService execution failed");
+            loadProgressBar.setVisible(false);
+        });
+        loadProgressBar.progressProperty().bind(loadService.progressProperty());
+        projectFileChooser.getExtensionFilters().add(
+                new ExtensionFilter("Startled Frog project", "*" + projectService.getProjectExtension()));
+        projectFileChooser.setTitle("Choose Startled Frog project");
+        loadProjectProperties.startledFrogProjectFileProperty().addListener(listenerRegistryHelper
+                .registerChangeListener(new FileNameChangeListener(projectFileNameLabel.textProperty())));
+        applicationNameLabel.textProperty().bind(loadProjectProperties.applicationNameProperty());
+        rootPackageLabel.textProperty().bind(loadProjectProperties.rootPackageProperty());
+        sfVersionLabel.textProperty().bind(loadProjectProperties.startledFrogVersionProperty().asString());
+        loadProjectButton.disableProperty().bind(
+                loadProjectProperties.startledFrogProjectFileProperty().isNull().or(loadService.runningProperty()));
+        startModellingButton.disableProperty().bind(loadedProjectProperty.isNull());
     }
 
     @FXML
     public void selectProjectFile() {
-	File projectFile = projectFileChooser.showOpenDialog(loadProjectButton.getScene().getWindow());
-	if (projectFile != null) {
-	    loadProjectProperties.setStartledFrogProjectFile(projectFile);
-	}
+        File projectFile = projectFileChooser.showOpenDialog(loadProjectButton.getScene().getWindow());
+        if (projectFile != null) {
+            loadProjectProperties.setStartledFrogProjectFile(projectFile);
+        }
     }
 
     @FXML
     public void loadProject() {
-	log.debug("Loading project using service...");
-	loadService.restart();
+        log.debug("Loading project using service...");
+        loadService.restart();
     }
 
     @FXML
     public void startModelling() {
-	projectService.setCurrentProject(loadedProjectProperty.get());
-	log.info("The project is selected and ready");
-	readyToStartModellingProperty.set(true);
+        projectService.setCurrentProject(loadedProjectProperty.get());
+        log.info("The project is selected and ready");
+        readyToStartModellingProperty.set(true);
     }
 
     public final ReadOnlyBooleanProperty readyToStartModellingPropertyProperty() {
-	return this.readyToStartModellingProperty;
+        return this.readyToStartModellingProperty;
     }
 
     public final boolean isReadyToStartModellingProperty() {
-	return this.readyToStartModellingPropertyProperty().get();
+        return this.readyToStartModellingPropertyProperty().get();
     }
-
 }

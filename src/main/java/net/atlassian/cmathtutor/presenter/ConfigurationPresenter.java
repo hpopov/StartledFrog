@@ -48,57 +48,50 @@ public class ConfigurationPresenter implements Initializable {
     private ChangeListenerRegistryHelper changeListenerRegistryHelper = new ChangeListenerRegistryHelper();
 
     public ConfigurationPresenter() {
-	jdbcDriverPathChooser.getExtensionFilters().add(
-		new ExtensionFilter("Jar file", "*.jar"));
-	jdbcDriverPathChooser.setTitle("Choose JDBC driver jar");
+        jdbcDriverPathChooser.getExtensionFilters().add(
+                new ExtensionFilter("Jar file", "*.jar"));
+        jdbcDriverPathChooser.setTitle("Choose JDBC driver jar");
     }
 
     @Override
     public void initialize(URL var1, ResourceBundle var2) {
-	globalConfigurationModel = configurationDomainService.loadConfigurationModel();
+        globalConfigurationModel = configurationDomainService.loadConfigurationModel();
 
-	dbRootPasswordField.setText(globalConfigurationModel.getRootPassword());
-	dbRootPasswordField.textProperty()
-		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    globalConfigurationModel.setRootPassword(newV);
-		}));
-	dbSchemaNameTextField.setText(globalConfigurationModel.getDatabase());
-	dbSchemaNameTextField.textProperty()
-		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    globalConfigurationModel.setDatabase(newV);
-		}));
-	dbUserPasswordField.setText(globalConfigurationModel.getPassword());
-	dbUserPasswordField.textProperty()
-		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    globalConfigurationModel.setPassword(newV);
-		}));
-	dbUserTextField.setText(globalConfigurationModel.getUser());
-	dbUserTextField.textProperty()
-		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    globalConfigurationModel.setUser(newV);
-		}));
-	dockerMachineIpTextField.setText(globalConfigurationModel.getDockerMachineIp());
-	dockerMachineIpTextField.textProperty()
-		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    globalConfigurationModel.setDockerMachineIp(newV);
-		}));
-	jdbcDriverPathLabel.setText(globalConfigurationModel.getJdbcDriverPath());
-	jdbcDriverPathLabel.textProperty()
-		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    globalConfigurationModel.setJdbcDriverPath(newV);
-		}));
+        dbRootPasswordField.setText(globalConfigurationModel.getRootPassword());
+        dbRootPasswordField.textProperty()
+                .addListener(changeListenerRegistryHelper.registerChangeListener(
+                        (observable, oldV, newV) -> { globalConfigurationModel.setRootPassword(newV); }));
+        dbSchemaNameTextField.setText(globalConfigurationModel.getDatabase());
+        dbSchemaNameTextField.textProperty()
+                .addListener(changeListenerRegistryHelper.registerChangeListener(
+                        (observable, oldV, newV) -> { globalConfigurationModel.setDatabase(newV); }));
+        dbUserPasswordField.setText(globalConfigurationModel.getPassword());
+        dbUserPasswordField.textProperty()
+                .addListener(changeListenerRegistryHelper.registerChangeListener(
+                        (observable, oldV, newV) -> { globalConfigurationModel.setPassword(newV); }));
+        dbUserTextField.setText(globalConfigurationModel.getUser());
+        dbUserTextField.textProperty()
+                .addListener(changeListenerRegistryHelper.registerChangeListener(
+                        (observable, oldV, newV) -> { globalConfigurationModel.setUser(newV); }));
+        dockerMachineIpTextField.setText(globalConfigurationModel.getDockerMachineIp());
+        dockerMachineIpTextField.textProperty()
+                .addListener(changeListenerRegistryHelper.registerChangeListener(
+                        (observable, oldV, newV) -> { globalConfigurationModel.setDockerMachineIp(newV); }));
+        jdbcDriverPathLabel.setText(globalConfigurationModel.getJdbcDriverPath());
+        jdbcDriverPathLabel.textProperty()
+                .addListener(changeListenerRegistryHelper.registerChangeListener(
+                        (observable, oldV, newV) -> { globalConfigurationModel.setJdbcDriverPath(newV); }));
     }
 
     @FXML
     public void chooseJdbcDriverPath() {
-	String jdbcDriverPath = jdbcDriverPathLabel.getText();
-	Path path = Paths.get(jdbcDriverPath);
-	jdbcDriverPathChooser.setInitialFileName(path.getFileName().toString());
-	jdbcDriverPathChooser.setInitialDirectory(path.getParent().toFile());
-	File jdbcDriverFile = jdbcDriverPathChooser.showOpenDialog(jdbcDriverPathLabel.getScene().getWindow());
-	if (null != jdbcDriverFile) {
-	    jdbcDriverPathLabel.setText(jdbcDriverFile.toString());
-	}
+        String jdbcDriverPath = jdbcDriverPathLabel.getText();
+        Path path = Paths.get(jdbcDriverPath);
+        jdbcDriverPathChooser.setInitialFileName(path.getFileName().toString());
+        jdbcDriverPathChooser.setInitialDirectory(path.getParent().toFile());
+        File jdbcDriverFile = jdbcDriverPathChooser.showOpenDialog(jdbcDriverPathLabel.getScene().getWindow());
+        if (null != jdbcDriverFile) {
+            jdbcDriverPathLabel.setText(jdbcDriverFile.toString());
+        }
     }
-
 }

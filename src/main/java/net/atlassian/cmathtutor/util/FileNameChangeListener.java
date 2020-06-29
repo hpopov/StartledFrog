@@ -14,11 +14,10 @@ public class FileNameChangeListener implements ChangeListener<File> {
 
     @Override
     public void changed(ObservableValue<? extends File> observable, File oldValue, File newValue) {
-	if (newValue == null) {
-	    fileNameTextProperty.set("...");
-	} else {
-	    fileNameTextProperty.set(newValue.getName());
-	}
+        if (newValue == null) {
+            fileNameTextProperty.set("...");
+        } else {
+            fileNameTextProperty.set(newValue.getName());
+        }
     }
-
 }

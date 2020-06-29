@@ -17,6 +17,6 @@ public class PersistencePresenter implements Initializable {
 
     @Override
     public void initialize(URL var1, ResourceBundle var2) {
-//	PersistenceDiagramView.modifyView(persistenceDiagramController.getRoot());
+        // PersistenceDiagramView.modifyView(persistenceDiagramController.getRoot());
     }
 }

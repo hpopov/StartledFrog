@@ -10,43 +10,44 @@ import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
 public class TranslatorHelper {
 
     public static ReferentialAttribute getAnotherAttributeFromAssociation(ReferentialAttribute attribute) {
-	Association association = attribute.getAssociation();
-	return association.getContainerAttribute().equals(attribute)
-		? association.getElementAttribute()
-		: association.getContainerAttribute();
+        Association association = attribute.getAssociation();
+        return association.getContainerAttribute().equals(attribute)
+                ? association.getElementAttribute()
+                : association.getContainerAttribute();
     }
 
     public static Pair<ReferentialAttribute, ReferentialAttribute> definePrimaryAndSecondaryAttributes(
-	    Association association) {
-	if (association.getContainerAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
-	    return new ImmutablePair<>(association.getContainerAttribute(), association.getElementAttribute());
-	} else if (association.getElementAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
-	    return new ImmutablePair<>(association.getElementAttribute(), association.getContainerAttribute());
-	} else {
-	    throw new IllegalArgumentException(
-		    "Association " + association + " must contain one end owned by classifier");
-	}
+            Association association
+    ) {
+        if (association.getContainerAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+            return new ImmutablePair<>(association.getContainerAttribute(), association.getElementAttribute());
+        } else if (association.getElementAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+            return new ImmutablePair<>(association.getElementAttribute(), association.getContainerAttribute());
+        } else {
+            throw new IllegalArgumentException(
+                    "Association " + association + " must contain one end owned by classifier");
+        }
     }
 
     public static ReferentialAttribute definePrimaryAttribute(Association association) {
-	if (association.getContainerAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
-	    return association.getContainerAttribute();
-	} else if (association.getElementAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
-	    return association.getElementAttribute();
-	} else {
-	    throw new IllegalArgumentException(
-		    "Association " + association + " must contain one end owned by classifier");
-	}
+        if (association.getContainerAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+            return association.getContainerAttribute();
+        } else if (association.getElementAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+            return association.getElementAttribute();
+        } else {
+            throw new IllegalArgumentException(
+                    "Association " + association + " must contain one end owned by classifier");
+        }
     }
 
     public static ReferentialAttribute defineSecondaryAttribute(Association association) {
-	if (association.getContainerAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
-	    return association.getElementAttribute();
-	} else if (association.getElementAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
-	    return association.getContainerAttribute();
-	} else {
-	    throw new IllegalArgumentException(
-		    "Association " + association + " must contain one end owned by classifier");
-	}
+        if (association.getContainerAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+            return association.getElementAttribute();
+        } else if (association.getElementAttribute().getOwnerType().equals(OwnerType.CLASSIFIER)) {
+            return association.getContainerAttribute();
+        } else {
+            throw new IllegalArgumentException(
+                    "Association " + association + " must contain one end owned by classifier");
+        }
     }
 }

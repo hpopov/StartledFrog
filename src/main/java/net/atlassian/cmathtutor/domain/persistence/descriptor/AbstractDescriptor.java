@@ -13,5 +13,4 @@ public abstract class AbstractDescriptor implements Identifiable {
     @Getter(onMethod = @__(@Override))
     @Setter
     private String id;
-
 }

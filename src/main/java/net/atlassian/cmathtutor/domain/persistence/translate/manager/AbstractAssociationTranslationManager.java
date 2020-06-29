@@ -15,10 +15,10 @@ public abstract class AbstractAssociationTranslationManager implements Associati
     protected ReferentialAttribute secondaryAttribute;
 
     public AbstractAssociationTranslationManager(Association association) {
-	Pair<ReferentialAttribute, ReferentialAttribute> primaryAndSecondaryAttributes = TranslatorHelper
-		.definePrimaryAndSecondaryAttributes(association);
-	this.primaryAttribute = primaryAndSecondaryAttributes.getKey();
-	this.secondaryAttribute = primaryAndSecondaryAttributes.getValue();
-	this.association = association;
+        Pair<ReferentialAttribute, ReferentialAttribute> primaryAndSecondaryAttributes = TranslatorHelper
+                .definePrimaryAndSecondaryAttributes(association);
+        this.primaryAttribute = primaryAndSecondaryAttributes.getKey();
+        this.secondaryAttribute = primaryAndSecondaryAttributes.getValue();
+        this.association = association;
     }
 }

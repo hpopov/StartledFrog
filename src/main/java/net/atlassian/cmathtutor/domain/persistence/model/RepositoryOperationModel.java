@@ -28,44 +28,45 @@ public class RepositoryOperationModel extends AbstractIdentifyableModel implemen
     @EqualsAndHashCode.Include
     private ObjectProperty<PersistenceUnitModel> parentClassifier = new SimpleObjectProperty<>();
 
-    public static RepositoryOperationModel makeIdentifiableInstance(String name,
-	    PersistenceUnitModel parentClassifier) {
-	RepositoryOperationModel repositoryOperationModel = new RepositoryOperationModel(UidUtil.getUId());
-	repositoryOperationModel.setName(name);
-	repositoryOperationModel.setParentClassifier(parentClassifier);
-	return repositoryOperationModel;
+    public static RepositoryOperationModel makeIdentifiableInstance(
+            String name,
+            PersistenceUnitModel parentClassifier
+    ) {
+        RepositoryOperationModel repositoryOperationModel = new RepositoryOperationModel(UidUtil.getUId());
+        repositoryOperationModel.setName(name);
+        repositoryOperationModel.setParentClassifier(parentClassifier);
+        return repositoryOperationModel;
     }
 
     public RepositoryOperationModel(String id) {
-	super(id);
+        super(id);
     }
 
     public StringProperty nameProperty() {
-	return this.name;
+        return this.name;
     }
 
     @XmlElement(required = true)
     @Override
     public String getName() {
-	return this.nameProperty().get();
+        return this.nameProperty().get();
     }
 
     public void setName(final String name) {
-	this.nameProperty().set(name);
+        this.nameProperty().set(name);
     }
 
     public ReadOnlyObjectProperty<PersistenceUnitModel> parentClassifierProperty() {
-	return this.parentClassifier;
+        return this.parentClassifier;
     }
 
     @XmlTransient
     @Override
     public PersistenceUnitModel getParentClassifier() {
-	return this.parentClassifierProperty().get();
+        return this.parentClassifierProperty().get();
     }
 
     public void setParentClassifier(final PersistenceUnitModel parentClassifier) {
-	this.parentClassifier.set(parentClassifier);
+        this.parentClassifier.set(parentClassifier);
     }
-
 }

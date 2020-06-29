@@ -13,26 +13,26 @@ public abstract class AbstractCreateShapeTool implements XDiagramTool {
     private EventHandler<MouseEvent> eventHandler = this::inactivateToolOnRightClick;
 
     public AbstractCreateShapeTool(XRoot xRoot) {
-	this.xRoot = xRoot;
-	diagram = (StartledFrogDiagram) xRoot.getDiagram();
+        this.xRoot = xRoot;
+        diagram = (StartledFrogDiagram) xRoot.getDiagram();
     }
 
     @Override
     public boolean activate() {
-	xRoot.getScene().addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	return true;
+        xRoot.getScene().addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+        return true;
     }
 
     private void inactivateToolOnRightClick(MouseEvent event) {
-	if (event.getButton() == MouseButton.SECONDARY) {
-	    xRoot.restoreDefaultTool();
-	    event.consume();
-	}
+        if (event.getButton() == MouseButton.SECONDARY) {
+            xRoot.restoreDefaultTool();
+            event.consume();
+        }
     }
 
     @Override
     public boolean deactivate() {
-	xRoot.getScene().removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	return true;
+        xRoot.getScene().removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+        return true;
     }
 }

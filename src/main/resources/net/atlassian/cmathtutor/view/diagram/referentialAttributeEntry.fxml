@@ -8,7 +8,8 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.HBox?>
 
-<fx:root alignment="CENTER_LEFT" type="HBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER_LEFT" type="HBox"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<Label fx:id="nameLabel" text="referentialAttribute">
 			<font>
@@ -26,7 +27,8 @@
 				<Font name="Lucida Bright" size="20.0" />
 			</font>
 		</Label>
-		<Label fx:id="typeLabel" contentDisplay="CENTER" text="OtherName">
+		<Label fx:id="typeLabel" contentDisplay="CENTER"
+			text="OtherName">
 			<font>
 				<Font name="Lucida Bright" size="20.0" />
 			</font>
@@ -35,9 +37,9 @@
 			<font>
 				<Font name="Lucida Bright" size="20.0" />
 			</font>
-         <HBox.margin>
-            <Insets left="5.0" />
-         </HBox.margin>
+			<HBox.margin>
+				<Insets left="5.0" />
+			</HBox.margin>
 		</Label>
 	</children>
 </fx:root>

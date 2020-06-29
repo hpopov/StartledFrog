@@ -25,39 +25,39 @@ public class StartPresenter implements Initializable {
     LoadProjectPresenter loadProjectController;
     @FXML
     HBox root;
-//    private BooleanBinding orBinding;
+    // private BooleanBinding orBinding;
 
     private ChangeListenerRegistryHelper listenerRegistryHelper = new ChangeListenerRegistryHelper();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-	// For some reason it simply doesn't work...
-//	orBinding = loadProjectController.readyToStartModellingPropertyProperty()
-//		.or(createProjectController.readyToStartModellingPropertyProperty());
-	ChangeListener<? super Boolean> changeListener = listenerRegistryHelper
-		.registerChangeListener((observable, oldValue, newValue) -> {
-		    log.debug("New value receieved, start presenter is ready? {}", newValue);
-		    if (newValue) {
-			switchToMainWindow();
-		    }
-		});
-	loadProjectController.readyToStartModellingPropertyProperty().addListener(changeListener);
-	createProjectController.readyToStartModellingPropertyProperty().addListener(changeListener);
+        // For some reason it simply doesn't work...
+        // orBinding =
+        // loadProjectController.readyToStartModellingPropertyProperty()
+        // .or(createProjectController.readyToStartModellingPropertyProperty());
+        ChangeListener<? super Boolean> changeListener = listenerRegistryHelper
+                .registerChangeListener((observable, oldValue, newValue) -> {
+                    log.debug("New value receieved, start presenter is ready? {}", newValue);
+                    if (newValue) {
+                        switchToMainWindow();
+                    }
+                });
+        loadProjectController.readyToStartModellingPropertyProperty().addListener(changeListener);
+        createProjectController.readyToStartModellingPropertyProperty().addListener(changeListener);
     }
 
     private void switchToMainWindow() {
-	listenerRegistryHelper = null;
-	Stage stage = new Stage();
-	stage.initModality(Modality.NONE);
-	stage.setResizable(false);
-	ProjectView view = new ProjectView();
-	Scene scene = new Scene(view.getView());
-	PerspectiveCamera perspectiveCamera = new PerspectiveCamera();
-	scene.setCamera(perspectiveCamera);
-	stage.setScene(scene);
-	stage.setTitle(VplApplication.MAIN_TITLE);
-	stage.show();
-	root.getScene().getWindow().hide();
+        listenerRegistryHelper = null;
+        Stage stage = new Stage();
+        stage.initModality(Modality.NONE);
+        stage.setResizable(false);
+        ProjectView view = new ProjectView();
+        Scene scene = new Scene(view.getView());
+        PerspectiveCamera perspectiveCamera = new PerspectiveCamera();
+        scene.setCamera(perspectiveCamera);
+        stage.setScene(scene);
+        stage.setTitle(VplApplication.MAIN_TITLE);
+        stage.show();
+        root.getScene().getWindow().hide();
     }
-
 }

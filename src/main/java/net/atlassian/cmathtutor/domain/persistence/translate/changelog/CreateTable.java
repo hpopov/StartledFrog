@@ -27,6 +27,6 @@ public class CreateTable {
     private List<Column> columns;
 
     public CreateTable() {
-	columns = new LinkedList<>();
+        columns = new LinkedList<>();
     }
 }

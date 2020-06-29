@@ -37,260 +37,268 @@ public class PersistenceFacade {
     private PersistenceDescriptor persistenceDescriptor;
 
     private PersistenceFacade(PersistenceDescriptor persistenceDescriptor) {
-	this.persistenceDescriptor = persistenceDescriptor;
+        this.persistenceDescriptor = persistenceDescriptor;
     }
 
     public PersistenceModel getWrappedPersistence() {
-	return persistenceDescriptor.getPersistence();
+        return persistenceDescriptor.getPersistence();
     }
 
     public static PersistenceFacade newInstance() {
-	return new PersistenceFacade(PersistenceDescriptor.newInstance());
+        return new PersistenceFacade(PersistenceDescriptor.newInstance());
     }
 
     public static PersistenceFacade loadFromFile(File persistenceModelFile) {
-	PersistenceModel persistence = null;
-	try {
-	    JAXBContext context = JAXBContext.newInstance(PersistenceModel.class);
-	    persistence = (PersistenceModel) context.createUnmarshaller()
-		    .unmarshal(new FileReader(persistenceModelFile));
-	} catch (JAXBException | FileNotFoundException e) {
-	    throw new RuntimeException("Unable to load persistence model using JAXB", e);
-	}
-	PersistenceDescriptor descriptor = executeInExceptionWrapper(PersistenceDescriptor::wrap, persistence);
-	return new PersistenceFacade(descriptor);
+        PersistenceModel persistence = null;
+        try {
+            JAXBContext context = JAXBContext.newInstance(PersistenceModel.class);
+            persistence = (PersistenceModel) context.createUnmarshaller()
+                    .unmarshal(new FileReader(persistenceModelFile));
+        } catch (JAXBException | FileNotFoundException e) {
+            throw new RuntimeException("Unable to load persistence model using JAXB", e);
+        }
+        PersistenceDescriptor descriptor = executeInExceptionWrapper(PersistenceDescriptor::wrap, persistence);
+        return new PersistenceFacade(descriptor);
     }
 
     public PersistenceUnitBuilder persistenceUnitBuilder(@NonNull String name) {
-	assertNameContainsAllowableCharactersOnly(name);
-	name = CaseUtil.trimAndUppercaseFirstLetter(name);
-	PersistenceUnitDescriptor persistenceUnitDescriptor = executeInExceptionWrapper(
-		persistenceDescriptor::addNewPersistenceUnit, name);
-	return new PersistenceUnitBuilder(persistenceUnitDescriptor);
+        assertNameContainsAllowableCharactersOnly(name);
+        name = CaseUtil.trimAndUppercaseFirstLetter(name);
+        PersistenceUnitDescriptor persistenceUnitDescriptor = executeInExceptionWrapper(
+                persistenceDescriptor::addNewPersistenceUnit, name);
+        return new PersistenceUnitBuilder(persistenceUnitDescriptor);
     }
 
     private void assertNameContainsAllowableCharactersOnly(String name) {
-	if (false == name.trim().matches("[a-zA-Z]+[a-zA-Z_0-9 \\-]*")) {
-	    throw new IllegalArgumentException(
-		    "Name must start with latin letter and contain only letters, digits, dashes, underscores or spaces");
-	}
+        if (false == name.trim().matches("[a-zA-Z]+[a-zA-Z_0-9 \\-]*")) {
+            throw new IllegalArgumentException(
+                    "Name must start with latin letter and contain only letters, digits, dashes, underscores or spaces");
+        }
     }
 
-    public AssociationBuilder associationBuilder(PersistenceUnitDescriptor container,
-	    PersistenceUnitDescriptor element) {
-	AssociationBuilder associationBuilder = new AssociationBuilder(container, element);
-	return associationBuilder;
+    public AssociationBuilder associationBuilder(
+            PersistenceUnitDescriptor container,
+            PersistenceUnitDescriptor element
+    ) {
+        AssociationBuilder associationBuilder = new AssociationBuilder(container, element);
+        return associationBuilder;
     }
 
     private AssociationDescriptor buildAssociation(AssociationBuilder builder) {
-	if (builder.containerAttribute.getName() == null) {
-	    initializeReferentialAttributeWithDefaultName(builder.container, builder.containerAttribute,
-		    builder.element.getName());
-	} else {
-	    executeInExceptionWrapper(
-		    () -> builder.container.addReferentialAttribute(builder.containerAttribute));
-	}
-	if (builder.elementAttribute.getName() == null) {
-	    initializeReferentialAttributeWithDefaultName(builder.element, builder.elementAttribute,
-		    builder.container.getName());
-	} else {
-	    executeInExceptionWrapper(
-		    () -> builder.element.addReferentialAttribute(builder.elementAttribute));
-	}
+        if (builder.containerAttribute.getName() == null) {
+            initializeReferentialAttributeWithDefaultName(builder.container, builder.containerAttribute,
+                    builder.element.getName());
+        } else {
+            executeInExceptionWrapper(
+                    () -> builder.container.addReferentialAttribute(builder.containerAttribute));
+        }
+        if (builder.elementAttribute.getName() == null) {
+            initializeReferentialAttributeWithDefaultName(builder.element, builder.elementAttribute,
+                    builder.container.getName());
+        } else {
+            executeInExceptionWrapper(
+                    () -> builder.element.addReferentialAttribute(builder.elementAttribute));
+        }
 
-	return executeInExceptionWrapper(persistenceDescriptor::addNewAssociation, builder.association);
+        return executeInExceptionWrapper(persistenceDescriptor::addNewAssociation, builder.association);
     }
 
-    private void initializeReferentialAttributeWithDefaultName(PersistenceUnitDescriptor persistenceUnitDescriptor,
-	    ReferentialAttributeModel referentialAttribute,
-	    String referencedPersistenceUnitName) {
-	String defaultAttributeName = CaseUtil.trimAndLowercaseFirstLetter(referencedPersistenceUnitName);
-	referentialAttribute.setName(defaultAttributeName);
-	boolean isAttributeInitialized = false;
-	for (int i = 1; i <= REFERENTIAL_ATTRIBUTE_DEFAULT_NAME_TRESHOLD && !isAttributeInitialized; i++) {
-	    try {
-		persistenceUnitDescriptor.addReferentialAttribute(referentialAttribute);
-		isAttributeInitialized = true;
-	    } catch (IllegalOperationException e) {
-		log.warn("Unable to initialize referential attribute : {}", e.getMessage());
-		referentialAttribute.setName(defaultAttributeName + i);
-	    }
-	}
-	if (false == isAttributeInitialized) {
-	    throw new IllegalStateException("Unable to initialize referential attribute using default name: "
-		    + "tried " + REFERENTIAL_ATTRIBUTE_DEFAULT_NAME_TRESHOLD + " times and still failed");
-	}
+    private void initializeReferentialAttributeWithDefaultName(
+            PersistenceUnitDescriptor persistenceUnitDescriptor,
+            ReferentialAttributeModel referentialAttribute,
+            String referencedPersistenceUnitName
+    ) {
+        String defaultAttributeName = CaseUtil.trimAndLowercaseFirstLetter(referencedPersistenceUnitName);
+        referentialAttribute.setName(defaultAttributeName);
+        boolean isAttributeInitialized = false;
+        for (int i = 1; i <= REFERENTIAL_ATTRIBUTE_DEFAULT_NAME_TRESHOLD && !isAttributeInitialized; i++) {
+            try {
+                persistenceUnitDescriptor.addReferentialAttribute(referentialAttribute);
+                isAttributeInitialized = true;
+            } catch (IllegalOperationException e) {
+                log.warn("Unable to initialize referential attribute : {}", e.getMessage());
+                referentialAttribute.setName(defaultAttributeName + i);
+            }
+        }
+        if (false == isAttributeInitialized) {
+            throw new IllegalStateException("Unable to initialize referential attribute using default name: "
+                    + "tried " + REFERENTIAL_ATTRIBUTE_DEFAULT_NAME_TRESHOLD + " times and still failed");
+        }
     }
 
     private static void executeInExceptionWrapper(RunnableDescriptorLogic logic) {
-	try {
-	    logic.run();
-	} catch (IllegalOperationException e) {
-	    throw new RuntimeException(e.getMessage(), e);
-	}
+        try {
+            logic.run();
+        } catch (IllegalOperationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     private static <T, U> U executeInExceptionWrapper(FunctionDescriptorLogic<T, U> logic, T argument) {
-	try {
-	    return logic.apply(argument);
-	} catch (IllegalOperationException e) {
-	    throw new RuntimeException(e.getMessage(), e);
-	}
+        try {
+            return logic.apply(argument);
+        } catch (IllegalOperationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     @FunctionalInterface
     private static interface RunnableDescriptorLogic {
-	void run() throws IllegalOperationException;
+
+        void run() throws IllegalOperationException;
     }
 
     @FunctionalInterface
     private static interface FunctionDescriptorLogic<T, U> {
-	U apply(T argument) throws IllegalOperationException;
+
+        U apply(T argument) throws IllegalOperationException;
     }
 
     public class PersistenceUnitBuilder {
-	private PersistenceUnitDescriptor persistenceUnitDescriptor;
 
-	private PersistenceUnitBuilder(PersistenceUnitDescriptor persistenceUnitDescriptor) {
-	    this.persistenceUnitDescriptor = persistenceUnitDescriptor;
-	}
+        private PersistenceUnitDescriptor persistenceUnitDescriptor;
 
-	public PrimitiveAttributeBuilder withPrimitiveAttribute() {
-	    return new PrimitiveAttributeBuilder();
-	}
+        private PersistenceUnitBuilder(PersistenceUnitDescriptor persistenceUnitDescriptor) {
+            this.persistenceUnitDescriptor = persistenceUnitDescriptor;
+        }
 
-	public RepositoryOperationBuilder withRepositoryOperation() {
-	    return new RepositoryOperationBuilder();
-	}
+        public PrimitiveAttributeBuilder withPrimitiveAttribute() {
+            return new PrimitiveAttributeBuilder();
+        }
 
-	public PersistenceUnitDescriptor build() {
-	    return persistenceUnitDescriptor;// TODO: here we have already ADDED unit to persistence: builder
-					     // enhancement proposal
-	}
+        public RepositoryOperationBuilder withRepositoryOperation() {
+            return new RepositoryOperationBuilder();
+        }
 
-	public class PrimitiveAttributeBuilder {
+        public PersistenceUnitDescriptor build() {
+            return persistenceUnitDescriptor;// TODO: here we have already ADDED
+                                             // unit to persistence: builder
+                                             // enhancement proposal
+        }
 
-	    private PrimitiveAttributeModel primitiveAttributeModel;
+        public class PrimitiveAttributeBuilder {
 
-	    private PrimitiveAttributeBuilder() {
-		primitiveAttributeModel = new PrimitiveAttributeModel(UidUtil.getUId());
-		primitiveAttributeModel.setType(PrimitiveType.STRING);
-	    }
+            private PrimitiveAttributeModel primitiveAttributeModel;
 
-	    public PrimitiveAttributeBuilder type(PrimitiveType type) {
-		primitiveAttributeModel.setType(type);
-		return this;
-	    }
+            private PrimitiveAttributeBuilder() {
+                primitiveAttributeModel = new PrimitiveAttributeModel(UidUtil.getUId());
+                primitiveAttributeModel.setType(PrimitiveType.STRING);
+            }
 
-	    public PrimitiveAttributeBuilder name(String name) {
-		assertNameContainsAllowableCharactersOnly(name);
-		primitiveAttributeModel.setName(CaseUtil.trimAndLowercaseFirstLetter(name));
-		return this;
-	    }
+            public PrimitiveAttributeBuilder type(PrimitiveType type) {
+                primitiveAttributeModel.setType(type);
+                return this;
+            }
 
-	    public PrimitiveAttributeBuilder withConstraint(ConstraintType constraint) {
-		primitiveAttributeModel.getConstraints().add(constraint);
-		return this;
-	    }
+            public PrimitiveAttributeBuilder name(String name) {
+                assertNameContainsAllowableCharactersOnly(name);
+                primitiveAttributeModel.setName(CaseUtil.trimAndLowercaseFirstLetter(name));
+                return this;
+            }
 
-	    public PersistenceUnitBuilder build() {
-		executeInExceptionWrapper(
-			() -> persistenceUnitDescriptor.addNewPrimitiveAttribute(primitiveAttributeModel));
-		return PersistenceUnitBuilder.this;
-	    }
-	}
+            public PrimitiveAttributeBuilder withConstraint(ConstraintType constraint) {
+                primitiveAttributeModel.getConstraints().add(constraint);
+                return this;
+            }
 
-	public class RepositoryOperationBuilder {
+            public PersistenceUnitBuilder build() {
+                executeInExceptionWrapper(
+                        () -> persistenceUnitDescriptor.addNewPrimitiveAttribute(primitiveAttributeModel));
+                return PersistenceUnitBuilder.this;
+            }
+        }
 
-	    private RepositoryOperationModel repositoryOperationModel;
+        public class RepositoryOperationBuilder {
 
-	    public RepositoryOperationBuilder() {
-		repositoryOperationModel = new RepositoryOperationModel(UidUtil.getUId());
-	    }
+            private RepositoryOperationModel repositoryOperationModel;
 
-	    public RepositoryOperationBuilder name(String name) {
-		assertNameContainsAllowableCharactersOnly(name);
-		repositoryOperationModel.setName(CaseUtil.trimAndLowercaseFirstLetter(name));
-		return this;
-	    }
+            public RepositoryOperationBuilder() {
+                repositoryOperationModel = new RepositoryOperationModel(UidUtil.getUId());
+            }
 
-	    public PersistenceUnitBuilder build() {
-		executeInExceptionWrapper(
-			() -> persistenceUnitDescriptor.addNewRepositoryOperation(repositoryOperationModel));
-		return PersistenceUnitBuilder.this;
-	    }
-	}
+            public RepositoryOperationBuilder name(String name) {
+                assertNameContainsAllowableCharactersOnly(name);
+                repositoryOperationModel.setName(CaseUtil.trimAndLowercaseFirstLetter(name));
+                return this;
+            }
 
+            public PersistenceUnitBuilder build() {
+                executeInExceptionWrapper(
+                        () -> persistenceUnitDescriptor.addNewRepositoryOperation(repositoryOperationModel));
+                return PersistenceUnitBuilder.this;
+            }
+        }
     }
 
     public class AssociationBuilder {
-	private PersistenceUnitDescriptor container;
-	private PersistenceUnitDescriptor element;
 
-	private AssociationModel association = new AssociationModel(UidUtil.getUId());
-	private ReferentialAttributeModel containerAttribute = new ReferentialAttributeModel(UidUtil.getUId());
-	private ReferentialAttributeModel elementAttribute = new ReferentialAttributeModel(UidUtil.getUId());
+        private PersistenceUnitDescriptor container;
+        private PersistenceUnitDescriptor element;
 
-	private AssociationBuilder(PersistenceUnitDescriptor container, PersistenceUnitDescriptor element) {
-	    this.container = container;
-	    this.element = element;
-	    association.setAggregationKind(AggregationKind.NONE);
-	    association.setContainerAttribute(containerAttribute);
-	    association.setElementAttribute(elementAttribute);
-	}
+        private AssociationModel association = new AssociationModel(UidUtil.getUId());
+        private ReferentialAttributeModel containerAttribute = new ReferentialAttributeModel(UidUtil.getUId());
+        private ReferentialAttributeModel elementAttribute = new ReferentialAttributeModel(UidUtil.getUId());
 
-	public AssociationDescriptor build() {
-	    return PersistenceFacade.this.buildAssociation(this);
-	}
+        private AssociationBuilder(PersistenceUnitDescriptor container, PersistenceUnitDescriptor element) {
+            this.container = container;
+            this.element = element;
+            association.setAggregationKind(AggregationKind.NONE);
+            association.setContainerAttribute(containerAttribute);
+            association.setElementAttribute(elementAttribute);
+        }
 
-	public ReferentialAttributeBuilder containerAttribute() {
-	    return new ReferentialAttributeBuilder(containerAttribute);
-	}
+        public AssociationDescriptor build() {
+            return PersistenceFacade.this.buildAssociation(this);
+        }
 
-	public ReferentialAttributeBuilder elementAttribute() {
-	    return new ReferentialAttributeBuilder(elementAttribute);
-	}
+        public ReferentialAttributeBuilder containerAttribute() {
+            return new ReferentialAttributeBuilder(containerAttribute);
+        }
 
-	public AssociationBuilder aggregationKind(AggregationKind aggregationKind) {
-	    association.setAggregationKind(aggregationKind);
-	    return this;
-	}
+        public ReferentialAttributeBuilder elementAttribute() {
+            return new ReferentialAttributeBuilder(elementAttribute);
+        }
 
-	public class ReferentialAttributeBuilder {
+        public AssociationBuilder aggregationKind(AggregationKind aggregationKind) {
+            association.setAggregationKind(aggregationKind);
+            return this;
+        }
 
-	    private ReferentialAttributeModel referentialAttribute;
+        public class ReferentialAttributeBuilder {
 
-	    public ReferentialAttributeBuilder(ReferentialAttributeModel referentialAttribute) {
-		this.referentialAttribute = referentialAttribute;
-		referentialAttribute.setNavigable(false);
-		referentialAttribute.setArity(AttributeArity.AT_MOST_ONE);
-		referentialAttribute.setOwnerType(OwnerType.ASSOCIATION);
-	    }
+            private ReferentialAttributeModel referentialAttribute;
 
-	    public ReferentialAttributeBuilder name(String name) {
-		assertNameContainsAllowableCharactersOnly(name);
-		referentialAttribute.setName(CaseUtil.trimAndLowercaseFirstLetter(name));
-		return this;
-	    }
+            public ReferentialAttributeBuilder(ReferentialAttributeModel referentialAttribute) {
+                this.referentialAttribute = referentialAttribute;
+                referentialAttribute.setNavigable(false);
+                referentialAttribute.setArity(AttributeArity.AT_MOST_ONE);
+                referentialAttribute.setOwnerType(OwnerType.ASSOCIATION);
+            }
 
-	    public ReferentialAttributeBuilder arity(AttributeArity arity) {
-		referentialAttribute.setArity(arity);
-		return this;
-	    }
+            public ReferentialAttributeBuilder name(String name) {
+                assertNameContainsAllowableCharactersOnly(name);
+                referentialAttribute.setName(CaseUtil.trimAndLowercaseFirstLetter(name));
+                return this;
+            }
 
-	    public ReferentialAttributeBuilder navigable(boolean navigable) {
-		referentialAttribute.setNavigable(navigable);
-		return this;
-	    }
+            public ReferentialAttributeBuilder arity(AttributeArity arity) {
+                referentialAttribute.setArity(arity);
+                return this;
+            }
 
-	    public ReferentialAttributeBuilder ownerType(OwnerType ownerType) {
-		referentialAttribute.setOwnerType(ownerType);
-		return this;
-	    }
+            public ReferentialAttributeBuilder navigable(boolean navigable) {
+                referentialAttribute.setNavigable(navigable);
+                return this;
+            }
 
-	    public AssociationBuilder build() {
-		return AssociationBuilder.this;
-	    }
-	}
+            public ReferentialAttributeBuilder ownerType(OwnerType ownerType) {
+                referentialAttribute.setOwnerType(ownerType);
+                return this;
+            }
+
+            public AssociationBuilder build() {
+                return AssociationBuilder.this;
+            }
+        }
     }
 }

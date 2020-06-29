@@ -12,12 +12,12 @@ public abstract class AbstractClassBasedClassifier<T> implements Named, Packaged
     @EqualsAndHashCode.Include
     @Override
     public String getName() {
-	return clazz.getSimpleName();
+        return clazz.getSimpleName();
     }
 
     @EqualsAndHashCode.Include
     @Override
     public String getPackageName() {
-	return clazz.getPackage().getName();
+        return clazz.getPackage().getName();
     }
 }

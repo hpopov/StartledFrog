@@ -96,109 +96,108 @@ public class NewAssociationConnectionPresenter implements Initializable {
 
     @Override
     public void initialize(URL var1, ResourceBundle var2) {
-	toElementPrimaryReferenceRadioButton.selectedProperty()
-		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    if (newV) {
-			primaryReferenceImageView.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
-		    } else {
-			primaryReferenceImageView.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-		    }
-		}));
-	aggregationKindChoiceBox.getItems().addAll(AggregationKind.values());
-	aggregationKindChoiceBox.setValue(aggregationKindChoiceBox.getItems().get(0));
-	List<String> attributeArities = Arrays.stream(AttributeArity.values())
-		.map(AttributeArity::getAppearance)
-		.collect(Collectors.toList());
-	containerArityChoiceBox.getItems().addAll(attributeArities);
-	containerArityChoiceBox.setValue(containerArityChoiceBox.getItems().get(0));
-	elementArityChoiceBox.getItems().addAll(attributeArities);
-	elementArityChoiceBox.setValue(elementArityChoiceBox.getItems().get(0));
+        toElementPrimaryReferenceRadioButton.selectedProperty()
+                .addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
+                    if (newV) {
+                        primaryReferenceImageView.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
+                    } else {
+                        primaryReferenceImageView.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+                    }
+                }));
+        aggregationKindChoiceBox.getItems().addAll(AggregationKind.values());
+        aggregationKindChoiceBox.setValue(aggregationKindChoiceBox.getItems().get(0));
+        List<String> attributeArities = Arrays.stream(AttributeArity.values())
+                .map(AttributeArity::getAppearance)
+                .collect(Collectors.toList());
+        containerArityChoiceBox.getItems().addAll(attributeArities);
+        containerArityChoiceBox.setValue(containerArityChoiceBox.getItems().get(0));
+        elementArityChoiceBox.getItems().addAll(attributeArities);
+        elementArityChoiceBox.setValue(elementArityChoiceBox.getItems().get(0));
 
-	containerAttributeNameTextLabel.focusedProperty()
-		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    if (Boolean.FALSE.equals(newV)) {
-			containerAttributeNameTextLabel
-				.setText(toAttributeName(containerAttributeNameTextLabel.getText()));
-		    }
-		}));
-	elementAttributeNameTextLabel.focusedProperty()
-		.addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    if (Boolean.FALSE.equals(newV)) {
-			elementAttributeNameTextLabel
-				.setText(toAttributeName(elementAttributeNameTextLabel.getText()));
-		    }
-		}));
+        containerAttributeNameTextLabel.focusedProperty()
+                .addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
+                    if (Boolean.FALSE.equals(newV)) {
+                        containerAttributeNameTextLabel
+                                .setText(toAttributeName(containerAttributeNameTextLabel.getText()));
+                    }
+                }));
+        elementAttributeNameTextLabel.focusedProperty()
+                .addListener(changeListenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
+                    if (Boolean.FALSE.equals(newV)) {
+                        elementAttributeNameTextLabel
+                                .setText(toAttributeName(elementAttributeNameTextLabel.getText()));
+                    }
+                }));
     }
 
     @FXML
     public void close() {
-	aggregationKindChoiceBox.getScene().getWindow().hide();
+        aggregationKindChoiceBox.getScene().getWindow().hide();
     }
 
     // TODO: extract shallow model and save data in it instead, then map it to
     // association model here
     @FXML
     public void createAssociation() {
-	AssociationModel associationModel = new AssociationModel(UidUtil.getUId());
+        AssociationModel associationModel = new AssociationModel(UidUtil.getUId());
 
-	associationModel.setAggregationKind(aggregationKindChoiceBox.getValue());
-	ReferentialAttributeModel containerAttribute = new ReferentialAttributeModel(UidUtil.getUId());
-	containerAttribute.setArity(defineAttributeArity(elementArityChoiceBox));
-	containerAttribute.setName(toAttributeName(elementAttributeNameTextLabel.getText()));
-	containerAttribute.setNavigable(elementNavigabilityCheckBox.isSelected());
-	containerAttribute.setOwnerType(defineOwnerType(toElementPrimaryReferenceRadioButton.isSelected()));
-	containerAttribute.setAssociation(associationModel);
-	containerAttribute
-		.setParentClassifier(containerNode.getPersistenceUnitDescriptor().getWrappedPersistenceUnit());
-	associationModel.setContainerAttribute(containerAttribute);
-	ReferentialAttributeModel elementAttribute = new ReferentialAttributeModel(UidUtil.getUId());
-	elementAttribute.setArity(defineAttributeArity(containerArityChoiceBox));
-	elementAttribute.setName(toAttributeName(containerAttributeNameTextLabel.getText()));
-	elementAttribute.setNavigable(containerNavigabilityCheckBox.isSelected());
-	elementAttribute.setOwnerType(defineOwnerType(toContainerPrimaryReferenceRadioButton.isSelected()));
-	elementAttribute.setAssociation(associationModel);
-	elementAttribute.setParentClassifier(elementNode.getPersistenceUnitDescriptor().getWrappedPersistenceUnit());
-	associationModel.setElementAttribute(elementAttribute);
+        associationModel.setAggregationKind(aggregationKindChoiceBox.getValue());
+        ReferentialAttributeModel containerAttribute = new ReferentialAttributeModel(UidUtil.getUId());
+        containerAttribute.setArity(defineAttributeArity(elementArityChoiceBox));
+        containerAttribute.setName(toAttributeName(elementAttributeNameTextLabel.getText()));
+        containerAttribute.setNavigable(elementNavigabilityCheckBox.isSelected());
+        containerAttribute.setOwnerType(defineOwnerType(toElementPrimaryReferenceRadioButton.isSelected()));
+        containerAttribute.setAssociation(associationModel);
+        containerAttribute
+                .setParentClassifier(containerNode.getPersistenceUnitDescriptor().getWrappedPersistenceUnit());
+        associationModel.setContainerAttribute(containerAttribute);
+        ReferentialAttributeModel elementAttribute = new ReferentialAttributeModel(UidUtil.getUId());
+        elementAttribute.setArity(defineAttributeArity(containerArityChoiceBox));
+        elementAttribute.setName(toAttributeName(containerAttributeNameTextLabel.getText()));
+        elementAttribute.setNavigable(containerNavigabilityCheckBox.isSelected());
+        elementAttribute.setOwnerType(defineOwnerType(toContainerPrimaryReferenceRadioButton.isSelected()));
+        elementAttribute.setAssociation(associationModel);
+        elementAttribute.setParentClassifier(elementNode.getPersistenceUnitDescriptor().getWrappedPersistenceUnit());
+        associationModel.setElementAttribute(elementAttribute);
 
-	try {
-	    associationDescriptor = persistenceDescriptor.addNewAssociation(associationModel);
-	    close();
-	} catch (IllegalOperationException e) {
-	    Alert alert = new Alert(AlertType.ERROR);
-	    alert.setHeaderText(UNABLE_TO_CREATE_ASSOCIATION_MESSAGE);
-	    alert.setContentText(e.getMessage());
-	    alert.showAndWait();
-	}
+        try {
+            associationDescriptor = persistenceDescriptor.addNewAssociation(associationModel);
+            close();
+        } catch (IllegalOperationException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setHeaderText(UNABLE_TO_CREATE_ASSOCIATION_MESSAGE);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     private String toAttributeName(String string) {
-	return CaseUtil.trimAndLowercaseFirstLetter(string);
+        return CaseUtil.trimAndLowercaseFirstLetter(string);
     }
 
     private AttributeArity defineAttributeArity(ChoiceBox<String> arityChoiceBox) {
-	String appearance = arityChoiceBox.getValue();
-	return Arrays.stream(AttributeArity.values())
-		.filter(v -> appearance.equals(v.getAppearance()))
-		.findAny().orElseThrow(() -> new IllegalStateException(
-			"Attribute arity with appearance " + appearance + "does not exist"));
+        String appearance = arityChoiceBox.getValue();
+        return Arrays.stream(AttributeArity.values())
+                .filter(v -> appearance.equals(v.getAppearance()))
+                .findAny().orElseThrow(() -> new IllegalStateException(
+                        "Attribute arity with appearance " + appearance + "does not exist"));
     }
 
     private OwnerType defineOwnerType(boolean primaryReference) {
-	return primaryReference ? OwnerType.CLASSIFIER : OwnerType.ASSOCIATION;
+        return primaryReference ? OwnerType.CLASSIFIER : OwnerType.ASSOCIATION;
     }
 
     public void setContainerNode(PersistenceUnitNode containerNode) {
-	this.containerNode = containerNode;
-	WritableImage snapshot = containerNode.snapshot(new SnapshotParameters(), null);
-	containerNodeImageView.setImage(snapshot);
-	containerAttributeNameTextLabel.setText(CaseUtil.trimAndLowercaseFirstLetter(containerNode.getName()));
+        this.containerNode = containerNode;
+        WritableImage snapshot = containerNode.snapshot(new SnapshotParameters(), null);
+        containerNodeImageView.setImage(snapshot);
+        containerAttributeNameTextLabel.setText(CaseUtil.trimAndLowercaseFirstLetter(containerNode.getName()));
     }
 
     public void setElementNode(PersistenceUnitNode elementNode) {
-	this.elementNode = elementNode;
-	WritableImage snapshot = elementNode.snapshot(new SnapshotParameters(), null);
-	elementNodeImageView.setImage(snapshot);
-	elementAttributeNameTextLabel.setText(CaseUtil.trimAndLowercaseFirstLetter(elementNode.getName()));
+        this.elementNode = elementNode;
+        WritableImage snapshot = elementNode.snapshot(new SnapshotParameters(), null);
+        elementNodeImageView.setImage(snapshot);
+        elementAttributeNameTextLabel.setText(CaseUtil.trimAndLowercaseFirstLetter(elementNode.getName()));
     }
-
 }

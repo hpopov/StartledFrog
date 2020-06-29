@@ -16,6 +16,7 @@ import net.atlassian.cmathtutor.model.Project;
 
 @Slf4j
 public class ProjectService {
+
     private static final String SF_PROJECT_FILENAME = ".startled-frog";
     private static final String SF_PROJECT_FOLDER_NAME = ".sf-project";
     private static final Version CURRENT_VERSION = Version.V_0_0_1_a;
@@ -24,77 +25,77 @@ public class ProjectService {
     private Project currentProject;
 
     public void setCurrentProject(@NonNull Project project) {
-	currentProject = project;
+        currentProject = project;
     }
 
     public Project getCurrentProject() {
-	assertCurrentProjectIsNotNull();
-	return currentProject;
+        assertCurrentProjectIsNotNull();
+        return currentProject;
     }
 
     public Path getCurrentStartledFrogProjectFolderPath() {
-	assertCurrentProjectIsNotNull();
-	return getStartledFrogProjectFolder(currentProject);
+        assertCurrentProjectIsNotNull();
+        return getStartledFrogProjectFolder(currentProject);
     }
 
     private Path getStartledFrogProjectFolder(Project project) {
-	return project.getProjectFolder().toPath().resolve(SF_PROJECT_FOLDER_NAME);
+        return project.getProjectFolder().toPath().resolve(SF_PROJECT_FOLDER_NAME);
     }
 
     public Path getCurrentProjectResourceFolderPath() {
-	assertCurrentProjectIsNotNull();
-	String resourceFolderSubpath = currentProject.getProjectBuildFramework().getResourcesSubpath();
-	Path resourceFolderPath = currentProject.getProjectFolder().toPath().resolve(resourceFolderSubpath);
-	return resourceFolderPath;
+        assertCurrentProjectIsNotNull();
+        String resourceFolderSubpath = currentProject.getProjectBuildFramework().getResourcesSubpath();
+        Path resourceFolderPath = currentProject.getProjectFolder().toPath().resolve(resourceFolderSubpath);
+        return resourceFolderPath;
     }
 
     public Path getCurrentProjectJavaFolderPath() {
-	assertCurrentProjectIsNotNull();
-	String javaSourcesSubpath = currentProject.getProjectBuildFramework().getJavaSourcesSubpath();
-	Path javaSourceFolderPath = currentProject.getProjectFolder().toPath().resolve(javaSourcesSubpath);
-	return javaSourceFolderPath;
+        assertCurrentProjectIsNotNull();
+        String javaSourcesSubpath = currentProject.getProjectBuildFramework().getJavaSourcesSubpath();
+        Path javaSourceFolderPath = currentProject.getProjectFolder().toPath().resolve(javaSourcesSubpath);
+        return javaSourceFolderPath;
     }
 
     public void persistCurrentProject() {
-	assertCurrentProjectIsNotNull();
-	currentProject.setStartledFrogProjectFolder(SF_PROJECT_FOLDER_NAME);
-	currentProject.setVersion(CURRENT_VERSION);
-	persistProject(currentProject);
+        assertCurrentProjectIsNotNull();
+        currentProject.setStartledFrogProjectFolder(SF_PROJECT_FOLDER_NAME);
+        currentProject.setVersion(CURRENT_VERSION);
+        persistProject(currentProject);
     }
 
     private void assertCurrentProjectIsNotNull() {
-	if (currentProject == null) {
-	    throw new NullPointerException("ProjectService does not contain currentProject");
-	}
+        if (currentProject == null) {
+            throw new NullPointerException("ProjectService does not contain currentProject");
+        }
     }
 
     private void persistProject(Project project) {
-	try {
-	    JAXBContext context = JAXBContext.newInstance(Project.class);
-	    Marshaller marshaller = context.createMarshaller();
-	    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-	    marshaller.marshal(project, project.getProjectFolder().toPath().resolve(SF_PROJECT_FILENAME).toFile());
-	} catch (JAXBException e) {
-	    log.error("Unable to persist the project using JAXB", e);
-	    return;
-	}
-	getStartledFrogProjectFolder(project).toFile().mkdir();
+        try {
+            JAXBContext context = JAXBContext.newInstance(Project.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(project, project.getProjectFolder().toPath().resolve(SF_PROJECT_FILENAME).toFile());
+        } catch (JAXBException e) {
+            log.error("Unable to persist the project using JAXB", e);
+            return;
+        }
+        getStartledFrogProjectFolder(project).toFile().mkdir();
     }
 
     public Project loadProject(@NonNull File projectFile) {
-	Project project = null;
-	try {
-	    JAXBContext context = JAXBContext.newInstance(Project.class);
-	    project = (Project) context.createUnmarshaller().unmarshal(new FileReader(projectFile));
-	} catch (JAXBException | FileNotFoundException e) {
-	    log.error("Unable to load the project using JAXB", e);
-	    return project;
-	}
-	project.setProjectFolder(projectFile.getParentFile());
-	return project;
+        Project project = null;
+        try {
+            JAXBContext context = JAXBContext.newInstance(Project.class);
+            project = (Project) context.createUnmarshaller().unmarshal(new FileReader(projectFile));
+        } catch (JAXBException | FileNotFoundException e) {
+            log.error("Unable to load the project using JAXB", e);
+            return project;
+        }
+        project.setProjectFolder(projectFile.getParentFile());
+        return project;
     }
 
     public String getProjectExtension() {
-	return SF_PROJECT_FILENAME;
+        return SF_PROJECT_FILENAME;
     }
 }

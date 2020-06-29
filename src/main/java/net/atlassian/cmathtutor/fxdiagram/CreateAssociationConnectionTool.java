@@ -31,116 +31,116 @@ public class CreateAssociationConnectionTool extends AbstractCreateShapeTool imp
     private ImageCursor createAssociationConnectionCursor = new ImageCursor(new Image("/images/Associations.png"));
 
     public CreateAssociationConnectionTool(XRoot xRoot) {
-	super(xRoot);
+        super(xRoot);
     }
 
     @Override
     public boolean activate() {
-	super.activate();
-	log.debug("Activating...");
-	xRoot.getScene().addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	xRoot.getScene().setCursor(createAssociationConnectionCursor);
-	return true;
+        super.activate();
+        log.debug("Activating...");
+        xRoot.getScene().addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+        xRoot.getScene().setCursor(createAssociationConnectionCursor);
+        return true;
     }
 
     private void handleMouseEvent(MouseEvent event) {
-	if (MouseButton.PRIMARY != event.getButton()) {
-	    return;
-	}
-	PersistenceUnitNode targetPersistenceUnitNode = getTargetPersistenceUnitNode(event);
-	log.debug("Target persistence unit node is: {}", targetPersistenceUnitNode);
-	AssociationNodesContainer nodesContainer = AssociationNodesContainer.add(targetPersistenceUnitNode);
-	if (nodesContainer == null) {
-	    log.debug("Selected first node only, waiting for the second one");
-	    return;
-	}
-	log.info("Both nodes are selected for association creation: {}", nodesContainer);
-	AssociationDescriptor associationDescriptor = createAssociationDescriptor(nodesContainer);
-	if (associationDescriptor == null) {
-	    log.info("Association descriptor has not been created. Nothing to do");
-	    return;
-	}
-	AssociationConnection associationConnection = new AssociationConnection(nodesContainer.getContainerNode(),
-		nodesContainer.getElementNode(),
-		associationDescriptor);
-	AnimationCommand command = StartledFrogAddRemoveCommand.newStartledFrogAddCommand(diagram,
-		associationConnection);
-	xRoot.getCommandStack().execute(command);
-	xRoot.restoreDefaultTool();
+        if (MouseButton.PRIMARY != event.getButton()) {
+            return;
+        }
+        PersistenceUnitNode targetPersistenceUnitNode = getTargetPersistenceUnitNode(event);
+        log.debug("Target persistence unit node is: {}", targetPersistenceUnitNode);
+        AssociationNodesContainer nodesContainer = AssociationNodesContainer.add(targetPersistenceUnitNode);
+        if (nodesContainer == null) {
+            log.debug("Selected first node only, waiting for the second one");
+            return;
+        }
+        log.info("Both nodes are selected for association creation: {}", nodesContainer);
+        AssociationDescriptor associationDescriptor = createAssociationDescriptor(nodesContainer);
+        if (associationDescriptor == null) {
+            log.info("Association descriptor has not been created. Nothing to do");
+            return;
+        }
+        AssociationConnection associationConnection = new AssociationConnection(nodesContainer.getContainerNode(),
+                nodesContainer.getElementNode(),
+                associationDescriptor);
+        AnimationCommand command = StartledFrogAddRemoveCommand.newStartledFrogAddCommand(diagram,
+                associationConnection);
+        xRoot.getCommandStack().execute(command);
+        xRoot.restoreDefaultTool();
     }
 
     private PersistenceUnitNode getTargetPersistenceUnitNode(MouseEvent event) {
-	EventTarget target = event.getTarget();
-	log.debug("clicked on target: {}", target);
-	if (target instanceof Node) {
-	    return getTargetPersistenceUnitNode((Node) target);
-	}
-	return null;
+        EventTarget target = event.getTarget();
+        log.debug("clicked on target: {}", target);
+        if (target instanceof Node) {
+            return getTargetPersistenceUnitNode((Node) target);
+        }
+        return null;
     }
 
     private PersistenceUnitNode getTargetPersistenceUnitNode(Node node) {
-	if (node == xRoot) {
-	    return null;
-	}
-	if (node instanceof PersistenceUnitNode) {
-	    return (PersistenceUnitNode) node;
-	}
-	return getTargetPersistenceUnitNode(node.getParent());
+        if (node == xRoot) {
+            return null;
+        }
+        if (node instanceof PersistenceUnitNode) {
+            return (PersistenceUnitNode) node;
+        }
+        return getTargetPersistenceUnitNode(node.getParent());
     }
 
     private AssociationDescriptor createAssociationDescriptor(AssociationNodesContainer nodesContainer) {
-	NewAssociationConnectionView newAssociationConnectionView = new NewAssociationConnectionView();
-	NewAssociationConnectionPresenter presenter = newAssociationConnectionView.getPresenter();
-	presenter.setPersistenceDescriptor(diagram.getPersistenceDescriptor());
-	presenter.setContainerNode(nodesContainer.getContainerNode());
-	presenter.setElementNode(nodesContainer.getElementNode());
-	Stage stage = new Stage(StageStyle.DECORATED);
-	stage.initModality(Modality.WINDOW_MODAL);
-	Scene scene = new Scene(newAssociationConnectionView.getView());
-	stage.setScene(scene);
-	stage.initOwner(xRoot.getScene().getWindow());
-	stage.showAndWait();
-	return presenter.getAssociationDescriptor();
+        NewAssociationConnectionView newAssociationConnectionView = new NewAssociationConnectionView();
+        NewAssociationConnectionPresenter presenter = newAssociationConnectionView.getPresenter();
+        presenter.setPersistenceDescriptor(diagram.getPersistenceDescriptor());
+        presenter.setContainerNode(nodesContainer.getContainerNode());
+        presenter.setElementNode(nodesContainer.getElementNode());
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.initModality(Modality.WINDOW_MODAL);
+        Scene scene = new Scene(newAssociationConnectionView.getView());
+        stage.setScene(scene);
+        stage.initOwner(xRoot.getScene().getWindow());
+        stage.showAndWait();
+        return presenter.getAssociationDescriptor();
     }
 
     @Override
     public boolean deactivate() {
-	super.deactivate();
-	log.debug("Deactivating...");
-	xRoot.getScene().removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	xRoot.getScene().setCursor(Cursor.DEFAULT);
-	return true;
+        super.deactivate();
+        log.debug("Deactivating...");
+        xRoot.getScene().removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+        xRoot.getScene().setCursor(Cursor.DEFAULT);
+        return true;
     }
 
     @ToString
     @NoArgsConstructor
     @Getter
     private static class AssociationNodesContainer {
-	private PersistenceUnitNode containerNode;
-	private PersistenceUnitNode elementNode;
 
-	private static AssociationNodesContainer currentContainer = new AssociationNodesContainer();
+        private PersistenceUnitNode containerNode;
+        private PersistenceUnitNode elementNode;
 
-	public static AssociationNodesContainer add(PersistenceUnitNode node) {
-	    AssociationNodesContainer currentContainer = AssociationNodesContainer.currentContainer;
-	    if (currentContainer.addNode(node)) {
-		AssociationNodesContainer.currentContainer = new AssociationNodesContainer();
-		return currentContainer;
-	    }
-	    return null;
-	}
+        private static AssociationNodesContainer currentContainer = new AssociationNodesContainer();
 
-	private boolean addNode(PersistenceUnitNode node) {
-	    if (containerNode == null) {
-		containerNode = node;
-		return false;
-	    }
-	    if (elementNode == null) {
-		elementNode = node;
-		return true;
-	    }
-	    return true;
-	}
+        public static AssociationNodesContainer add(PersistenceUnitNode node) {
+            AssociationNodesContainer currentContainer = AssociationNodesContainer.currentContainer;
+            if (currentContainer.addNode(node)) {
+                AssociationNodesContainer.currentContainer = new AssociationNodesContainer();
+                return currentContainer;
+            }
+            return null;
+        }
+
+        private boolean addNode(PersistenceUnitNode node) {
+            if (containerNode == null) {
+                containerNode = node;
+                return false;
+            }
+            if (elementNode == null) {
+                elementNode = node;
+                return true;
+            }
+            return true;
+        }
     }
-
 }

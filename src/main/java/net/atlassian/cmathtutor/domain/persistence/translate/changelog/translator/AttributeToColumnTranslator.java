@@ -16,12 +16,12 @@ public class AttributeToColumnTranslator {
     private static final Column PK_COLUMN;
 
     static {
-	PK_COLUMN = Column.builder()
-		.autoIncrement(true)
-		.constraints(Constraints.builder().primaryKey(true).build())
-		.name(PK_COLUMN_NAME)
-		.type(PK_COLUMN_TYPE)
-		.build();
+        PK_COLUMN = Column.builder()
+                .autoIncrement(true)
+                .constraints(Constraints.builder().primaryKey(true).build())
+                .name(PK_COLUMN_NAME)
+                .type(PK_COLUMN_TYPE)
+                .build();
     }
 
     private AttributeNameToColumnNameTranslator nameTranslator;
@@ -29,42 +29,48 @@ public class AttributeToColumnTranslator {
     private ConstraintsTranslator constraintsTranslator;
 
     public Column pkColumn() {
-	return PK_COLUMN;
+        return PK_COLUMN;
     }
 
     public Column translate(PrimitiveAttribute attribute) {
-	return Column.builder()
-		.name(nameTranslator.translate(attribute.getName()))
-		.type(typeTranslator.translate(attribute.getType()))
-		.constraints(constraintsTranslator.translate(attribute.getUnmodifiableConstraints()))
-		.build();
+        return Column.builder()
+                .name(nameTranslator.translate(attribute.getName()))
+                .type(typeTranslator.translate(attribute.getType()))
+                .constraints(constraintsTranslator.translate(attribute.getUnmodifiableConstraints()))
+                .build();
     }
 
-    public Column translateReferentialAttributeToJoinColumn(ReferentialAttribute attribute,
-	    String referencedTableName) {
-	ReferentialAttribute referencedAttribute = TranslatorHelper.getAnotherAttributeFromAssociation(attribute);
+    public Column translateReferentialAttributeToJoinColumn(
+            ReferentialAttribute attribute,
+            String referencedTableName
+    ) {
+        ReferentialAttribute referencedAttribute = TranslatorHelper.getAnotherAttributeFromAssociation(attribute);
 
-	return translateReferentialAttributeToColumn(attribute, referencedTableName,
-		constraintsTranslator.translateArity(attribute.getArity(), referencedAttribute.getArity()));
+        return translateReferentialAttributeToColumn(attribute, referencedTableName,
+                constraintsTranslator.translateArity(attribute.getArity(), referencedAttribute.getArity()));
     }
 
-    private Column translateReferentialAttributeToColumn(ReferentialAttribute attribute, String referencedTableName,
-	    Constraints constraints) {
-	String fkColumnName = nameTranslator.translateReferentialAttributeName(attribute.getName(), referencedTableName)
-		+ AttributeNameToColumnNameTranslator.DELIMITER + PK_COLUMN_NAME;
+    private Column translateReferentialAttributeToColumn(
+            ReferentialAttribute attribute, String referencedTableName,
+            Constraints constraints
+    ) {
+        String fkColumnName = nameTranslator.translateReferentialAttributeName(attribute.getName(), referencedTableName)
+                + AttributeNameToColumnNameTranslator.DELIMITER + PK_COLUMN_NAME;
 
-	return Column.builder()
-		.constraints(constraints)
-		.name(fkColumnName)
-		.type(PK_COLUMN_TYPE)
-		.build();
+        return Column.builder()
+                .constraints(constraints)
+                .name(fkColumnName)
+                .type(PK_COLUMN_TYPE)
+                .build();
     }
 
-    public Column translateReferentialAttributeToColumnInJoinTable(ReferentialAttribute attribute,
-	    String referencedTableName) {
-	ReferentialAttribute referencedAttribute = TranslatorHelper.getAnotherAttributeFromAssociation(attribute);
+    public Column translateReferentialAttributeToColumnInJoinTable(
+            ReferentialAttribute attribute,
+            String referencedTableName
+    ) {
+        ReferentialAttribute referencedAttribute = TranslatorHelper.getAnotherAttributeFromAssociation(attribute);
 
-	return translateReferentialAttributeToColumn(attribute, referencedTableName, constraintsTranslator
-		.translateArityToJoinTableColumnConstraints(attribute.getArity(), referencedAttribute.getArity()));
+        return translateReferentialAttributeToColumn(attribute, referencedTableName, constraintsTranslator
+                .translateArityToJoinTableColumnConstraints(attribute.getArity(), referencedAttribute.getArity()));
     }
 }

@@ -15,23 +15,25 @@ public class AssociationToJoinTableDataTranslator {
     private TableNameTranslator tableNameTranslator;
     private AttributeToColumnTranslator attributeToColumnTranslator;
 
-    public JoinTableData translateAssociationToJoinTable(@NonNull ReferentialAttribute primaryAttribute,
-	    @NonNull String primaryTableName, @NonNull String secondaryTableName) {
-	String joinTableName = tableNameTranslator.translateAssociationToTableName(primaryAttribute, primaryTableName,
-		secondaryTableName);
-	ReferentialAttribute secondaryAttribute = TranslatorHelper.getAnotherAttributeFromAssociation(primaryAttribute);
-	Column primaryAttrJoinColumn = attributeToColumnTranslator
-		.translateReferentialAttributeToColumnInJoinTable(primaryAttribute, secondaryTableName);
-	Column secondaryAttrJoinColumn = attributeToColumnTranslator
-		.translateReferentialAttributeToColumnInJoinTable(secondaryAttribute, primaryTableName);
-	CreateTable createTable = CreateTable.builder()
-		.columns(Arrays.asList(secondaryAttrJoinColumn, primaryAttrJoinColumn))
-		.tableName(joinTableName)
-		.build();
-	return JoinTableData.builder()
-		.primaryAttributeJoinColumn(primaryAttrJoinColumn)
-		.secondaryAttributeJoinColumn(secondaryAttrJoinColumn)
-		.createTable(createTable)
-		.build();
+    public JoinTableData translateAssociationToJoinTable(
+            @NonNull ReferentialAttribute primaryAttribute,
+            @NonNull String primaryTableName, @NonNull String secondaryTableName
+    ) {
+        String joinTableName = tableNameTranslator.translateAssociationToTableName(primaryAttribute, primaryTableName,
+                secondaryTableName);
+        ReferentialAttribute secondaryAttribute = TranslatorHelper.getAnotherAttributeFromAssociation(primaryAttribute);
+        Column primaryAttrJoinColumn = attributeToColumnTranslator
+                .translateReferentialAttributeToColumnInJoinTable(primaryAttribute, secondaryTableName);
+        Column secondaryAttrJoinColumn = attributeToColumnTranslator
+                .translateReferentialAttributeToColumnInJoinTable(secondaryAttribute, primaryTableName);
+        CreateTable createTable = CreateTable.builder()
+                .columns(Arrays.asList(secondaryAttrJoinColumn, primaryAttrJoinColumn))
+                .tableName(joinTableName)
+                .build();
+        return JoinTableData.builder()
+                .primaryAttributeJoinColumn(primaryAttrJoinColumn)
+                .secondaryAttributeJoinColumn(secondaryAttrJoinColumn)
+                .createTable(createTable)
+                .build();
     }
 }

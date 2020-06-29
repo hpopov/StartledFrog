@@ -69,112 +69,111 @@ public class NewPersistenceUnitPresenter implements Initializable {
     private ChangeListenerRegistryHelper listenerRegistryHelper = new ChangeListenerRegistryHelper();
 
     public NewPersistenceUnitPresenter() {
-	persistenceUnitModel = new PersistenceUnitModel(UidUtil.getUId());
+        persistenceUnitModel = new PersistenceUnitModel(UidUtil.getUId());
     }
 
     @Override
     public void initialize(URL var1, ResourceBundle var2) {
-	typeChoiceBox.getItems().addAll(
-		Arrays.stream(PrimitiveType.values())
-			.map(PrimitiveType::getAppearance)
-			.collect(Collectors.toList()));
-	typeChoiceBox.setValue(typeChoiceBox.getItems().get(0));
-	setupAttributesTable();
-	persistenceUnitModel.getPrimitiveAttributes()
-		.addListener((Change<? extends PrimitiveAttributeModel> change) -> {
-		    if (change.wasAdded()) {
-			primitiveAttributesTable.getItems().add(change.getElementAdded());
-		    }
-		    if (change.wasRemoved()) {
-			primitiveAttributesTable.getItems().remove(change.getElementRemoved());
-		    }
-		});
-	unitNameTextField.focusedProperty()
-		.addListener(listenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
-		    if (Boolean.FALSE.equals(newV)) {
-			String persistenceUnitName = toPersistenceUnitName(unitNameTextField.getText());
-			unitNameTextField.setText(persistenceUnitName);
-			persistenceUnitModel.setName(persistenceUnitName);
-		    }
-		}));
-//	persistenceUnitModel.nameProperty().bind(unitNameTextField.textProperty());
+        typeChoiceBox.getItems().addAll(
+                Arrays.stream(PrimitiveType.values())
+                        .map(PrimitiveType::getAppearance)
+                        .collect(Collectors.toList()));
+        typeChoiceBox.setValue(typeChoiceBox.getItems().get(0));
+        setupAttributesTable();
+        persistenceUnitModel.getPrimitiveAttributes()
+                .addListener((Change<? extends PrimitiveAttributeModel> change) -> {
+                    if (change.wasAdded()) {
+                        primitiveAttributesTable.getItems().add(change.getElementAdded());
+                    }
+                    if (change.wasRemoved()) {
+                        primitiveAttributesTable.getItems().remove(change.getElementRemoved());
+                    }
+                });
+        unitNameTextField.focusedProperty()
+                .addListener(listenerRegistryHelper.registerChangeListener((observable, oldV, newV) -> {
+                    if (Boolean.FALSE.equals(newV)) {
+                        String persistenceUnitName = toPersistenceUnitName(unitNameTextField.getText());
+                        unitNameTextField.setText(persistenceUnitName);
+                        persistenceUnitModel.setName(persistenceUnitName);
+                    }
+                }));
+        // persistenceUnitModel.nameProperty().bind(unitNameTextField.textProperty());
     }
 
     @SuppressWarnings("unchecked")
     private void setupAttributesTable() {
-	TableColumn<PrimitiveAttributeModel, String> nameCol = new TableColumn<>("Name");
-	TableColumn<PrimitiveAttributeModel, String> typeCol = new TableColumn<>("Type");
-	TableColumn<PrimitiveAttributeModel, String> constraintsCol = new TableColumn<>("Constraints");
+        TableColumn<PrimitiveAttributeModel, String> nameCol = new TableColumn<>("Name");
+        TableColumn<PrimitiveAttributeModel, String> typeCol = new TableColumn<>("Type");
+        TableColumn<PrimitiveAttributeModel, String> constraintsCol = new TableColumn<>("Constraints");
 
-	nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-	typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-	constraintsCol.setCellValueFactory(new PropertyValueFactory<>("unmodifiableConstraints"));
-	primitiveAttributesTable.getColumns().addAll(nameCol, typeCol, constraintsCol);
-	primitiveAttributesTable
-		.setItems(FXCollections.observableArrayList(persistenceUnitModel.getUnmodifiablePrimitiveAttributes()));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+        constraintsCol.setCellValueFactory(new PropertyValueFactory<>("unmodifiableConstraints"));
+        primitiveAttributesTable.getColumns().addAll(nameCol, typeCol, constraintsCol);
+        primitiveAttributesTable
+                .setItems(FXCollections.observableArrayList(persistenceUnitModel.getUnmodifiablePrimitiveAttributes()));
     }
 
     @FXML
     public void createPersistenceUnit() {
-	String persistenceUnitName = toPersistenceUnitName(unitNameTextField.getText());
-	persistenceUnitModel.setName(persistenceUnitName);
-	if (StringUtils.isBlank(persistenceUnitName)) {
-	    Alert alert = new Alert(AlertType.ERROR);
-	    alert.setHeaderText(UNABLE_TO_CREATE_PERSISTENCE_UNIT_MESSAGE);
-	    alert.setContentText(PERSISTENCE_UNIT_NAME_MUST_NOT_BE_BLANK_MESSAGE);
-	    alert.showAndWait();
-	    return;
-	}
-	try {
-	    persistenceUnitDescriptor = persistenceDescriptor.addNewPersistenceUnit(persistenceUnitModel);
-//	    persistenceUnitModel.nameProperty().unbind();
-	    close();
-	} catch (IllegalOperationException e) {
-	    Alert alert = new Alert(AlertType.ERROR);
-	    alert.setHeaderText(UNABLE_TO_CREATE_PERSISTENCE_UNIT_MESSAGE);
-	    alert.setContentText(e.getMessage());
-	    alert.showAndWait();
-	}
+        String persistenceUnitName = toPersistenceUnitName(unitNameTextField.getText());
+        persistenceUnitModel.setName(persistenceUnitName);
+        if (StringUtils.isBlank(persistenceUnitName)) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setHeaderText(UNABLE_TO_CREATE_PERSISTENCE_UNIT_MESSAGE);
+            alert.setContentText(PERSISTENCE_UNIT_NAME_MUST_NOT_BE_BLANK_MESSAGE);
+            alert.showAndWait();
+            return;
+        }
+        try {
+            persistenceUnitDescriptor = persistenceDescriptor.addNewPersistenceUnit(persistenceUnitModel);
+            // persistenceUnitModel.nameProperty().unbind();
+            close();
+        } catch (IllegalOperationException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setHeaderText(UNABLE_TO_CREATE_PERSISTENCE_UNIT_MESSAGE);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     @FXML
     public void addNewPrimitiveAttribute() {
-	String primitiveAttributeName = toPrimitiveAttributeName();
-	if (StringUtils.isBlank(primitiveAttributeName)) {
-	    Alert alert = new Alert(AlertType.WARNING);
-	    alert.setHeaderText(UNABLE_TO_CREATE_PRIMITIVE_ATTRIBUTE_MESSAGE);
-	    alert.setContentText(ATTRIBUTE_NAME_MUST_NOT_BE_BLANK_MESSAGE);
-	    alert.showAndWait();
-	    return;
-	}
-	PrimitiveAttributeModel primitiveAttributeModel = new PrimitiveAttributeModel(UidUtil.getUId());
-	primitiveAttributeModel.setName(primitiveAttributeName);
-	String value = typeChoiceBox.getValue();
-	primitiveAttributeModel.setType(Arrays.stream(PrimitiveType.values())
-		.filter(pt -> pt.getAppearance().equals(value))
-		.findAny().orElseThrow(() -> new IllegalStateException(
-			"PrimitiveType constant with appearance " + value + " does not exist")));
-	primitiveAttributeModel.setParentClassifier(persistenceUnitModel);
-	if (false == nullableCheckBox.isSelected()) {
-	    primitiveAttributeModel.getConstraints().add(ConstraintType.NON_NULL);
-	}
-	if (uniqueCheckBox.isSelected()) {
-	    primitiveAttributeModel.getConstraints().add(ConstraintType.UNIQUE);
-	}
-	persistenceUnitModel.getPrimitiveAttributes().add(primitiveAttributeModel);
+        String primitiveAttributeName = toPrimitiveAttributeName();
+        if (StringUtils.isBlank(primitiveAttributeName)) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setHeaderText(UNABLE_TO_CREATE_PRIMITIVE_ATTRIBUTE_MESSAGE);
+            alert.setContentText(ATTRIBUTE_NAME_MUST_NOT_BE_BLANK_MESSAGE);
+            alert.showAndWait();
+            return;
+        }
+        PrimitiveAttributeModel primitiveAttributeModel = new PrimitiveAttributeModel(UidUtil.getUId());
+        primitiveAttributeModel.setName(primitiveAttributeName);
+        String value = typeChoiceBox.getValue();
+        primitiveAttributeModel.setType(Arrays.stream(PrimitiveType.values())
+                .filter(pt -> pt.getAppearance().equals(value))
+                .findAny().orElseThrow(() -> new IllegalStateException(
+                        "PrimitiveType constant with appearance " + value + " does not exist")));
+        primitiveAttributeModel.setParentClassifier(persistenceUnitModel);
+        if (false == nullableCheckBox.isSelected()) {
+            primitiveAttributeModel.getConstraints().add(ConstraintType.NON_NULL);
+        }
+        if (uniqueCheckBox.isSelected()) {
+            primitiveAttributeModel.getConstraints().add(ConstraintType.UNIQUE);
+        }
+        persistenceUnitModel.getPrimitiveAttributes().add(primitiveAttributeModel);
     }
 
     private String toPrimitiveAttributeName() {
-	return CaseUtil.trimAndLowercaseFirstLetter(newAttributeNameTextField.getText());
+        return CaseUtil.trimAndLowercaseFirstLetter(newAttributeNameTextField.getText());
     }
 
     private String toPersistenceUnitName(String string) {
-	return CaseUtil.trimAndUppercaseFirstLetter(string);
+        return CaseUtil.trimAndUppercaseFirstLetter(string);
     }
 
     @FXML
     public void close() {
-	unitNameTextField.getScene().getWindow().hide();
+        unitNameTextField.getScene().getWindow().hide();
     }
-
 }

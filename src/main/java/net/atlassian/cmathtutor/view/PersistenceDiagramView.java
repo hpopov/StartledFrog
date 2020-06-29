@@ -9,12 +9,12 @@ public class PersistenceDiagramView extends FXMLView {
 
     @Override
     public XRoot getView() {
-	XRoot parent = (XRoot) super.getView();
-	return parent;
+        XRoot parent = (XRoot) super.getView();
+        return parent;
     }
 
     @Override
     public PersistenceDiagramPresenter getPresenter() {
-	return (PersistenceDiagramPresenter) super.getPresenter();
+        return (PersistenceDiagramPresenter) super.getPresenter();
     }
 }

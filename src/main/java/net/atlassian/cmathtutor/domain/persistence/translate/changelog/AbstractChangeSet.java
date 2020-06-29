@@ -26,16 +26,16 @@ public abstract class AbstractChangeSet {
 
     @XmlElement(required = false)
     public CreateTable getCreateTable() {
-	return null;
+        return null;
     }
 
     @XmlElement(required = false)
     public AddForeignKeyConstraint getAddForeignKeyConstraint() {
-	return null;
+        return null;
     }
 
     @XmlElement(required = false)
     public CreateIndex getCreateIndex() {
-	return null;
+        return null;
     }
 }

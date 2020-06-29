@@ -7,21 +7,21 @@ import net.atlassian.cmathtutor.domain.persistence.translate.changelog.ColumnTyp
 public class PrimitiveTypeToColumnTypeTranslator {
 
     public ColumnType translate(PrimitiveType type) {
-	switch (type) {
-	case BIG_INTEGER:
-	    return ColumnType.BIGINT;
-	case BOOLEAN:
-	    return ColumnType.TINYINT;
-	case INTEGER:
-	    return ColumnType.INT;
-	case REAL:
-	    return ColumnType.DOUBLE;
-	case STRING:
-	    return ColumnType.VARCHAR;
-	case TEXT:
-	    return ColumnType.BIG_VARCHAR;
-	default:
-	    throw new UnimplementedEnumConstantException(type);
-	}
+        switch (type) {
+        case BIG_INTEGER:
+            return ColumnType.BIGINT;
+        case BOOLEAN:
+            return ColumnType.TINYINT;
+        case INTEGER:
+            return ColumnType.INT;
+        case REAL:
+            return ColumnType.DOUBLE;
+        case STRING:
+            return ColumnType.VARCHAR;
+        case TEXT:
+            return ColumnType.BIG_VARCHAR;
+        default:
+            throw new UnimplementedEnumConstantException(type);
+        }
     }
 }

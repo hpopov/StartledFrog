@@ -36,109 +36,108 @@ public class PrimitiveAttributeEntryView extends HBox {
     private ChangeListenerRegistryHelper listenerRegistryHelper = new ChangeListenerRegistryHelper();
 
     public PrimitiveAttributeEntryView(PrimitiveAttribute primitiveAttribute) {
-	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("primitiveAttributeEntry.fxml"));
-	fxmlLoader.setRoot(this);
-	fxmlLoader.setController(this);
-	try {
-	    fxmlLoader.load();
-	} catch (IOException exception) {
-	    throw new RuntimeException(exception);
-	}
-	initBindings(primitiveAttribute);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("primitiveAttributeEntry.fxml"));
+        fxmlLoader.setRoot(this);
+        fxmlLoader.setController(this);
+        try {
+            fxmlLoader.load();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+        initBindings(primitiveAttribute);
     }
 
     private void initBindings(PrimitiveAttribute primitiveAttribute) {
-	nameLabel.textProperty().bind(primitiveAttribute.nameProperty());
-	setType(primitiveAttribute.getType());
-	primitiveAttribute.typeProperty()
-		.addListener(listenerRegistryHelper.registerChangeListener((observable, oldValue, newValue) -> {
-		    setType(newValue);
-		}));
-	boolean isUnique = false;
-	boolean isNonNull = false;
-	ObservableSet<ConstraintType> constraints = primitiveAttribute.getUnmodifiableConstraints();
-	for (ConstraintType constraint : constraints) {
-	    switch (constraint) {
-	    case NON_NULL:
-		isNonNull = true;
-		break;
-	    case UNIQUE:
-		isUnique = true;
-		break;
-	    default:
-		throw new UnimplementedEnumConstantException(constraint);
-	    }
-	}
-	displayNullabilityImage(isNonNull);
-	displayUniquenessImage(isUnique);
-	constraints.addListener(new SetChangeListener<ConstraintType>() {
+        nameLabel.textProperty().bind(primitiveAttribute.nameProperty());
+        setType(primitiveAttribute.getType());
+        primitiveAttribute.typeProperty()
+                .addListener(listenerRegistryHelper
+                        .registerChangeListener((observable, oldValue, newValue) -> { setType(newValue); }));
+        boolean isUnique = false;
+        boolean isNonNull = false;
+        ObservableSet<ConstraintType> constraints = primitiveAttribute.getUnmodifiableConstraints();
+        for (ConstraintType constraint : constraints) {
+            switch (constraint) {
+            case NON_NULL:
+                isNonNull = true;
+                break;
+            case UNIQUE:
+                isUnique = true;
+                break;
+            default:
+                throw new UnimplementedEnumConstantException(constraint);
+            }
+        }
+        displayNullabilityImage(isNonNull);
+        displayUniquenessImage(isUnique);
+        constraints.addListener(new SetChangeListener<ConstraintType>() {
 
-	    @Override
-	    public void onChanged(Change<? extends ConstraintType> change) {
-		if (change.wasRemoved()) {
-		    ConstraintType elementRemoved = change.getElementRemoved();
-		    switch (elementRemoved) {
-		    case NON_NULL:
-			displayNullableImage();
-			break;
-		    case UNIQUE:
-			displayNonUniqueImage();
-			break;
-		    default:
-			throw new UnimplementedEnumConstantException(elementRemoved);
-		    }
-		}
-		if (change.wasAdded()) {
-		    ConstraintType elementAdded = change.getElementAdded();
-		    switch (elementAdded) {
-		    case NON_NULL:
-			displayNonNullImage();
-			break;
-		    case UNIQUE:
-			displayUniqueImage();
-			break;
-		    default:
-			throw new UnimplementedEnumConstantException(elementAdded);
-		    }
-		}
-	    }
-	});
+            @Override
+            public void onChanged(Change<? extends ConstraintType> change) {
+                if (change.wasRemoved()) {
+                    ConstraintType elementRemoved = change.getElementRemoved();
+                    switch (elementRemoved) {
+                    case NON_NULL:
+                        displayNullableImage();
+                        break;
+                    case UNIQUE:
+                        displayNonUniqueImage();
+                        break;
+                    default:
+                        throw new UnimplementedEnumConstantException(elementRemoved);
+                    }
+                }
+                if (change.wasAdded()) {
+                    ConstraintType elementAdded = change.getElementAdded();
+                    switch (elementAdded) {
+                    case NON_NULL:
+                        displayNonNullImage();
+                        break;
+                    case UNIQUE:
+                        displayUniqueImage();
+                        break;
+                    default:
+                        throw new UnimplementedEnumConstantException(elementAdded);
+                    }
+                }
+            }
+        });
     }
 
     private void setType(PrimitiveType newValue) {
-	String type = Optional.ofNullable(newValue).map(PrimitiveType::getAppearance).orElse(null);
-	typeLabel.setText(type);
+        String type = Optional.ofNullable(newValue).map(PrimitiveType::getAppearance).orElse(null);
+        typeLabel.setText(type);
     }
 
     private void displayNullabilityImage(boolean isNonNull) {
-	if (isNonNull) {
-	    displayNonNullImage();
-	} else {
-	    displayNullableImage();
-	}
+        if (isNonNull) {
+            displayNonNullImage();
+        } else {
+            displayNullableImage();
+        }
     }
 
     private void displayUniquenessImage(boolean isUnique) {
-	if (isUnique) {
-	    displayUniqueImage();
-	} else {
-	    displayNonUniqueImage();
-	}
+        if (isUnique) {
+            displayUniqueImage();
+        } else {
+            displayNonUniqueImage();
+        }
     }
 
     private void displayNullableImage() {
-	nullableImageView.setImage(NULLABLE_IMAGE);
+        nullableImageView.setImage(NULLABLE_IMAGE);
     }
 
     private void displayNonUniqueImage() {
-	uniqueImageView.setVisible(false);
+        uniqueImageView.setVisible(false);
     }
 
     protected void displayNonNullImage() {
-	nullableImageView.setImage(NON_NULLABLE_IMAGE);
+        nullableImageView.setImage(NON_NULLABLE_IMAGE);
     }
 
     protected void displayUniqueImage() {
-	uniqueImageView.setVisible(true);
+        uniqueImageView.setVisible(true);
     }
 }

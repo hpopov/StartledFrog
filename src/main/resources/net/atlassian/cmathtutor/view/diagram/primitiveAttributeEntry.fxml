@@ -8,13 +8,17 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.HBox?>
 
-<fx:root alignment="CENTER_LEFT" type="HBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER_LEFT" type="HBox"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<fx:define>
-		<Image fx:id="NULLABLE_IMAGE" url="@../../../../../images/nullable.png" />
-		<Image fx:id="NON_NULLABLE_IMAGE" url="@../../../../../images/not_null.png" />
+		<Image fx:id="NULLABLE_IMAGE"
+			url="@../../../../../images/nullable.png" />
+		<Image fx:id="NON_NULLABLE_IMAGE"
+			url="@../../../../../images/not_null.png" />
 	</fx:define>
 	<children>
-		<ImageView fx:id="uniqueImageView" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+		<ImageView fx:id="uniqueImageView" fitHeight="20.0"
+			fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
 			<image>
 				<Image url="@../../../../../images/unique.png" />
 			</image>
@@ -22,7 +26,8 @@
 				<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
 			</HBox.margin>
 		</ImageView>
-		<ImageView fx:id="nullableImageView" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+		<ImageView fx:id="nullableImageView" fitHeight="20.0"
+			fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
 			<HBox.margin>
 				<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
 			</HBox.margin>
@@ -30,7 +35,8 @@
 				<Image url="@../../../../../images/nullable.png" />
 			</image>
 		</ImageView>
-		<Label fx:id="nameLabel" contentDisplay="CENTER" text="primitiveAttribute">
+		<Label fx:id="nameLabel" contentDisplay="CENTER"
+			text="primitiveAttribute">
 			<HBox.margin>
 				<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
 			</HBox.margin>
@@ -38,7 +44,8 @@
 				<Font name="Lucida Bright" size="20.0" />
 			</font>
 		</Label>
-		<Label contentDisplay="CENTER" layoutX="54.0" layoutY="13.0" text=":">
+		<Label contentDisplay="CENTER" layoutX="54.0" layoutY="13.0"
+			text=":">
 			<padding>
 				<Insets left="1.0" right="9.0" />
 			</padding>
@@ -46,7 +53,8 @@
 				<Font name="Lucida Bright" size="20.0" />
 			</font>
 		</Label>
-		<Label fx:id="typeLabel" contentDisplay="CENTER" layoutX="174.0" layoutY="13.0" text="String">
+		<Label fx:id="typeLabel" contentDisplay="CENTER" layoutX="174.0"
+			layoutY="13.0" text="String">
 			<font>
 				<Font name="Lucida Bright" size="20.0" />
 			</font>

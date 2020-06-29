@@ -25,43 +25,43 @@ public class PrimitiveAttributeModel extends AbstractAttributeModel implements P
 
     private ObjectProperty<PrimitiveType> type = new SimpleObjectProperty<>();
     private ObservableSet<ConstraintType> constraints = FXCollections
-	    .observableSet(EnumSet.noneOf(ConstraintType.class));
+            .observableSet(EnumSet.noneOf(ConstraintType.class));
 
     private ObservableSet<ConstraintType> unmodifiableConstraints = FXCollections
-	    .unmodifiableObservableSet(constraints);
+            .unmodifiableObservableSet(constraints);
 
     public static PrimitiveAttributeModel makeIdentifiableInstance(String name, PersistenceUnitModel parentClassifier) {
-	PrimitiveAttributeModel primitiveAttributeModel = new PrimitiveAttributeModel();
-	primitiveAttributeModel.setName(name);
-	primitiveAttributeModel.setParentClassifier(parentClassifier);
-	return primitiveAttributeModel;
+        PrimitiveAttributeModel primitiveAttributeModel = new PrimitiveAttributeModel();
+        primitiveAttributeModel.setName(name);
+        primitiveAttributeModel.setParentClassifier(parentClassifier);
+        return primitiveAttributeModel;
     }
 
     public PrimitiveAttributeModel(String id) {
-	super(id);
+        super(id);
     }
 
     public ObjectProperty<PrimitiveType> typeProperty() {
-	return this.type;
+        return this.type;
     }
 
     @XmlElement(required = true)
     @Override
     public PrimitiveType getType() {
-	return this.typeProperty().get();
+        return this.typeProperty().get();
     }
 
     public void setType(final PrimitiveType type) {
-	this.typeProperty().set(type);
+        this.typeProperty().set(type);
     }
 
     @XmlElement(required = false, name = "constraint")
     public ObservableSet<ConstraintType> getConstraints() {
-	return this.constraints;
+        return this.constraints;
     }
 
     @Override
     public ObservableSet<ConstraintType> getUnmodifiableConstraints() {
-	return unmodifiableConstraints;
+        return unmodifiableConstraints;
     }
 }

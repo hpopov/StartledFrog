@@ -1,5 +1,6 @@
 package net.atlassian.cmathtutor.domain.persistence;
 
 public enum ConstraintType {
-    NON_NULL, UNIQUE;
+    NON_NULL,
+    UNIQUE;
 }

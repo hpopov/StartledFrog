@@ -26,56 +26,55 @@ public class CreatePersistenceUnitTool extends AbstractCreateShapeTool implement
     private ImageCursor createPersistenceUnitCursor = new ImageCursor(new Image("/images/entity.png"));
 
     public CreatePersistenceUnitTool(XRoot xRoot) {
-	super(xRoot);
+        super(xRoot);
     }
 
     @Override
     public boolean activate() {
-	log.debug("Activating...");
-	super.activate();
-	xRoot.getScene().addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	xRoot.getScene().setCursor(createPersistenceUnitCursor);
-	return true;
+        log.debug("Activating...");
+        super.activate();
+        xRoot.getScene().addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+        xRoot.getScene().setCursor(createPersistenceUnitCursor);
+        return true;
     }
 
     private void handleMouseEvent(MouseEvent event) {
-	if (MouseButton.PRIMARY == event.getButton()) {
-	    log.debug("Mouse clicked at {},{}", event.getX(), event.getY());
-	    PersistenceUnitDescriptor persistenceUnitDescriptor = createPersistenceUnitDescriptor();
-	    if (persistenceUnitDescriptor == null) {
-		log.info("Persistence unit descriptor has not been created. Nothing to do");
-		return;
-	    }
-	    PersistenceUnitNode persistenceUnitNode = new PersistenceUnitNode(persistenceUnitDescriptor);
-	    persistenceUnitNode.setLayoutX(event.getX());
-	    persistenceUnitNode.setLayoutY(event.getY());
-	    AnimationCommand command = StartledFrogAddRemoveCommand.newStartledFrogAddCommand(diagram,
-		    persistenceUnitNode);
-	    xRoot.getCommandStack().execute(command);
-	    xRoot.restoreDefaultTool();
-	}
+        if (MouseButton.PRIMARY == event.getButton()) {
+            log.debug("Mouse clicked at {},{}", event.getX(), event.getY());
+            PersistenceUnitDescriptor persistenceUnitDescriptor = createPersistenceUnitDescriptor();
+            if (persistenceUnitDescriptor == null) {
+                log.info("Persistence unit descriptor has not been created. Nothing to do");
+                return;
+            }
+            PersistenceUnitNode persistenceUnitNode = new PersistenceUnitNode(persistenceUnitDescriptor);
+            persistenceUnitNode.setLayoutX(event.getX());
+            persistenceUnitNode.setLayoutY(event.getY());
+            AnimationCommand command = StartledFrogAddRemoveCommand.newStartledFrogAddCommand(diagram,
+                    persistenceUnitNode);
+            xRoot.getCommandStack().execute(command);
+            xRoot.restoreDefaultTool();
+        }
     }
 
     private PersistenceUnitDescriptor createPersistenceUnitDescriptor() {
-	NewPersistenceUnitView newPersistenceUnitView = new NewPersistenceUnitView();
-	NewPersistenceUnitPresenter presenter = newPersistenceUnitView.getPresenter();
-	presenter.setPersistenceDescriptor(diagram.getPersistenceDescriptor());
-	Stage stage = new Stage(StageStyle.DECORATED);
-	stage.initModality(Modality.WINDOW_MODAL);
-	Scene scene = new Scene(newPersistenceUnitView.getView());
-	stage.setScene(scene);
-	stage.initOwner(xRoot.getScene().getWindow());
-	stage.showAndWait();
-	return presenter.getPersistenceUnitDescriptor();
+        NewPersistenceUnitView newPersistenceUnitView = new NewPersistenceUnitView();
+        NewPersistenceUnitPresenter presenter = newPersistenceUnitView.getPresenter();
+        presenter.setPersistenceDescriptor(diagram.getPersistenceDescriptor());
+        Stage stage = new Stage(StageStyle.DECORATED);
+        stage.initModality(Modality.WINDOW_MODAL);
+        Scene scene = new Scene(newPersistenceUnitView.getView());
+        stage.setScene(scene);
+        stage.initOwner(xRoot.getScene().getWindow());
+        stage.showAndWait();
+        return presenter.getPersistenceUnitDescriptor();
     }
 
     @Override
     public boolean deactivate() {
-	log.debug("Deactivating...");
-	super.deactivate();
-	xRoot.getScene().removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	xRoot.getScene().setCursor(Cursor.DEFAULT);
-	return true;
+        log.debug("Deactivating...");
+        super.deactivate();
+        xRoot.getScene().removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+        xRoot.getScene().setCursor(Cursor.DEFAULT);
+        return true;
     }
-
 }

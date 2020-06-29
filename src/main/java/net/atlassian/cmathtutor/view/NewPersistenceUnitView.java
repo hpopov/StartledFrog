@@ -8,6 +8,6 @@ public class NewPersistenceUnitView extends FXMLView {
 
     @Override
     public NewPersistenceUnitPresenter getPresenter() {
-	return (NewPersistenceUnitPresenter) super.getPresenter();
+        return (NewPersistenceUnitPresenter) super.getPresenter();
     }
 }

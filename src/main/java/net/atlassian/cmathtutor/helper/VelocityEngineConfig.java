@@ -10,10 +10,9 @@ public class VelocityEngineConfig extends Properties {
     private static final long serialVersionUID = 2274061539994400318L;
 
     public VelocityEngineConfig() {
-	super();
-	put("resource.loaders", "class");
-	put("resource.loader.class.class",
-		"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        super();
+        put("resource.loaders", "class");
+        put("resource.loader.class.class",
+                "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
     }
-
 }

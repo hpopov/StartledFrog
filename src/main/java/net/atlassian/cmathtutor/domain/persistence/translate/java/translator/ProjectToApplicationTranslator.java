@@ -8,6 +8,6 @@ public class ProjectToApplicationTranslator {
     private static final String APPLICATION = "Application";
 
     public Application translate(Project project) {
-	return new Application(project.getRootPackage(), project.getApplicationName() + APPLICATION);
+        return new Application(project.getRootPackage(), project.getApplicationName() + APPLICATION);
     }
 }

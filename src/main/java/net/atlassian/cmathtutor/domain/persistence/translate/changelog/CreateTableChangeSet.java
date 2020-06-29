@@ -16,5 +16,4 @@ import lombok.experimental.SuperBuilder;
 public class CreateTableChangeSet extends AbstractChangeSet {
 
     private CreateTable createTable;
-
 }

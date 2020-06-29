@@ -23,58 +23,58 @@ public class PersistenceUnitNode extends XNode {
     private Lazy<PersistenceUnitNodeView> lazyPersistenceUnitNodeView = Lazy.of(PersistenceUnitNodeView::new);
 
     public PersistenceUnitNode(PersistenceUnitDescriptor persistenceUnitDescriptor) {
-	setPersistenceUnitDescriptor(persistenceUnitDescriptor);
+        setPersistenceUnitDescriptor(persistenceUnitDescriptor);
     }
 
     @Override
     protected Node createNode() {
-	PersistenceUnitNodeView persistenceUnitNodeView = lazyPersistenceUnitNodeView.get();
-	return persistenceUnitNodeView;
+        PersistenceUnitNodeView persistenceUnitNodeView = lazyPersistenceUnitNodeView.get();
+        return persistenceUnitNodeView;
     }
 
     @Override
     public void doActivate() {
-	super.doActivate();
-	log.debug("Setting persistence unit descriptor to the view during doActivate(): {}",
-		persistenceUnitDescriptor.getId());
-	lazyPersistenceUnitNodeView.get().setPersistenceUnitDescriptor(persistenceUnitDescriptor);
+        super.doActivate();
+        log.debug("Setting persistence unit descriptor to the view during doActivate(): {}",
+                persistenceUnitDescriptor.getId());
+        lazyPersistenceUnitNodeView.get().setPersistenceUnitDescriptor(persistenceUnitDescriptor);
     }
 
     @Override
     public void populate(ModelElementImpl modelElement) {
-	super.populate(modelElement);
-	modelElement.addProperty(persistenceUnitDescriptorId, String.class);
+        super.populate(modelElement);
+        modelElement.addProperty(persistenceUnitDescriptorId, String.class);
     }
 
     @Override
     public String getName() {
-	if (persistenceUnitDescriptor == null) {
-	    log.warn("Returning id as persistence unit node name...");
-	    return getPersistenceUnitDescriptorId();
-	}
-	return persistenceUnitDescriptor.getName();
+        if (persistenceUnitDescriptor == null) {
+            log.warn("Returning id as persistence unit node name...");
+            return getPersistenceUnitDescriptorId();
+        }
+        return persistenceUnitDescriptor.getName();
     }
 
     public PersistenceUnitDescriptor getPersistenceUnitDescriptor() {
-	return persistenceUnitDescriptor;
+        return persistenceUnitDescriptor;
     }
 
     public void setPersistenceUnitDescriptor(PersistenceUnitDescriptor persistenceUnitDescriptor) {
-	log.debug("Setting persistence unit descriptor to PU Node: {}", persistenceUnitDescriptor.getId());
-	this.persistenceUnitDescriptor = persistenceUnitDescriptor;
-	persistenceUnitDescriptorId
-		.setValue(Optional.ofNullable(persistenceUnitDescriptor).map(AbstractDescriptor::getId).orElse(null));
+        log.debug("Setting persistence unit descriptor to PU Node: {}", persistenceUnitDescriptor.getId());
+        this.persistenceUnitDescriptor = persistenceUnitDescriptor;
+        persistenceUnitDescriptorId
+                .setValue(Optional.ofNullable(persistenceUnitDescriptor).map(AbstractDescriptor::getId).orElse(null));
     }
 
     public StringProperty persistenceUnitDescriptorIdProperty() {
-	return this.persistenceUnitDescriptorId;
+        return this.persistenceUnitDescriptorId;
     }
 
     public String getPersistenceUnitDescriptorId() {
-	return this.persistenceUnitDescriptorIdProperty().get();
+        return this.persistenceUnitDescriptorIdProperty().get();
     }
 
     public void setPersistenceUnitDescriptorId(final String persistenceUnitDescriptorId) {
-	this.persistenceUnitDescriptorIdProperty().set(persistenceUnitDescriptorId);
+        this.persistenceUnitDescriptorIdProperty().set(persistenceUnitDescriptorId);
     }
 }

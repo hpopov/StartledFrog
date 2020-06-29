@@ -8,6 +8,6 @@ public class NewAssociationConnectionView extends FXMLView {
 
     @Override
     public NewAssociationConnectionPresenter getPresenter() {
-	return (NewAssociationConnectionPresenter) super.getPresenter();
+        return (NewAssociationConnectionPresenter) super.getPresenter();
     }
 }

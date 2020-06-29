@@ -14,7 +14,7 @@ public class StartledFrogSaveAction extends SaveAction {
 
     @Override
     public void perform(XRoot root) {
-	persistenceDomainService.persistModel(persistenceModel);
-	super.perform(root);
+        persistenceDomainService.persistModel(persistenceModel);
+        super.perform(root);
     }
 }

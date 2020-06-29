@@ -6,7 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.Region?>
 
-<fx:root alignment="CENTER" type="HBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root alignment="CENTER" type="HBox"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="net.atlassian.cmathtutor.view.diagram.ReferentialAttributeArrowHeadView">
 	<fx:define>
 		<Double fx:id="CONTAINMENT_DIAMOND_WIDTH" fx:value="40.0" />
@@ -14,10 +15,12 @@
 		<Double fx:id="PRIMARY_REFERENCE_CIRCLE_RADIUS" fx:value="4.0" />
 		<Double fx:id="SECONDARY_REFERENCE_LINE_WIDTH" fx:value="14.0" />
 		<Double fx:id="SECONDARY_REFERENCE_LINE_HEIGHT" fx:value="20.0" />
-		<Double fx:id="SECONDARY_REFERENCE_LINE_STROKE_WIDTH" fx:value="1.5" />
+		<Double fx:id="SECONDARY_REFERENCE_LINE_STROKE_WIDTH"
+			fx:value="1.5" />
 	</fx:define>
 	<children>
-		<Polyline fx:id="secondaryReferenceLine" fill="#ffffff00" strokeType="INSIDE">
+		<Polyline fx:id="secondaryReferenceLine" fill="#ffffff00"
+			strokeType="INSIDE">
 			<points>
 				<Double fx:value="0.0" />
 				<Double fx:value="0.0" />
@@ -27,8 +30,10 @@
 				<Double fx:value="20.0" />
 			</points>
 		</Polyline>
-		<Circle fx:id="primaryReferenceCircle" radius="4.0" centerY="4" stroke="BLACK" strokeType="INSIDE" />
-		<Polygon fx:id="containmentDiamond" fill="DODGERBLUE" stroke="BLACK" strokeType="INSIDE">
+		<Circle fx:id="primaryReferenceCircle" radius="4.0" centerY="4"
+			stroke="BLACK" strokeType="INSIDE" />
+		<Polygon fx:id="containmentDiamond" fill="DODGERBLUE"
+			stroke="BLACK" strokeType="INSIDE">
 			<points>
 				<Double fx:value="0.0" />
 				<Double fx:value="10.0" />

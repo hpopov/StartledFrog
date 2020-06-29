@@ -15,38 +15,37 @@ public class AssociationConnectionLabel extends XConnectionLabel {
     private BooleanProperty container = new SimpleBooleanProperty(this, "isContainer");
 
     public AssociationConnectionLabel(XConnection connection, boolean isContainer) {
-	super(connection);
-	this.container.set(isContainer);
-	if (isContainer) {
-	    setPosition(0.8);
-	} else {
-	    setPosition(0.2);
-	}
-	getText().setFont(Font.font(getText().getFont().getName(), FONT_SIZE));
+        super(connection);
+        this.container.set(isContainer);
+        if (isContainer) {
+            setPosition(0.8);
+        } else {
+            setPosition(0.2);
+        }
+        getText().setFont(Font.font(getText().getFont().getName(), FONT_SIZE));
     }
 
     @Override
     public void postLoad() {
-	super.postLoad();
-	getText().setFont(Font.font(getText().getFont().getName(), FONT_SIZE));
+        super.postLoad();
+        getText().setFont(Font.font(getText().getFont().getName(), FONT_SIZE));
     }
 
     @Override
     public void populate(ModelElementImpl modelElement) {
-	super.populate(modelElement);
-	modelElement.addProperty(container, Boolean.class);
+        super.populate(modelElement);
+        modelElement.addProperty(container, Boolean.class);
     }
 
     public BooleanProperty containerProperty() {
-	return this.container;
+        return this.container;
     }
 
     public boolean isContainer() {
-	return this.containerProperty().get();
+        return this.containerProperty().get();
     }
 
     public void setContainer(final boolean isContainer) {
-	this.containerProperty().set(isContainer);
+        this.containerProperty().set(isContainer);
     }
-
 }

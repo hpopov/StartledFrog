@@ -15,20 +15,20 @@ public class VplApplication extends Application {
     private StartView view;
 
     public static void main(String[] args) throws Exception {
-	launch(args);
+        launch(args);
     }
 
     @Override
     public void start(Stage stage) throws IOException {
-	view = new StartView();
-	Scene scene = new Scene(view.getView());
-	stage.setScene(scene);
-	stage.setTitle(MAIN_TITLE + " -- " + view.getTitle());
-	stage.show();
+        view = new StartView();
+        Scene scene = new Scene(view.getView());
+        stage.setScene(scene);
+        stage.setTitle(MAIN_TITLE + " -- " + view.getTitle());
+        stage.show();
     }
 
     @Override
     public void stop() throws Exception {
-	Injector.forgetAll();
+        Injector.forgetAll();
     }
 }

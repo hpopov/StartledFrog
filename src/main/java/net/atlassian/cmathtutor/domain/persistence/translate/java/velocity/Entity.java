@@ -16,14 +16,13 @@ public class Entity extends AbstractDeclaration implements PackagedType {
     private String tableName;
 
     public Entity(String name, String packageName, String tableName) {
-	super(name, packageName);
-	this.tableName = tableName;
+        super(name, packageName);
+        this.tableName = tableName;
     }
 
     @Override
     public List<PackagedType> getTypesToImport() {
-	return fields.stream().flatMap(field -> field.getContainedTypes().stream()).distinct()
-		.filter(type -> !type.getPackageName().equals(packageName)).collect(Collectors.toList());
+        return fields.stream().flatMap(field -> field.getContainedTypes().stream()).distinct()
+                .filter(type -> !type.getPackageName().equals(packageName)).collect(Collectors.toList());
     }
-
 }

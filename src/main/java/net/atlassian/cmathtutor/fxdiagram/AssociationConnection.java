@@ -33,93 +33,92 @@ public class AssociationConnection extends XConnection {
     private ChangeListenerRegistryHelper listenerRegistryHelper = new ChangeListenerRegistryHelper();
 
     public AssociationConnection(XNode source, XNode target, AssociationDescriptor associationDescriptor) {
-	super(source, target);
-	setSourceArrowHead(new ReferentialAttributeArrowHead(this, true));
-	setTargetArrowHead(new ReferentialAttributeArrowHead(this, false));
-	new AssociationConnectionLabel(this, true);
-	new AssociationConnectionLabel(this, false);
-	setAssociationDescriptor(associationDescriptor);
+        super(source, target);
+        setSourceArrowHead(new ReferentialAttributeArrowHead(this, true));
+        setTargetArrowHead(new ReferentialAttributeArrowHead(this, false));
+        new AssociationConnectionLabel(this, true);
+        new AssociationConnectionLabel(this, false);
+        setAssociationDescriptor(associationDescriptor);
     }
 
     @Override
     public ReferentialAttributeArrowHead getSourceArrowHead() {
-	return (ReferentialAttributeArrowHead) super.getSourceArrowHead();
+        return (ReferentialAttributeArrowHead) super.getSourceArrowHead();
     }
 
     @Override
     public ReferentialAttributeArrowHead getTargetArrowHead() {
-	return (ReferentialAttributeArrowHead) super.getTargetArrowHead();
+        return (ReferentialAttributeArrowHead) super.getTargetArrowHead();
     }
 
     @Override
     public void populate(ModelElementImpl modelElement) {
-	super.populate(modelElement);
-	modelElement.addProperty(associationDescriptorId, String.class);
+        super.populate(modelElement);
+        modelElement.addProperty(associationDescriptorId, String.class);
     }
 
     public ReadOnlyObjectProperty<AssociationDescriptor> associationDescriptorProperty() {
-	return this.associationDescriptor;
+        return this.associationDescriptor;
     }
 
     public AssociationDescriptor getAssociationDescriptor() {
-	return this.associationDescriptorProperty().get();
+        return this.associationDescriptorProperty().get();
     }
 
     public List<AssociationConnectionLabel> getAssociationLabels() {
-	return getLabels().stream()
-		.filter(label -> label instanceof AssociationConnectionLabel)
-		.map(AssociationConnectionLabel.class::cast)
-		.collect(Collectors.toList());
+        return getLabels().stream()
+                .filter(label -> label instanceof AssociationConnectionLabel)
+                .map(AssociationConnectionLabel.class::cast)
+                .collect(Collectors.toList());
     }
 
     public void setAssociationDescriptor(AssociationDescriptor associationDescriptor) {
-	this.associationDescriptor.set(associationDescriptor);
-	associationDescriptorId
-		.setValue(Optional.ofNullable(associationDescriptor).map(AbstractDescriptor::getId).orElse(null));
-	getSourceArrowHead().setAssociationDescriptor(associationDescriptor);
-	getTargetArrowHead().setAssociationDescriptor(associationDescriptor);
-	List<AssociationConnectionLabel> labels = getAssociationLabels();
-	Predicate<? super AssociationConnectionLabel> isContainerPredicate = AssociationConnectionLabel::isContainer;
-	XConnectionLabel containerLabel = labels.stream()
-		.filter(isContainerPredicate)
-		.findAny().orElse(null);
-	bindAttributeToLabel(associationDescriptor.getContainerAttribute(), containerLabel);
-	XConnectionLabel elementLabel = labels.stream()
-		.filter(isContainerPredicate.negate())
-		.findAny().orElse(null);
-	bindAttributeToLabel(associationDescriptor.getElementAttribute(), elementLabel);
+        this.associationDescriptor.set(associationDescriptor);
+        associationDescriptorId
+                .setValue(Optional.ofNullable(associationDescriptor).map(AbstractDescriptor::getId).orElse(null));
+        getSourceArrowHead().setAssociationDescriptor(associationDescriptor);
+        getTargetArrowHead().setAssociationDescriptor(associationDescriptor);
+        List<AssociationConnectionLabel> labels = getAssociationLabels();
+        Predicate<? super AssociationConnectionLabel> isContainerPredicate = AssociationConnectionLabel::isContainer;
+        XConnectionLabel containerLabel = labels.stream()
+                .filter(isContainerPredicate)
+                .findAny().orElse(null);
+        bindAttributeToLabel(associationDescriptor.getContainerAttribute(), containerLabel);
+        XConnectionLabel elementLabel = labels.stream()
+                .filter(isContainerPredicate.negate())
+                .findAny().orElse(null);
+        bindAttributeToLabel(associationDescriptor.getElementAttribute(), elementLabel);
     }
 
     private void bindAttributeToLabel(ReferentialAttribute attribute, XConnectionLabel label) {
-	if (label == null) {
-	    log.warn("label is null!");
-	    return;
-	}
-	StringProperty labelTextProperty = label.getText().textProperty();
-	if (attribute.isNavigable() || OwnerType.CLASSIFIER == attribute.getOwnerType()) {
-	    labelTextProperty.bind(attribute.nameProperty());
-	}
-	attribute.navigableProperty().or(attribute.ownerTypeProperty().isEqualTo(OwnerType.CLASSIFIER))
-		.addListener(listenerRegistryHelper.registerChangeListener((observable, oldValue, newValue) -> {
-		    if (newValue && false == labelTextProperty.isBound()) {
-			labelTextProperty.bind(attribute.nameProperty());
-		    } else if (false == newValue && labelTextProperty.isBound()) {
-			labelTextProperty.unbind();
-			labelTextProperty.set(null);
-		    }
-		}));
+        if (label == null) {
+            log.warn("label is null!");
+            return;
+        }
+        StringProperty labelTextProperty = label.getText().textProperty();
+        if (attribute.isNavigable() || OwnerType.CLASSIFIER == attribute.getOwnerType()) {
+            labelTextProperty.bind(attribute.nameProperty());
+        }
+        attribute.navigableProperty().or(attribute.ownerTypeProperty().isEqualTo(OwnerType.CLASSIFIER))
+                .addListener(listenerRegistryHelper.registerChangeListener((observable, oldValue, newValue) -> {
+                    if (newValue && false == labelTextProperty.isBound()) {
+                        labelTextProperty.bind(attribute.nameProperty());
+                    } else if (false == newValue && labelTextProperty.isBound()) {
+                        labelTextProperty.unbind();
+                        labelTextProperty.set(null);
+                    }
+                }));
     }
 
     public StringProperty associationDescriptorIdProperty() {
-	return this.associationDescriptorId;
+        return this.associationDescriptorId;
     }
 
     public String getAssociationDescriptorId() {
-	return this.associationDescriptorIdProperty().get();
+        return this.associationDescriptorIdProperty().get();
     }
 
     public void setAssociationDescriptorId(final String associationDescriptorId) {
-	this.associationDescriptorIdProperty().set(associationDescriptorId);
+        this.associationDescriptorIdProperty().set(associationDescriptorId);
     }
-
 }

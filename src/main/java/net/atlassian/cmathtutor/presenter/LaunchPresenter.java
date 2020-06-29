@@ -14,18 +14,26 @@ public class LaunchPresenter implements Initializable {
 
     @FXML
     VBox root;
-    @FXML ProgressIndicator progressIndicator;
-    @FXML Label appStateLabel;
-    @FXML Button stopApplicationButton;
-    @FXML Button runApplicationButton;
-    @FXML VBox logEntriesVBox;
+    @FXML
+    ProgressIndicator progressIndicator;
+    @FXML
+    Label appStateLabel;
+    @FXML
+    Button stopApplicationButton;
+    @FXML
+    Button runApplicationButton;
+    @FXML
+    VBox logEntriesVBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-	
     }
 
-    @FXML public void stopApplication() {}
-    @FXML public void runApplication() {}
+    @FXML
+    public void stopApplication() {
+    }
 
+    @FXML
+    public void runApplication() {
+    }
 }

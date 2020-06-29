@@ -6,9 +6,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="558.0" prefWidth="804.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.atlassian.cmathtutor.presenter.NewPersistenceUnitPresenter">
+<AnchorPane prefHeight="558.0" prefWidth="804.0"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="net.atlassian.cmathtutor.presenter.NewPersistenceUnitPresenter">
 	<children>
-		<Label layoutX="223.0" layoutY="37.0" prefHeight="34.0" prefWidth="359.0" text="Define Persistence Unit attributes">
+		<Label layoutX="223.0" layoutY="37.0" prefHeight="34.0"
+			prefWidth="359.0" text="Define Persistence Unit attributes">
 			<font>
 				<Font name="Marlett" size="24.0" />
 			</font>
@@ -18,40 +21,54 @@
 				<Font name="Marlett" size="18.0" />
 			</font>
 		</Label>
-		<TextField fx:id="unitNameTextField" layoutX="143.0" layoutY="108.0" />
-		<Label layoutX="64.0" layoutY="169.0" text="Primitive attributes">
+		<TextField fx:id="unitNameTextField" layoutX="143.0"
+			layoutY="108.0" />
+		<Label layoutX="64.0" layoutY="169.0"
+			text="Primitive attributes">
 			<font>
 				<Font name="Marlett" size="18.0" />
 			</font>
 		</Label>
-		<ScrollPane layoutX="64.0" layoutY="261.0" prefHeight="202.0" prefViewportHeight="200.0" prefViewportWidth="579.0" prefWidth="711.0">
+		<ScrollPane layoutX="64.0" layoutY="261.0"
+			prefHeight="202.0" prefViewportHeight="200.0"
+			prefViewportWidth="579.0" prefWidth="711.0">
 			<content>
-				<TableView fx:id="primitiveAttributesTable" layoutX="64.0" layoutY="290.0" prefHeight="200.0" prefWidth="707.0" />
+				<TableView fx:id="primitiveAttributesTable" layoutX="64.0"
+					layoutY="290.0" prefHeight="200.0" prefWidth="707.0" />
 			</content>
 		</ScrollPane>
-		<TextField fx:id="newAttributeNameTextField" layoutX="64.0" layoutY="208.0" promptText="Attribute name..." />
-		<ChoiceBox fx:id="typeChoiceBox" layoutX="255.0" layoutY="208.0" prefHeight="31.0" prefWidth="177.0" />
-		<CheckBox fx:id="nullableCheckBox" layoutX="451.0" layoutY="213.0" mnemonicParsing="false" text="isNullable">
+		<TextField fx:id="newAttributeNameTextField" layoutX="64.0"
+			layoutY="208.0" promptText="Attribute name..." />
+		<ChoiceBox fx:id="typeChoiceBox" layoutX="255.0"
+			layoutY="208.0" prefHeight="31.0" prefWidth="177.0" />
+		<CheckBox fx:id="nullableCheckBox" layoutX="451.0"
+			layoutY="213.0" mnemonicParsing="false" text="isNullable">
 			<font>
 				<Font name="Marlett" size="18.0" />
 			</font>
 		</CheckBox>
-		<CheckBox fx:id="uniqueCheckBox" layoutX="573.0" layoutY="213.0" mnemonicParsing="false" text="isUnique">
+		<CheckBox fx:id="uniqueCheckBox" layoutX="573.0"
+			layoutY="213.0" mnemonicParsing="false" text="isUnique">
 			<font>
 				<Font name="Marlett" size="18.0" />
 			</font>
 		</CheckBox>
-		<Button fx:id="createPersistenceUnitButton" layoutX="697.0" layoutY="488.0" mnemonicParsing="false" onAction="#createPersistenceUnit" text="Create">
+		<Button fx:id="createPersistenceUnitButton" layoutX="697.0"
+			layoutY="488.0" mnemonicParsing="false"
+			onAction="#createPersistenceUnit" text="Create">
 			<font>
 				<Font size="18.0" />
 			</font>
 		</Button>
-		<Button fx:id="addNewPrimitiveAttributeButton" layoutX="716.0" layoutY="204.0" mnemonicParsing="false" onAction="#addNewPrimitiveAttribute" text="Add">
+		<Button fx:id="addNewPrimitiveAttributeButton" layoutX="716.0"
+			layoutY="204.0" mnemonicParsing="false"
+			onAction="#addNewPrimitiveAttribute" text="Add">
 			<font>
 				<Font size="18.0" />
 			</font>
 		</Button>
-		<Button fx:id="closeButton" layoutX="41.0" layoutY="488.0" mnemonicParsing="false" onAction="#close" text="Close">
+		<Button fx:id="closeButton" layoutX="41.0" layoutY="488.0"
+			mnemonicParsing="false" onAction="#close" text="Close">
 			<font>
 				<Font size="18.0" />
 			</font>

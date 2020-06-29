@@ -8,11 +8,11 @@ public interface NestedType extends PackagedType {
 
     @Override
     default String getName() {
-	return getDeclaringTypeName() + "." + getNestedTypeName();
+        return getDeclaringTypeName() + "." + getNestedTypeName();
     }
 
     @Override
     default String getTypeUri() {
-	return getPackageName() + "." + getDeclaringTypeName();
+        return getPackageName() + "." + getDeclaringTypeName();
     }
 }

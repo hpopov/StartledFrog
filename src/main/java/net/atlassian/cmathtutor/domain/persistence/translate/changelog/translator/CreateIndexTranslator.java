@@ -6,14 +6,14 @@ import net.atlassian.cmathtutor.domain.persistence.translate.changelog.CreateInd
 public class CreateIndexTranslator {
 
     private static final String INDEX_NAME_FORMAT = "fk" + AttributeNameToColumnNameTranslator.DELIMITER + "%s"
-	    + AttributeNameToColumnNameTranslator.DELIMITER + "%s" + AttributeNameToColumnNameTranslator.DELIMITER
-	    + "idx";
+            + AttributeNameToColumnNameTranslator.DELIMITER + "%s" + AttributeNameToColumnNameTranslator.DELIMITER
+            + "idx";
 
     public CreateIndex translate(String tableName, String columnName) {
-	return CreateIndex.builder()
-		.column(ColumnReference.builder().name(columnName).build())
-		.indexName(String.format(INDEX_NAME_FORMAT, tableName, columnName))
-		.tableName(tableName)
-		.build();
+        return CreateIndex.builder()
+                .column(ColumnReference.builder().name(columnName).build())
+                .indexName(String.format(INDEX_NAME_FORMAT, tableName, columnName))
+                .tableName(tableName)
+                .build();
     }
 }

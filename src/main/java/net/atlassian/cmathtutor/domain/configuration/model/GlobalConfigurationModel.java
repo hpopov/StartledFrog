@@ -20,6 +20,7 @@ import net.atlassian.cmathtutor.model.Project;
 @NoArgsConstructor
 @Builder
 public class GlobalConfigurationModel {
+
     private String rootPassword;
     private String user;
     private String password;

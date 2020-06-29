@@ -20,60 +20,60 @@ public class TranslatedClassesData {
     private Map<String, Repository> nameToRepositoriesMap = new HashMap<>();
 
     public Entity getEntityByPersistenceUnitName(@NonNull String persistenceUnitName) {
-	if (nameToEntities.containsKey(persistenceUnitName)) {
-	    return nameToEntities.get(persistenceUnitName);
-	}
-	return getContainableEntityByPersistenceUnitName(persistenceUnitName);
+        if (nameToEntities.containsKey(persistenceUnitName)) {
+            return nameToEntities.get(persistenceUnitName);
+        }
+        return getContainableEntityByPersistenceUnitName(persistenceUnitName);
     }
 
     public ContainableEntity getContainableEntityByPersistenceUnitName(@NonNull String persistenceUnitName) {
-	if (nameToContainableEntities.containsKey(persistenceUnitName)) {
-	    return nameToContainableEntities.get(persistenceUnitName);
-	}
-	return null;
+        if (nameToContainableEntities.containsKey(persistenceUnitName)) {
+            return nameToContainableEntities.get(persistenceUnitName);
+        }
+        return null;
     }
 
     public Repository getRepositoryByPersistenceUnitName(@NonNull String persistenceUnitName) {
-	if (nameToRepositoriesMap.containsKey(persistenceUnitName)) {
-	    return nameToRepositoriesMap.get(persistenceUnitName);
-	}
-	return null;
+        if (nameToRepositoriesMap.containsKey(persistenceUnitName)) {
+            return nameToRepositoriesMap.get(persistenceUnitName);
+        }
+        return null;
     }
 
     public boolean addEntity(@NonNull String persistenceUnitName, Entity entity) {
-	if (entity instanceof ContainableEntity) {
-	    return addContainableEntity(persistenceUnitName, (ContainableEntity) entity);
-	}
-	boolean containedKey = nameToEntities.containsKey(persistenceUnitName);
-	nameToEntities.put(persistenceUnitName, entity);
-	return !containedKey;
+        if (entity instanceof ContainableEntity) {
+            return addContainableEntity(persistenceUnitName, (ContainableEntity) entity);
+        }
+        boolean containedKey = nameToEntities.containsKey(persistenceUnitName);
+        nameToEntities.put(persistenceUnitName, entity);
+        return !containedKey;
     }
 
     private boolean addContainableEntity(@NonNull String persistenceUnitName, ContainableEntity entity) {
-	boolean containedKey = nameToContainableEntities.containsKey(persistenceUnitName);
-	nameToContainableEntities.put(persistenceUnitName, entity);
-	return !containedKey;
+        boolean containedKey = nameToContainableEntities.containsKey(persistenceUnitName);
+        nameToContainableEntities.put(persistenceUnitName, entity);
+        return !containedKey;
     }
 
     public boolean addRepository(@NonNull String persistenceUnitName, Repository repository) {
-	boolean containedKey = nameToRepositoriesMap.containsKey(persistenceUnitName);
-	nameToRepositoriesMap.put(persistenceUnitName, repository);
-	return !containedKey;
+        boolean containedKey = nameToRepositoriesMap.containsKey(persistenceUnitName);
+        nameToRepositoriesMap.put(persistenceUnitName, repository);
+        return !containedKey;
     }
 
     public Application getTranslatedApplication() {
-	return application;
+        return application;
     }
 
     public Collection<Repository> getTranslatedRepositories() {
-	return nameToRepositoriesMap.values();
+        return nameToRepositoriesMap.values();
     }
 
     public Collection<Entity> getTranslatedEntities() {
-	return nameToEntities.values();
+        return nameToEntities.values();
     }
 
     public Collection<ContainableEntity> getTranslatedContainableEntities() {
-	return nameToContainableEntities.values();
+        return nameToContainableEntities.values();
     }
 }

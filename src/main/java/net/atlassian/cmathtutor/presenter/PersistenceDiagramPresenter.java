@@ -48,69 +48,72 @@ public class PersistenceDiagramPresenter implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-	persistenceModel = persistenceService.loadPersistenceModel();
-	PersistenceDescriptor wrappedModel;
-	try {
-	    wrappedModel = PersistenceDescriptor.wrap(persistenceModel);
-	} catch (IllegalOperationException e) {
-	    throw new IllegalStateException(e);
-	}
-	StartledFrogDiagram diagram = persistenceService.getProjectDiagram(root, wrappedModel);
+        persistenceModel = persistenceService.loadPersistenceModel();
+        PersistenceDescriptor wrappedModel;
+        try {
+            wrappedModel = PersistenceDescriptor.wrap(persistenceModel);
+        } catch (IllegalOperationException e) {
+            throw new IllegalStateException(e);
+        }
+        StartledFrogDiagram diagram = persistenceService.getProjectDiagram(root, wrappedModel);
 
-	Set<String> assignedPersistenceUnitDescriptorIds = diagram.getPersistenceUnitNodes().stream()
-		.map(PersistenceUnitNode::getPersistenceUnitDescriptorId)
-		.collect(Collectors.toSet());
-	wrappedModel.getPersistenceUnitDescriptors().stream()
-		.filter(pud -> !assignedPersistenceUnitDescriptorIds.contains(pud.getId()))
-		.forEach(pud -> createNewPersistenceUnitNode(diagram, pud));
+        Set<String> assignedPersistenceUnitDescriptorIds = diagram.getPersistenceUnitNodes().stream()
+                .map(PersistenceUnitNode::getPersistenceUnitDescriptorId)
+                .collect(Collectors.toSet());
+        wrappedModel.getPersistenceUnitDescriptors().stream()
+                .filter(pud -> !assignedPersistenceUnitDescriptorIds.contains(pud.getId()))
+                .forEach(pud -> createNewPersistenceUnitNode(diagram, pud));
 
-	Set<String> assignedAssociationDescriptorIds = diagram.getAssociationConnections().stream()
-		.map(AssociationConnection::getAssociationDescriptorId)
-		.peek(id -> log.debug("Assigned association connection ID is {}", id))
-		.collect(Collectors.toSet());
-	wrappedModel.getAssociationDescriptors().stream()
-		.filter(ad -> !assignedAssociationDescriptorIds.contains(ad.getId()))
-		.forEach(ad -> createNewAssociationConnection(diagram, ad));
+        Set<String> assignedAssociationDescriptorIds = diagram.getAssociationConnections().stream()
+                .map(AssociationConnection::getAssociationDescriptorId)
+                .peek(id -> log.debug("Assigned association connection ID is {}", id))
+                .collect(Collectors.toSet());
+        wrappedModel.getAssociationDescriptors().stream()
+                .filter(ad -> !assignedAssociationDescriptorIds.contains(ad.getId()))
+                .forEach(ad -> createNewAssociationConnection(diagram, ad));
 
-	root.getDiagramActionRegistry().operator_add(Arrays.asList(
-		new CenterAction(),
-//		new ExitAction(),
-		new StartledFrogDeleteAction(),
-//		new LayoutAction(LayoutType.DOT), <-- is throwing java.lang.NoClassDefFoundError: org/eclipse/emf/ecore/EObject
-		new RedoAction(),
-		new UndoAction(),
-		new RevealAction(),
-//		new LoadAction(),
-		new StartledFrogSaveAction(persistenceService, persistenceModel),
-		new SelectAllAction(),
-		new ZoomToFitAction()// ,
-//			new NavigatePreviousAction,
-//			new NavigateNextAction,
-//			new OpenAction,
-//			new CloseAction,
-//			new UndoRedoPlayerAction
-	));
-	root.sceneProperty().addListener(new AutoDisposableListener<>(Objects::nonNull, () -> root.activate()));
+        root.getDiagramActionRegistry().operator_add(Arrays.asList(
+                new CenterAction(),
+                // new ExitAction(),
+                new StartledFrogDeleteAction(),
+                // new LayoutAction(LayoutType.DOT), <-- is throwing
+                // java.lang.NoClassDefFoundError: org/eclipse/emf/ecore/EObject
+                new RedoAction(),
+                new UndoAction(),
+                new RevealAction(),
+                // new LoadAction(),
+                new StartledFrogSaveAction(persistenceService, persistenceModel),
+                new SelectAllAction(),
+                new ZoomToFitAction()// ,
+        // new NavigatePreviousAction,
+        // new NavigateNextAction,
+        // new OpenAction,
+        // new CloseAction,
+        // new UndoRedoPlayerAction
+        ));
+        root.sceneProperty().addListener(new AutoDisposableListener<>(Objects::nonNull, () -> root.activate()));
     }
 
     private void createNewPersistenceUnitNode(StartledFrogDiagram diagram, PersistenceUnitDescriptor descriptor) {
-	XNode persistenceunitNode = new PersistenceUnitNode(descriptor);
-	diagram.getNodes().add(persistenceunitNode);
+        XNode persistenceunitNode = new PersistenceUnitNode(descriptor);
+        diagram.getNodes().add(persistenceunitNode);
     }
 
-    private void createNewAssociationConnection(StartledFrogDiagram diagram,
-	    AssociationDescriptor associationDescriptor) {
-	log.info("Creating new association connection: id ({}), {}->{}", associationDescriptor.getId(),
-		associationDescriptor.getElementAttribute(), associationDescriptor.getContainerAttribute());
-	XNode sourceNode = diagram.getPersistenceUnitNodeById(
-		associationDescriptor.getContainerAttribute().getParentClassifier().getId());
-	XNode targetNode = diagram
-		.getPersistenceUnitNodeById(associationDescriptor.getElementAttribute().getParentClassifier().getId());
-	if (sourceNode == null || targetNode == null) {
-	    throw new IllegalStateException(
-		    "Both source and target nodes must exist at diagram before association creation");
-	}
-	AssociationConnection connection = new AssociationConnection(sourceNode, targetNode, associationDescriptor);
-	diagram.getConnections().add(connection);
+    private void createNewAssociationConnection(
+            StartledFrogDiagram diagram,
+            AssociationDescriptor associationDescriptor
+    ) {
+        log.info("Creating new association connection: id ({}), {}->{}", associationDescriptor.getId(),
+                associationDescriptor.getElementAttribute(), associationDescriptor.getContainerAttribute());
+        XNode sourceNode = diagram.getPersistenceUnitNodeById(
+                associationDescriptor.getContainerAttribute().getParentClassifier().getId());
+        XNode targetNode = diagram
+                .getPersistenceUnitNodeById(associationDescriptor.getElementAttribute().getParentClassifier().getId());
+        if (sourceNode == null || targetNode == null) {
+            throw new IllegalStateException(
+                    "Both source and target nodes must exist at diagram before association creation");
+        }
+        AssociationConnection connection = new AssociationConnection(sourceNode, targetNode, associationDescriptor);
+        diagram.getConnections().add(connection);
     }
 }

@@ -8,6 +8,6 @@ public class ConfigurationView extends FXMLView {
 
     @Override
     public ConfigurationPresenter getPresenter() {
-	return (ConfigurationPresenter) super.getPresenter();
+        return (ConfigurationPresenter) super.getPresenter();
     }
 }

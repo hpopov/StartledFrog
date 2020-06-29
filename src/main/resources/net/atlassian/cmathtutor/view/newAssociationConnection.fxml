@@ -8,27 +8,34 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="522.0" prefWidth="755.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="522.0" prefWidth="755.0"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="net.atlassian.cmathtutor.presenter.NewAssociationConnectionPresenter">
 	<children>
-		<Label layoutX="220.0" layoutY="29.0" prefHeight="34.0" prefWidth="306.0" text="Define Association attributes">
+		<Label layoutX="220.0" layoutY="29.0" prefHeight="34.0"
+			prefWidth="306.0" text="Define Association attributes">
 			<font>
 				<Font name="Marlett" size="24.0" />
 			</font>
 		</Label>
-		<VBox alignment="CENTER" layoutX="23.0" layoutY="169.0" prefHeight="283.0" prefWidth="200.0">
+		<VBox alignment="CENTER" layoutX="23.0" layoutY="169.0"
+			prefHeight="283.0" prefWidth="200.0">
 			<children>
-				<ImageView fx:id="containerNodeImageView" fitHeight="150.0" fitWidth="200.0" layoutX="62.0" layoutY="113.0"
+				<ImageView fx:id="containerNodeImageView"
+					fitHeight="150.0" fitWidth="200.0" layoutX="62.0" layoutY="113.0"
 					pickOnBounds="true" preserveRatio="true" />
 			</children>
 		</VBox>
-		<VBox alignment="CENTER" layoutX="523.0" layoutY="169.0" prefHeight="283.0" prefWidth="200.0">
+		<VBox alignment="CENTER" layoutX="523.0" layoutY="169.0"
+			prefHeight="283.0" prefWidth="200.0">
 			<children>
-				<ImageView fx:id="elementNodeImageView" fitHeight="150.0" fitWidth="200.0" layoutX="62.0" layoutY="113.0"
-					pickOnBounds="true" preserveRatio="true" />
+				<ImageView fx:id="elementNodeImageView" fitHeight="150.0"
+					fitWidth="200.0" layoutX="62.0" layoutY="113.0" pickOnBounds="true"
+					preserveRatio="true" />
 			</children>
 		</VBox>
-		<ChoiceBox fx:id="aggregationKindChoiceBox" layoutX="393.0" layoutY="92.0" prefWidth="150.0" />
+		<ChoiceBox fx:id="aggregationKindChoiceBox" layoutX="393.0"
+			layoutY="92.0" prefWidth="150.0" />
 		<Label layoutX="70.0" layoutY="131.0" text="Container">
 			<font>
 				<Font name="Copperplate Gothic Bold" size="18.0" />
@@ -39,72 +46,90 @@
 				<Font name="Copperplate Gothic Bold" size="18.0" />
 			</font>
 		</Label>
-		<Label layoutX="203.0" layoutY="91.0" prefHeight="34.0" prefWidth="177.0" text="Aggregation kind">
+		<Label layoutX="203.0" layoutY="91.0" prefHeight="34.0"
+			prefWidth="177.0" text="Aggregation kind">
 			<font>
 				<Font name="Copperplate Gothic Light" size="18.0" />
 			</font>
 		</Label>
-		<CheckBox fx:id="elementNavigabilityCheckBox" layoutX="390.0" layoutY="327.0" mnemonicParsing="false"
+		<CheckBox fx:id="elementNavigabilityCheckBox" layoutX="390.0"
+			layoutY="327.0" mnemonicParsing="false"
 			nodeOrientation="RIGHT_TO_LEFT" text="isNavigable">
 			<font>
 				<Font name="Marlett" size="18.0" />
 			</font>
 		</CheckBox>
-		<CheckBox fx:id="containerNavigabilityCheckBox" layoutX="233.0" layoutY="327.0" mnemonicParsing="false"
+		<CheckBox fx:id="containerNavigabilityCheckBox"
+			layoutX="233.0" layoutY="327.0" mnemonicParsing="false"
 			text="isNavigable">
 			<font>
 				<Font name="Marlett" size="18.0" />
 			</font>
 		</CheckBox>
-		<Label layoutX="233.0" layoutY="372.0" prefHeight="34.0" prefWidth="281.0" text="Primary reference direction">
+		<Label layoutX="233.0" layoutY="372.0" prefHeight="34.0"
+			prefWidth="281.0" text="Primary reference direction">
 			<font>
 				<Font name="Copperplate Gothic Light" size="18.0" />
 			</font>
 		</Label>
-		<RadioButton fx:id="toContainerPrimaryReferenceRadioButton" contentDisplay="CENTER" graphicTextGap="0.0"
-			layoutX="240.0" layoutY="412.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="13.0">
+		<RadioButton
+			fx:id="toContainerPrimaryReferenceRadioButton"
+			contentDisplay="CENTER" graphicTextGap="0.0" layoutX="240.0"
+			layoutY="412.0" mnemonicParsing="false" prefHeight="21.0"
+			prefWidth="13.0">
 			<toggleGroup>
 				<ToggleGroup fx:id="toggleGroup" />
 			</toggleGroup>
 		</RadioButton>
-		<RadioButton fx:id="toElementPrimaryReferenceRadioButton" contentDisplay="CENTER" graphicTextGap="0.0"
-			layoutX="486.0" layoutY="412.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="13.0" selected="true">
+		<RadioButton fx:id="toElementPrimaryReferenceRadioButton"
+			contentDisplay="CENTER" graphicTextGap="0.0" layoutX="486.0"
+			layoutY="412.0" mnemonicParsing="false" prefHeight="21.0"
+			prefWidth="13.0" selected="true">
 			<toggleGroup>
 				<fx:reference source="toggleGroup" />
 			</toggleGroup>
 		</RadioButton>
-		<ChoiceBox fx:id="containerArityChoiceBox" layoutX="233.0" layoutY="262.0" prefHeight="31.0" prefWidth="123.0" />
-		<ChoiceBox fx:id="elementArityChoiceBox" layoutX="390.0" layoutY="262.0" prefHeight="31.0" prefWidth="123.0" />
-		<Label layoutX="235.0" layoutY="224.0" prefHeight="34.0" prefWidth="37.0" text="Arity">
+		<ChoiceBox fx:id="containerArityChoiceBox" layoutX="233.0"
+			layoutY="262.0" prefHeight="31.0" prefWidth="123.0" />
+		<ChoiceBox fx:id="elementArityChoiceBox" layoutX="390.0"
+			layoutY="262.0" prefHeight="31.0" prefWidth="123.0" />
+		<Label layoutX="235.0" layoutY="224.0" prefHeight="34.0"
+			prefWidth="37.0" text="Arity">
 			<font>
 				<Font name="Marlett" size="18.0" />
 			</font>
 		</Label>
-		<Label layoutX="476.0" layoutY="224.0" prefHeight="34.0" prefWidth="37.0" text="Arity">
+		<Label layoutX="476.0" layoutY="224.0" prefHeight="34.0"
+			prefWidth="37.0" text="Arity">
 			<font>
 				<Font name="Marlett" size="18.0" />
 			</font>
 		</Label>
-		<ImageView fx:id="primaryReferenceImageView" fitHeight="31.0" fitWidth="200.0" layoutX="273.0" layoutY="409.0"
+		<ImageView fx:id="primaryReferenceImageView"
+			fitHeight="31.0" fitWidth="200.0" layoutX="273.0" layoutY="409.0"
 			pickOnBounds="true" preserveRatio="true">
 			<image>
 				<Image url="@../../../../images/primaryReference.png" />
 			</image>
 		</ImageView>
-		<Button fx:id="closeButton" layoutX="22.0" layoutY="463.0" mnemonicParsing="false" onAction="#close" text="Close">
+		<Button fx:id="closeButton" layoutX="22.0" layoutY="463.0"
+			mnemonicParsing="false" onAction="#close" text="Close">
 			<font>
 				<Font size="18.0" />
 			</font>
 		</Button>
-		<Button fx:id="createPersistenceUnitButton" layoutX="663.0" layoutY="463.0" mnemonicParsing="false"
-			onAction="#createAssociation" text="Create">
+		<Button fx:id="createPersistenceUnitButton" layoutX="663.0"
+			layoutY="463.0" mnemonicParsing="false" onAction="#createAssociation"
+			text="Create">
 			<font>
 				<Font size="18.0" />
 			</font>
 		</Button>
-		<TextField fx:id="containerAttributeNameTextLabel" layoutX="230.0" layoutY="169.0" prefHeight="31.0" prefWidth="129.0"
+		<TextField fx:id="containerAttributeNameTextLabel"
+			layoutX="230.0" layoutY="169.0" prefHeight="31.0" prefWidth="129.0"
 			promptText="Attribute name..." />
-		<TextField fx:id="elementAttributeNameTextLabel" layoutX="387.0" layoutY="169.0" prefHeight="31.0" prefWidth="129.0"
+		<TextField fx:id="elementAttributeNameTextLabel"
+			layoutX="387.0" layoutY="169.0" prefHeight="31.0" prefWidth="129.0"
 			promptText="Attribute name..." />
 	</children>
 </AnchorPane>
