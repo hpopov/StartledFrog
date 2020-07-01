@@ -17,58 +17,57 @@ public class CreateProjectProperties {
     private StringProperty projectDescription;
 
     public CreateProjectProperties() {
-	projectDestinationFolder = new SimpleObjectProperty<>();
-	applicationName = new SimpleStringProperty();
-	rootPackage = new SimpleStringProperty();
-	projectDescription = new SimpleStringProperty();
+        projectDestinationFolder = new SimpleObjectProperty<>();
+        applicationName = new SimpleStringProperty();
+        rootPackage = new SimpleStringProperty();
+        projectDescription = new SimpleStringProperty();
     }
 
     public final ObjectProperty<File> projectDestinationFolderProperty() {
-	return this.projectDestinationFolder;
+        return this.projectDestinationFolder;
     }
 
     public final File getProjectDestinationFolder() {
-	return this.projectDestinationFolderProperty().getValue();
+        return this.projectDestinationFolderProperty().getValue();
     }
 
     public final void setProjectDestinationFolder(final File projectDestinationFolder) {
-	this.projectDestinationFolderProperty().setValue(projectDestinationFolder);
+        this.projectDestinationFolderProperty().setValue(projectDestinationFolder);
     }
 
     public final StringProperty applicationNameProperty() {
-	return this.applicationName;
+        return this.applicationName;
     }
 
     public final String getApplicationName() {
-	return this.applicationNameProperty().get();
+        return this.applicationNameProperty().get();
     }
 
     public final void setApplicationName(final String applicationName) {
-	this.applicationNameProperty().set(applicationName);
+        this.applicationNameProperty().set(applicationName);
     }
 
     public final StringProperty rootPackageProperty() {
-	return this.rootPackage;
+        return this.rootPackage;
     }
 
     public final String getRootPackage() {
-	return this.rootPackageProperty().get();
+        return this.rootPackageProperty().get();
     }
 
     public final void setRootPackage(final String rootPackage) {
-	this.rootPackageProperty().set(rootPackage);
+        this.rootPackageProperty().set(rootPackage);
     }
 
     public final StringProperty projectDescriptionProperty() {
-	return this.projectDescription;
+        return this.projectDescription;
     }
 
     public final String getProjectDescription() {
-	return this.projectDescriptionProperty().get();
+        return this.projectDescriptionProperty().get();
     }
 
     public final void setProjectDescription(final String projectDescription) {
-	this.projectDescriptionProperty().set(projectDescription);
+        this.projectDescriptionProperty().set(projectDescription);
     }
-
 }

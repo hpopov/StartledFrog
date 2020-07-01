@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import net.atlassian.cmathtutor.view.PersistenceDiagramView;
 
 public class PersistencePresenter implements Initializable {
 
@@ -18,6 +17,6 @@ public class PersistencePresenter implements Initializable {
 
     @Override
     public void initialize(URL var1, ResourceBundle var2) {
-	PersistenceDiagramView.modifyView(persistenceDiagramController.getRoot());
+        // PersistenceDiagramView.modifyView(persistenceDiagramController.getRoot());
     }
 }

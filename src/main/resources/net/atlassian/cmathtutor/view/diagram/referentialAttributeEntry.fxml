@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root alignment="CENTER_LEFT" type="HBox"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<Label fx:id="nameLabel" text="referentialAttribute">
+			<font>
+				<Font name="Lucida Bright" size="20.0" />
+			</font>
+			<HBox.margin>
+				<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+			</HBox.margin>
+		</Label>
+		<Label contentDisplay="CENTER" text=":">
+			<padding>
+				<Insets left="1.0" right="9.0" />
+			</padding>
+			<font>
+				<Font name="Lucida Bright" size="20.0" />
+			</font>
+		</Label>
+		<Label fx:id="typeLabel" contentDisplay="CENTER"
+			text="OtherName">
+			<font>
+				<Font name="Lucida Bright" size="20.0" />
+			</font>
+		</Label>
+		<Label fx:id="arityLabel" contentDisplay="CENTER" text="(0..1)">
+			<font>
+				<Font name="Lucida Bright" size="20.0" />
+			</font>
+			<HBox.margin>
+				<Insets left="5.0" />
+			</HBox.margin>
+		</Label>
+	</children>
+</fx:root>

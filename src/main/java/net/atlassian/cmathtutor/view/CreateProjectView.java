@@ -8,6 +8,6 @@ public class CreateProjectView extends FXMLView implements Titlable {
 
     @Override
     public String getTitle() {
-	return TITLE;
+        return TITLE;
     }
 }

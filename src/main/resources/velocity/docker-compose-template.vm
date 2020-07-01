@@ -1,0 +1,10 @@
+db:
+##switch back to mysql:8.0 when understand how to enable ssl from client (or disable from server)
+  image: mysql:8.0.16
+  ports:
+    - "3306:3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=${model.RootPassword}
+    - MYSQL_USER=${model.User}
+    - MYSQL_PASSWORD=${model.Password}
+    - MYSQL_DATABASE=${model.Database}

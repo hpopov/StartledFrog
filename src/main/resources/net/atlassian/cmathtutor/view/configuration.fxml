@@ -1,11 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+<VBox fx:id="root" alignment="TOP_CENTER" prefHeight="621.0"
+	prefWidth="857.0" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="net.atlassian.cmathtutor.presenter.ConfigurationPresenter">
-	<!-- TODO Add Nodes -->
+	<children>
+		<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+			<children>
+				<Label text="Global configuration view">
+					<font>
+						<Font name="Copperplate Gothic Bold" size="24.0" />
+					</font>
+				</Label>
+			</children>
+		</HBox>
+		<GridPane alignment="TOP_CENTER" maxWidth="-Infinity"
+			prefHeight="222.0" prefWidth="765.0">
+			<children>
+				<Label contentDisplay="TEXT_ONLY" maxWidth="300.0"
+					text="DB Root password:" />
+				<Label contentDisplay="TEXT_ONLY" maxWidth="300.0"
+					text="DB user:" GridPane.rowIndex="1" />
+				<Label contentDisplay="TEXT_ONLY" maxWidth="300.0"
+					text="DB user password:" GridPane.rowIndex="2" />
+				<TextField fx:id="dbUserTextField" prefHeight="30.0"
+					prefWidth="245.0"
+					promptText="Used for DB connections from generated app"
+					GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<TextField fx:id="dbSchemaNameTextField" prefHeight="30.0"
+					prefWidth="245.0" promptText="The name of MySQL schema"
+					GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<Label contentDisplay="TEXT_ONLY" maxWidth="300.0"
+					text="DB schema name:" GridPane.rowIndex="3" />
+				<HBox alignment="CENTER_LEFT" spacing="40.0"
+					GridPane.columnIndex="1" GridPane.rowIndex="4">
+					<children>
+						<Label fx:id="jdbcDriverPathLabel" text="..." />
+						<Button mnemonicParsing="false"
+							onAction="#chooseJdbcDriverPath" text="Choose" />
+					</children>
+					<padding>
+						<Insets left="20.0" right="20.0" />
+					</padding>
+				</HBox>
+				<Label contentDisplay="TEXT_ONLY" maxWidth="300.0"
+					text="JDBC driver path:" GridPane.rowIndex="4" />
+				<TextField fx:id="dockerMachineIpTextField"
+					prefHeight="30.0" prefWidth="245.0"
+					promptText="IP of the Docker VM to create DB on"
+					GridPane.columnIndex="1" GridPane.rowIndex="5" />
+				<Label contentDisplay="TEXT_ONLY" maxWidth="300.0"
+					text="Docker machine ip:" GridPane.rowIndex="5" />
+				<PasswordField fx:id="dbRootPasswordField"
+					promptText="Is used to generate MySQL tables"
+					GridPane.columnIndex="1" />
+				<PasswordField fx:id="dbUserPasswordField"
+					promptText="Password for DB user" GridPane.columnIndex="1"
+					GridPane.rowIndex="2" />
+			</children>
+			<columnConstraints>
+				<ColumnConstraints hgrow="SOMETIMES"
+					maxWidth="557.0" minWidth="10.0" prefWidth="194.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					maxWidth="993.0" minWidth="10.0" percentWidth="80.0"
+					prefWidth="930.0" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+			</rowConstraints>
+		</GridPane>
+	</children>
 </VBox>

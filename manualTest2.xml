@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistenceModel
+	id="176be039-2bd2-42a6-8428-684b4723046a">
+	<persistence-units>
+		<persistence-unit
+			id="152dd68f-357f-45aa-b07c-c17cc7624268">
+			<name>Bulb</name>
+			<primitive-attributes>
+				<primitive-attribute
+					id="d60b1a89-4664-43d2-b7f8-ac9b9319330e">
+					<name>s</name>
+					<constraint>NON_NULL</constraint>
+					<type>BOOLEAN</type>
+				</primitive-attribute>
+			</primitive-attributes>
+			<referential-attributes>
+				<referential-attribute arity="AT_MOST_ONE"
+					id="ae33b985-67e3-4168-8aad-e892adf0a01b">
+					<name>chandelier</name>
+					<navigable>false</navigable>
+					<ownerType>ASSOCIATION</ownerType>
+				</referential-attribute>
+				<referential-attribute arity="AT_MOST_ONE"
+					id="ae33b985-67e3-4168-8aad-e892adf0a01b">
+					<name>chandelier</name>
+					<navigable>false</navigable>
+					<ownerType>ASSOCIATION</ownerType>
+				</referential-attribute>
+			</referential-attributes>
+			<repository-operations />
+		</persistence-unit>
+		<persistence-unit
+			id="80f7168d-c9d5-432b-9e13-1a769fe4db77">
+			<name>Chandelier</name>
+			<primitive-attributes>
+				<primitive-attribute
+					id="56434147-b077-4363-9ac7-3942c3131354">
+					<name>color</name>
+					<type>STRING</type>
+				</primitive-attribute>
+			</primitive-attributes>
+			<referential-attributes>
+				<referential-attribute arity="AT_LEAST_ZERO"
+					id="12dcd205-9396-4d06-839c-7843141b8c13">
+					<name>bulbs</name>
+					<navigable>false</navigable>
+					<ownerType>CLASSIFIER</ownerType>
+				</referential-attribute>
+				<referential-attribute arity="AT_LEAST_ZERO"
+					id="12dcd205-9396-4d06-839c-7843141b8c13">
+					<name>bulbs</name>
+					<navigable>false</navigable>
+					<ownerType>CLASSIFIER</ownerType>
+				</referential-attribute>
+			</referential-attributes>
+			<repository-operations />
+		</persistence-unit>
+	</persistence-units>
+	<associations>
+		<association id="7ffd878c-f161-4488-a577-bed481520b3a">
+			<aggregationKind>NONE</aggregationKind>
+			<containerAttribute>12dcd205-9396-4d06-839c-7843141b8c13</containerAttribute>
+			<elementAttribute>ae33b985-67e3-4168-8aad-e892adf0a01b</elementAttribute>
+		</association>
+	</associations>
+</persistenceModel>

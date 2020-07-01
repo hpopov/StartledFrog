@@ -19,21 +19,19 @@ public class LoadStartledFrogProjectService extends Service<Project> {
 
     @Override
     protected Task<Project> createTask() {
-	return new Task<Project>() {
+        return new Task<Project>() {
 
-	    @Override
-	    protected Project call() throws Exception {
-		updateProgress(0, 1);
-		Project project = projectService.loadProject(projectFileProperty.get());
-		if (project == null) {
-		    throw new LoadProjectException("Unable to load the project");
-		}
-		log.info("Startled Frog project is loaded {}", project);
-		updateProgress(1, 1);
-		return project;
-	    }
-
-	};
+            @Override
+            protected Project call() throws Exception {
+                updateProgress(0, 1);
+                Project project = projectService.loadProject(projectFileProperty.get());
+                if (project == null) {
+                    throw new LoadProjectException("Unable to load the project");
+                }
+                log.info("Startled Frog project is loaded {}", project);
+                updateProgress(1, 1);
+                return project;
+            }
+        };
     }
-
 }

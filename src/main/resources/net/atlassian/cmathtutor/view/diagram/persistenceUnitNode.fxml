@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.StackPane?>
+
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<VBox>
+			<children>
+				<HBox alignment="TOP_CENTER">
+					<children>
+						<Text fx:id="nameText" strokeType="OUTSIDE" strokeWidth="0.0"
+							text="Name" textOrigin="TOP">
+							<StackPane.margin>
+								<Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+							</StackPane.margin>
+							<font>
+								<Font name="Lucida Bright" size="24.0" />
+							</font>
+							<HBox.margin>
+								<Insets left="5.0" right="5.0" />
+							</HBox.margin>
+						</Text>
+					</children>
+				</HBox>
+				<Separator />
+				<VBox fx:id="primitiveAttributeEntriesVBox" spacing="5.0">
+					<children>
+						<HBox alignment="CENTER_LEFT">
+							<children>
+								<ImageView fitHeight="20.0" fitWidth="20.0"
+									pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../../images/unique.png" />
+									</image>
+									<HBox.margin>
+										<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+									</HBox.margin>
+								</ImageView>
+								<ImageView fitHeight="20.0" fitWidth="20.0"
+									pickOnBounds="true" preserveRatio="true">
+									<HBox.margin>
+										<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+									</HBox.margin>
+									<image>
+										<Image url="@../../../../../images/nullable.png" />
+									</image>
+								</ImageView>
+								<Label contentDisplay="CENTER" text="primitiveAttribute">
+									<HBox.margin>
+										<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+									</HBox.margin>
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+								</Label>
+								<Label contentDisplay="CENTER" layoutX="54.0"
+									layoutY="13.0" text=":">
+									<padding>
+										<Insets left="1.0" right="9.0" />
+									</padding>
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+								</Label>
+								<Label contentDisplay="CENTER" layoutX="174.0"
+									layoutY="13.0" text="String">
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+								</Label>
+							</children>
+						</HBox>
+						<HBox alignment="CENTER_LEFT" layoutX="12.0" layoutY="12.0">
+							<children>
+								<ImageView fitHeight="20.0" fitWidth="20.0"
+									pickOnBounds="true" preserveRatio="true" visible="false">
+									<image>
+										<Image url="@../../../../../images/unique.png" />
+									</image>
+									<HBox.margin>
+										<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+									</HBox.margin>
+								</ImageView>
+								<ImageView fitHeight="20.0" fitWidth="20.0"
+									pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../../images/not_null.png" />
+									</image>
+									<HBox.margin>
+										<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+									</HBox.margin>
+								</ImageView>
+								<Label contentDisplay="CENTER" text="primitiveAttribute">
+									<HBox.margin>
+										<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+									</HBox.margin>
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+								</Label>
+								<Label contentDisplay="CENTER" layoutX="54.0"
+									layoutY="13.0" text=":">
+									<padding>
+										<Insets left="1.0" right="9.0" />
+									</padding>
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+								</Label>
+								<Label contentDisplay="CENTER" layoutX="174.0"
+									layoutY="13.0" text="Integer">
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+								</Label>
+							</children>
+						</HBox>
+					</children>
+					<padding>
+						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+					</padding>
+				</VBox>
+				<Separator prefWidth="200.0" />
+				<VBox fx:id="referentialAttributeEntriesVBox">
+					<children>
+						<HBox alignment="CENTER_LEFT">
+							<children>
+								<Label text="referentialAttribute">
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+									<HBox.margin>
+										<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+									</HBox.margin>
+								</Label>
+								<Label contentDisplay="CENTER" text=":">
+									<padding>
+										<Insets left="1.0" right="9.0" />
+									</padding>
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+								</Label>
+								<Label contentDisplay="CENTER" text="OtherName">
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+								</Label>
+								<Label contentDisplay="CENTER" text="(0..1)">
+									<font>
+										<Font name="Lucida Bright" size="20.0" />
+									</font>
+									<padding>
+										<Insets left="5.0" right="2.0" />
+									</padding>
+								</Label>
+							</children>
+						</HBox>
+					</children>
+					<padding>
+						<Insets left="5.0" right="5.0" />
+					</padding>
+				</VBox>
+			</children>
+			<StackPane.margin>
+				<Insets bottom="5.0" top="5.0" />
+			</StackPane.margin>
+		</VBox>
+	</children>
+</fx:root>
