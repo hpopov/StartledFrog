@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -28,8 +29,8 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<lombok.version>1.18.12</lombok.version>
 		<afterburner.version>1.7.0</afterburner.version>
-		<slf4j.version>1.7.12</slf4j.version>
-		<log4j.version>1.2.17</log4j.version>
+		<slf4j.version>1.7.30</slf4j.version>
+		<log4j.version>2.13.3</log4j.version>
 		<velocity.version>2.2</velocity.version>
 		<apache.commons.version>3.10</apache.commons.version>
 		<!-- <apache.common-text.version>1.8</apache.common-text.version> -->
@@ -49,6 +50,9 @@
 		<junit.jupiter.version>5.5.1</junit.jupiter.version>
 		<hamcrest.version>2.2</hamcrest.version>
 		<mockito.jupiter.version>2.23.4</mockito.jupiter.version>
+		<fxdiagram.version>0.35.1-SNAPSHOT</fxdiagram.version>
+
+		<fx-diagram-libs>${basedir}/lib</fx-diagram-libs>
 	</properties>
 
 	<build>
@@ -68,6 +72,29 @@
 					<allPermissions>true</allPermissions>
 
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>net.atlassian.cmathtutor.VplApplication</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -119,8 +146,8 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
 
@@ -220,6 +247,112 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Local JAR dependencies for FXDiagram -->
+		<dependency>
+			<groupId>de.cau.cs.kieler.core.kgraph</groupId>
+			<artifactId>de.cau.cs.kieler.core.kgraph</artifactId>
+			<scope>system</scope>
+			<version>0.7.2.201506231527</version>
+			<systemPath>${fx-diagram-libs}/de.cau.cs.kieler.core.kgraph-0.7.2.201506231527.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.cau.cs.kieler.core</groupId>
+			<artifactId>de.cau.cs.kieler.core</artifactId>
+			<scope>system</scope>
+			<version>0.14.1.201506231527</version>
+			<systemPath>${fx-diagram-libs}/de.cau.cs.kieler.core-0.14.1.201506231527.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.cau.cs.kieler.kiml.formats</groupId>
+			<artifactId>de.cau.cs.kieler.kiml.formats</artifactId>
+			<scope>system</scope>
+			<version>0.2.4.201506231527</version>
+			<systemPath>${fx-diagram-libs}/de.cau.cs.kieler.kiml.formats-0.2.4.201506231527.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.cau.cs.kieler.kiml.graphviz.dot</groupId>
+			<artifactId>de.cau.cs.kieler.kiml.graphviz.dot</artifactId>
+			<scope>system</scope>
+			<version>0.7.1.201612130921</version>
+			<systemPath>${fx-diagram-libs}/de.cau.cs.kieler.kiml.graphviz.dot-0.7.1.201612130921.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.cau.cs.kieler.kiml.graphviz.layouter</groupId>
+			<artifactId>de.cau.cs.kieler.kiml.graphviz.layouter</artifactId>
+			<scope>system</scope>
+			<version>0.7.0.201506231527</version>
+			<systemPath>${fx-diagram-libs}/de.cau.cs.kieler.kiml.graphviz.layouter-0.7.0.201506231527.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.cau.cs.kieler.kiml.service</groupId>
+			<artifactId>de.cau.cs.kieler.kiml.service</artifactId>
+			<scope>system</scope>
+			<version>0.8.0.201506231527</version>
+			<systemPath>${fx-diagram-libs}/de.cau.cs.kieler.kiml.service-0.8.0.201506231527.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.cau.cs.kieler.kiml</groupId>
+			<artifactId>de.cau.cs.kieler.kiml</artifactId>
+			<scope>system</scope>
+			<version>0.18.0.201506231527</version>
+			<systemPath>${fx-diagram-libs}/de.cau.cs.kieler.kiml-0.18.0.201506231527.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.fxdiagram.core</groupId>
+			<artifactId>de.fxdiagram.core</artifactId>
+			<scope>system</scope>
+			<version>${fxdiagram.version}</version>
+			<systemPath>${fx-diagram-libs}/de.fxdiagram.core-${fxdiagram.version}.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.fxdiagram.external</groupId>
+			<artifactId>de.fxdiagram.external</artifactId>
+			<scope>system</scope>
+			<version>${fxdiagram.version}</version>
+			<systemPath>${fx-diagram-libs}/de.fxdiagram.external-${fxdiagram.version}.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.fxdiagram.lib</groupId>
+			<artifactId>de.fxdiagram.lib</artifactId>
+			<scope>system</scope>
+			<version>${fxdiagram.version}</version>
+			<systemPath>${fx-diagram-libs}/de.fxdiagram.lib-${fxdiagram.version}.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.fxdiagram.mapping</groupId>
+			<artifactId>de.fxdiagram.mapping</artifactId>
+			<scope>system</scope>
+			<version>${fxdiagram.version}</version>
+			<systemPath>${fx-diagram-libs}/de.fxdiagram.mapping-${fxdiagram.version}.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.fxdiagram.noeclipse</groupId>
+			<artifactId>de.fxdiagram.noeclipse</artifactId>
+			<scope>system</scope>
+			<version>${fxdiagram.version}</version>
+			<systemPath>${fx-diagram-libs}/de.fxdiagram.noeclipse-${fxdiagram.version}.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtend.lib.macro</groupId>
+			<artifactId>org.eclipse.xtend.lib.macro</artifactId>
+			<scope>system</scope>
+			<version>2.10.0</version>
+			<systemPath>${fx-diagram-libs}/org.eclipse.xtend.lib.macro-2.10.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtend.lib</groupId>
+			<artifactId>org.eclipse.xtend.lib</artifactId>
+			<scope>system</scope>
+			<version>2.10.0</version>
+			<systemPath>${fx-diagram-libs}/org.eclipse.xtend.lib-2.10.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext.xbase.lib</groupId>
+			<artifactId>org.eclipse.xtext.xbase.lib</artifactId>
+			<scope>system</scope>
+			<version>2.10.0</version>
+			<systemPath>${fx-diagram-libs}/org.eclipse.xtext.xbase.lib-2.10.0.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -28,34 +28,36 @@ public abstract class AbstractAttributeModel extends AbstractIdentifyableModel i
     private ObjectProperty<PersistenceUnitModel> parentClassifier = new SimpleObjectProperty<>();
 
     public AbstractAttributeModel(String id) {
-	super(id);
+        super(id);
     }
 
+    @Override
     public StringProperty nameProperty() {
-	return this.name;
+        return this.name;
     }
 
     @XmlElement(required = true)
     @Override
     public String getName() {
-	return this.nameProperty().get();
+        return this.nameProperty().get();
     }
 
     public void setName(final String name) {
-	this.nameProperty().set(name);
+        this.nameProperty().set(name);
     }
 
-    public ReadOnlyObjectProperty<PersistenceUnitModel> parentClassifierProperty() {
-	return this.parentClassifier;
+    @Override
+    public ReadOnlyObjectProperty<? extends PersistenceUnitModel> parentClassifierProperty() {
+        return this.parentClassifier;
     }
 
     @XmlTransient
     @Override
     public PersistenceUnitModel getParentClassifier() {
-	return this.parentClassifierProperty().get();
+        return this.parentClassifierProperty().get();
     }
 
     public void setParentClassifier(final PersistenceUnitModel parentClassifier) {
-	this.parentClassifier.set(parentClassifier);
+        this.parentClassifier.set(parentClassifier);
     }
 }

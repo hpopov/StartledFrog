@@ -17,29 +17,28 @@ public class EntityTableData {
     private Map<ReferentialAttribute, Column> attributeToJoinColumns;
 
     public EntityTableData(String tableName) {
-	this.createTable = new CreateTable(tableName, new LinkedList<>());
-	attributeToJoinColumns = new HashMap<>();
+        this.createTable = new CreateTable(tableName, new LinkedList<>());
+        attributeToJoinColumns = new HashMap<>();
     }
 
     public void addColumn(@NonNull Column column) {
-	createTable.getColumns().add(column);
+        createTable.getColumns().add(column);
     }
 
     public boolean addJoinColumn(@NonNull ReferentialAttribute attribute, @NonNull Column column) {
-	if (attributeToJoinColumns.containsKey(attribute)) {
-	    return false;
-	}
-	addColumn(column);
-	attributeToJoinColumns.put(attribute, column);
-	return true;
+        if (attributeToJoinColumns.containsKey(attribute)) {
+            return false;
+        }
+        addColumn(column);
+        attributeToJoinColumns.put(attribute, column);
+        return true;
     }
 
     public Column getJoinColumnByReferentialAttribute(@NonNull ReferentialAttribute attribute) {
-	return attributeToJoinColumns.get(attribute);
+        return attributeToJoinColumns.get(attribute);
     }
 
     public String getName() {
-	return createTable.getTableName();
+        return createTable.getTableName();
     }
-
 }

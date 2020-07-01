@@ -8,7 +8,6 @@ public class StartView extends FXMLView implements Titlable {
 
     @Override
     public String getTitle() {
-	return TITLE;
+        return TITLE;
     }
-
 }

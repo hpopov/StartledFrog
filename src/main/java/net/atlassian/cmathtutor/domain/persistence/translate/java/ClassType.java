@@ -15,27 +15,27 @@ public class ClassType<T> extends AbstractClassBasedClassifier<T> implements Pac
     private List<Type> parameters = new LinkedList<>();
 
     public ClassType(Class<T> clazz, Type... parameters) {
-	super(clazz);
-	for (Type type : parameters) {
-	    this.parameters.add(type);
-	}
+        super(clazz);
+        for (Type type : parameters) {
+            this.parameters.add(type);
+        }
     }
 
     @Override
     public boolean isGeneric() {
-	return !parameters.isEmpty();
+        return !parameters.isEmpty();
     }
 
     public String displayParametersList() {
-	StringBuilder sb = parameters.stream().map(p -> p.getName() + COMMA_SPACE).collect(StringBuilder::new,
-		StringBuilder::append,
-		StringBuilder::append);
-	return sb.substring(0, sb.length() - COMMA_SPACE.length());
+        StringBuilder sb = parameters.stream().map(p -> p.getName() + COMMA_SPACE).collect(StringBuilder::new,
+                StringBuilder::append,
+                StringBuilder::append);
+        return sb.substring(0, sb.length() - COMMA_SPACE.length());
     }
 
     @Override
     public Set<PackagedType> getContainedTypes() {
-	return parameters.stream().distinct().filter(param -> PackagedType.class.isAssignableFrom(param.getClass()))
-		.map(PackagedType.class::cast).collect(Collectors.toSet());
+        return parameters.stream().distinct().filter(param -> PackagedType.class.isAssignableFrom(param.getClass()))
+                .map(PackagedType.class::cast).collect(Collectors.toSet());
     }
 }

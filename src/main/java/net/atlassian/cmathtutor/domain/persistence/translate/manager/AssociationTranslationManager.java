@@ -10,16 +10,16 @@ import net.atlassian.cmathtutor.domain.persistence.translate.UnimplementedEnumCo
 public interface AssociationTranslationManager {
 
     public static AssociationTranslationManager of(@NonNull Association association) {
-	switch (association.getAggregationKind()) {
-	case COMPOSITE:
-	    return new CompositionTranslationManager(association);
-	case NONE:
-	    return new PureAssociationTranslationManager(association);
-	case SHARED:
-	    return new AggregationTranslationManager(association);
-	default:
-	    throw new UnimplementedEnumConstantException(association.getAggregationKind());
-	}
+        switch (association.getAggregationKind()) {
+        case COMPOSITE:
+            return new CompositionTranslationManager(association);
+        case NONE:
+            return new PureAssociationTranslationManager(association);
+        case SHARED:
+            return new AggregationTranslationManager(association);
+        default:
+            throw new UnimplementedEnumConstantException(association.getAggregationKind());
+        }
     }
 
     Association getAssociation();
@@ -35,4 +35,6 @@ public interface AssociationTranslationManager {
     boolean isTableJoin();
 
     boolean isSecondaryReferenceFieldToBeCreated();
+
+    boolean isAssociationContainable();
 }

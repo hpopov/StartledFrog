@@ -5,6 +5,6 @@ import net.atlassian.cmathtutor.util.CaseUtil;
 public class PersistenceUnitNameToEntityNameTranslator {
 
     public String translate(String persistenceUnitName) {
-	return CaseUtil.toCapitalizedCamelCase(persistenceUnitName);
+        return CaseUtil.toCapitalizedCamelCase(persistenceUnitName);
     }
 }

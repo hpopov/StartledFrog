@@ -1,68 +1,66 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<persistenceModel id="30bcf00d-99e3-42ea-800c-f7ca8d416c05">
-    <associations>
-        <association id="496e88ad-b636-4260-ad6a-8007466c9aa1">
-            <aggregationKind>COMPOSITE</aggregationKind>
-            <containerAttribute>406f7fa7-6efa-49b0-86c5-da3e7dcfac38</containerAttribute>
-            <elementAttribute>7bf8dc60-361c-4b2c-aac4-17439f532593</elementAttribute>
-        </association>
-    </associations>
-    <persistence-units>
-        <persistence-unit id="66744213-fe54-4b23-9169-5a9aec879e10">
-            <name>The beau-tiful word_</name>
-            <primitive-attributes>
-                <primitive-attribute id="1e1a6dc5-d07d-4216-b886-661ae1c84aab">
-                    <name>word age__ _ -</name>
-                    <constraint>NON_NULL</constraint>
-                    <type>BIG_INTEGER</type>
-                </primitive-attribute>
-                <primitive-attribute id="97f16731-14ad-4033-b384-ae02e4c5b3b9">
-                    <name>existed</name>
-                    <constraint>NON_NULL</constraint>
-                    <type>BOOLEAN</type>
-                </primitive-attribute>
-                <primitive-attribute id="7a0c0d11-31f9-4f63-b90a-919e2a4238d8">
-                    <name>world name</name>
-                    <constraint>NON_NULL</constraint>
-                    <constraint>UNIQUE</constraint>
-                    <type>STRING</type>
-                </primitive-attribute>
-            </primitive-attributes>
-            <referential-attributes>
-                <referential-attribute arity="AT_LEAST_ZERO" id="406f7fa7-6efa-49b0-86c5-da3e7dcfac38">
-                    <name>inhabitants_human</name>
-                    <navigable>true</navigable>
-                    <ownerType>ASSOCIATION</ownerType>
-                </referential-attribute>
-            </referential-attributes>
-            <repository-operations>
-                <repository-operation id="1a76bffa-241f-4391-84f7-13aeccf73fdc">
-                    <name>findByExistedIsTrue</name>
-                </repository-operation>
-            </repository-operations>
-        </persistence-unit>
-        <persistence-unit id="f4ef4c06-926e-435e-adaf-997f419e4f66">
-            <name>Human</name>
-            <primitive-attributes>
-                <primitive-attribute id="6e42ce4a-d604-4f38-9236-f153a7c8776b">
-                    <name>age</name>
-                    <type>INTEGER</type>
-                </primitive-attribute>
-            </primitive-attributes>
-            <referential-attributes>
-                <referential-attribute arity="ONE_EXACTLY" id="7bf8dc60-361c-4b2c-aac4-17439f532593">
-                    <name>the beau-tiful word_</name>
-                    <navigable>true</navigable>
-                    <ownerType>CLASSIFIER</ownerType>
-                </referential-attribute>
-            </referential-attributes>
-            <repository-operations/>
-        </persistence-unit>
-        <persistence-unit id="41b7705e-7cb8-4ebf-b2cc-41ea8f1f4e9a">
-            <name>Standalone superman</name>
-            <primitive-attributes/>
-            <referential-attributes/>
-            <repository-operations/>
-        </persistence-unit>
-    </persistence-units>
+<persistenceModel
+	id="176be039-2bd2-42a6-8428-684b4723046a">
+	<persistence-units>
+		<persistence-unit
+			id="152dd68f-357f-45aa-b07c-c17cc7624268">
+			<name>Bulb</name>
+			<primitive-attributes>
+				<primitive-attribute
+					id="d60b1a89-4664-43d2-b7f8-ac9b9319330e">
+					<name>s</name>
+					<constraint>NON_NULL</constraint>
+					<type>BOOLEAN</type>
+				</primitive-attribute>
+			</primitive-attributes>
+			<referential-attributes>
+				<referential-attribute arity="AT_MOST_ONE"
+					id="ae33b985-67e3-4168-8aad-e892adf0a01b">
+					<name>chandelier</name>
+					<navigable>false</navigable>
+					<ownerType>ASSOCIATION</ownerType>
+				</referential-attribute>
+				<referential-attribute arity="AT_MOST_ONE"
+					id="ae33b985-67e3-4168-8aad-e892adf0a01b">
+					<name>chandelier</name>
+					<navigable>false</navigable>
+					<ownerType>ASSOCIATION</ownerType>
+				</referential-attribute>
+			</referential-attributes>
+			<repository-operations />
+		</persistence-unit>
+		<persistence-unit
+			id="80f7168d-c9d5-432b-9e13-1a769fe4db77">
+			<name>Chandelier</name>
+			<primitive-attributes>
+				<primitive-attribute
+					id="56434147-b077-4363-9ac7-3942c3131354">
+					<name>color</name>
+					<type>STRING</type>
+				</primitive-attribute>
+			</primitive-attributes>
+			<referential-attributes>
+				<referential-attribute arity="AT_LEAST_ZERO"
+					id="12dcd205-9396-4d06-839c-7843141b8c13">
+					<name>bulbs</name>
+					<navigable>false</navigable>
+					<ownerType>CLASSIFIER</ownerType>
+				</referential-attribute>
+				<referential-attribute arity="AT_LEAST_ZERO"
+					id="12dcd205-9396-4d06-839c-7843141b8c13">
+					<name>bulbs</name>
+					<navigable>false</navigable>
+					<ownerType>CLASSIFIER</ownerType>
+				</referential-attribute>
+			</referential-attributes>
+			<repository-operations />
+		</persistence-unit>
+	</persistence-units>
+	<associations>
+		<association id="7ffd878c-f161-4488-a577-bed481520b3a">
+			<aggregationKind>NONE</aggregationKind>
+			<containerAttribute>12dcd205-9396-4d06-839c-7843141b8c13</containerAttribute>
+			<elementAttribute>ae33b985-67e3-4168-8aad-e892adf0a01b</elementAttribute>
+		</association>
+	</associations>
 </persistenceModel>

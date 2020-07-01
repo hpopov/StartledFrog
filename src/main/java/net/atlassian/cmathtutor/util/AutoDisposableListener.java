@@ -14,10 +14,9 @@ public class AutoDisposableListener<T> implements ChangeListener<T> {
 
     @Override
     public void changed(ObservableValue<? extends T> observable, T oldValue, T newValue) {
-	if (trigger.test(newValue)) {
-	    observable.removeListener(this);
-	    handler.run();
-	}
+        if (trigger.test(newValue)) {
+            observable.removeListener(this);
+            handler.run();
+        }
     }
-
 }

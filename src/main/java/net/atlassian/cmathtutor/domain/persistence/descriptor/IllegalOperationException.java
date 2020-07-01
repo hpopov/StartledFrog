@@ -8,7 +8,6 @@ public class IllegalOperationException extends Exception {
     private static final long serialVersionUID = 992990681976919280L;
 
     public IllegalOperationException(String message) {
-	super(message);
+        super(message);
     }
-
 }

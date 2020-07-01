@@ -11,11 +11,12 @@ import net.atlassian.cmathtutor.domain.persistence.translate.changelog.CreateTab
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class JoinTableData {
+
     private CreateTable createTable;
     private Column primaryAttributeJoinColumn;
     private Column secondaryAttributeJoinColumn;
 
     public String getName() {
-	return createTable.getTableName();
+        return createTable.getTableName();
     }
 }

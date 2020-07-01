@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.*?>
@@ -7,19 +8,25 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="911.0"
-	prefWidth="1600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<VBox maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="911.0"
+	prefWidth="1600.0" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="net.atlassian.cmathtutor.presenter.ProjectPresenter">
 	<children>
 		<MenuBar fx:id="menuBar">
 			<menus>
 				<Menu mnemonicParsing="false" text="File">
 					<items>
-						<MenuItem mnemonicParsing="false" onAction="#saveModels" text="Save models" />
-						<MenuItem mnemonicParsing="false" onAction="#generateProgram" text="Generate program" />
-						<MenuItem mnemonicParsing="false" onAction="#runGeneratedProgram" text="Run" />
-						<MenuItem mnemonicParsing="false" onAction="#exitStartledFrog" onMenuValidation="#onCloseMenuValidation"
-							text="Close" />
+						<MenuItem mnemonicParsing="false" onAction="#saveModels"
+							text="Save models" />
+						<MenuItem mnemonicParsing="false"
+							onAction="#generateProgram" text="Generate program" />
+						<MenuItem mnemonicParsing="false"
+							onAction="#runGeneratedProgram" text="Run" />
+						<MenuItem mnemonicParsing="false"
+							onAction="#exitStartledFrog"
+							onMenuValidation="#onCloseMenuValidation" text="Close" />
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false" text="Edit">
@@ -34,56 +41,110 @@
 				</Menu>
 			</menus>
 		</MenuBar>
-		<SplitPane dividerPositions="0.1, 0.8" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+		<SplitPane dividerPositions="0.17, 0.9" prefHeight="160.0"
+			prefWidth="200.0" VBox.vgrow="ALWAYS">
 			<items>
-				<VBox fx:id="viewButtonsContainer" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0" prefWidth="156.0">
+				<VBox fx:id="viewButtonsContainer" minHeight="-Infinity"
+					minWidth="-Infinity" prefHeight="877.0" prefWidth="256.0">
 					<children>
-						<Button fx:id="persistentViewButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#switchToPersistentView"
-							prefHeight="156.0" prefWidth="156.0" text="Persistence View" textAlignment="CENTER" wrapText="true">
+						<Button fx:id="persistentViewButton" contentDisplay="TOP"
+							mnemonicParsing="false" onAction="#switchToPersistentView"
+							prefHeight="256.0" prefWidth="256.0" text="Persistence View"
+							textAlignment="CENTER" wrapText="true">
 							<graphic>
-								<ImageView fitHeight="60.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+								<ImageView fitHeight="95.0" fitWidth="140.0"
+									pickOnBounds="true" preserveRatio="true">
 									<image>
-										<Image url="@../../../../images/persistence_view2.jpg" />
+										<Image url="@../../../../images/persistence_view.png" />
 									</image>
 								</ImageView>
 							</graphic>
+							<font>
+								<Font name="Marlett" size="28.0" />
+							</font>
 						</Button>
-						<Button fx:id="configurationViewButton" contentDisplay="TOP" mnemonicParsing="false"
-							onAction="#switchToConfigurationView" prefHeight="156.0" prefWidth="156.0" text="Configuration View" textAlignment="CENTER"
-							wrapText="true">
+						<Button fx:id="configurationViewButton"
+							contentDisplay="TOP" mnemonicParsing="false"
+							onAction="#switchToConfigurationView" prefHeight="256.0"
+							prefWidth="256.0" text="Configuration View"
+							textAlignment="CENTER" wrapText="true">
 							<graphic>
-								<ImageView fitHeight="68.0" fitWidth="79.0" pickOnBounds="true" preserveRatio="true">
+								<ImageView fitHeight="130.0" fitWidth="149.0"
+									pickOnBounds="true" preserveRatio="true">
 									<image>
 										<Image url="@../../../../images/configuration_view.png" />
 									</image>
 								</ImageView>
 							</graphic>
+							<font>
+								<Font name="Marlett" size="28.0" />
+							</font>
 						</Button>
-						<Button fx:id="launchViewButton" contentDisplay="TOP" layoutX="10.0" layoutY="166.0" mnemonicParsing="false"
-							onAction="#switchToLaunchView" prefHeight="156.0" prefWidth="156.0" text="Launch View" textAlignment="CENTER"
+						<Button fx:id="launchViewButton" contentDisplay="TOP"
+							layoutX="10.0" layoutY="166.0" mnemonicParsing="false"
+							onAction="#switchToLaunchView" prefHeight="256.0"
+							prefWidth="256.0" text="Launch View" textAlignment="CENTER"
 							wrapText="true">
 							<graphic>
-								<ImageView fitHeight="89.0" fitWidth="103.0" pickOnBounds="true" preserveRatio="true">
+								<ImageView fitHeight="141.0" fitWidth="178.0"
+									pickOnBounds="true" preserveRatio="true">
 									<image>
 										<Image url="@../../../../images/lunch_view.png" />
 									</image>
 								</ImageView>
 							</graphic>
+							<font>
+								<Font name="Marlett" size="28.0" />
+							</font>
 						</Button>
 					</children>
 				</VBox>
-				<StackPane fx:id="viewPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0" prefWidth="1110.0">
+				<StackPane fx:id="viewPane" minHeight="-Infinity"
+					minWidth="-Infinity" prefHeight="877.0" prefWidth="1110.0">
 					<children>
 						<!-- <fx:include source="persistence.fxml" fx:id="persistence" /> -->
-						<fx:include fx:id="configuration" source="configuration.fxml" />
-						<fx:include fx:id="launch" source="launch.fxml" />
+						<fx:include fx:id="configuration"
+							source="configuration.fxml" />
+						<fx:include fx:id="launch" visible="false"
+							source="launch.fxml" />
 					</children>
 				</StackPane>
-				<TilePane fx:id="persistenceToolbarTilePane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0"
-					prefWidth="316.0" visible="false">
+				<TilePane fx:id="persistenceToolbarTilePane"
+					minHeight="-Infinity" minWidth="-Infinity" prefHeight="877.0"
+					prefWidth="180.0" tileAlignment="CENTER_LEFT" visible="false">
 					<children>
-						<Button mnemonicParsing="false" onAction="#addNewDiagram" prefHeight="100.0" prefWidth="100.0" text="New Diagram"
-							textAlignment="CENTER" wrapText="true" />
+						<Button contentDisplay="TOP"
+							onAction="#selectNewPersistenceUnitTool" prefHeight="220.0"
+							prefWidth="180.0" text="New Persistence Unit"
+							textAlignment="CENTER" wrapText="true">
+							<graphic>
+								<ImageView fitHeight="115.0" fitWidth="112.0"
+									pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../images/entity.png" />
+									</image>
+								</ImageView>
+							</graphic>
+							<font>
+								<Font name="System Bold Italic" size="20.0" />
+							</font>
+						</Button>
+						<Button contentDisplay="TOP"
+							onAction="#selectNewAssociationTool" prefHeight="221.0"
+							prefWidth="180.0" text="New Association" textAlignment="CENTER"
+							wrapText="true">
+							<graphic>
+								<ImageView fitHeight="100.0" fitWidth="126.0"
+									pickOnBounds="true" preserveRatio="true">
+									<image>
+										<Image url="@../../../../images/Associations.png" />
+									</image>
+								</ImageView>
+							</graphic>
+							<font>
+								<Font name="System Bold Italic" size="20.0" />
+							</font>
+						</Button>
 					</children>
 				</TilePane>
 			</items>

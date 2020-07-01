@@ -17,7 +17,6 @@ import lombok.ToString;
 import net.atlassian.cmathtutor.domain.persistence.AttributeArity;
 import net.atlassian.cmathtutor.domain.persistence.OwnerType;
 import net.atlassian.cmathtutor.domain.persistence.ReferentialAttribute;
-import net.atlassian.cmathtutor.util.UidUtil;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @ToString(callSuper = true)
@@ -33,71 +32,74 @@ public class ReferentialAttributeModel extends AbstractAttributeModel implements
     private ObjectProperty<AssociationModel> association = new SimpleObjectProperty<>();
 
     public ReferentialAttributeModel(String id) {
-	super(id);
+        super(id);
     }
 
-    public static ReferentialAttributeModel makeIdentifiableInstance(String name,
-	    PersistenceUnitModel parentClassifier) {
-	ReferentialAttributeModel referentialAttributeModel = new ReferentialAttributeModel(UidUtil.getUId());
-	referentialAttributeModel.setName(name);
-	referentialAttributeModel.setParentClassifier(parentClassifier);
-	return referentialAttributeModel;
+    public static ReferentialAttributeModel makeIdentifiableInstance(
+            String name,
+            PersistenceUnitModel parentClassifier
+    ) {
+        ReferentialAttributeModel referentialAttributeModel = new ReferentialAttributeModel();
+        referentialAttributeModel.setName(name);
+        referentialAttributeModel.setParentClassifier(parentClassifier);
+        return referentialAttributeModel;
     }
 
     public ReadOnlyObjectProperty<AssociationModel> associationProperty() {
-	return this.association;
+        return this.association;
     }
 
     @XmlTransient
     @Override
     public AssociationModel getAssociation() {
-	return this.associationProperty().get();
+        return this.associationProperty().get();
     }
 
     public void setAssociation(final AssociationModel association) {
-	this.association.set(association);
+        this.association.set(association);
     }
 
+    @Override
     public ObjectProperty<OwnerType> ownerTypeProperty() {
-	return this.ownerType;
+        return this.ownerType;
     }
 
     @XmlElement(required = true)
     @Override
     public OwnerType getOwnerType() {
-	return this.ownerTypeProperty().get();
+        return this.ownerTypeProperty().get();
     }
 
     public void setOwnerType(final OwnerType ownerType) {
-	this.ownerTypeProperty().set(ownerType);
+        this.ownerTypeProperty().set(ownerType);
     }
 
+    @Override
     public BooleanProperty navigableProperty() {
-	return this.navigable;
+        return this.navigable;
     }
 
     @XmlElement(required = true)
     @Override
     public boolean isNavigable() {
-	return this.navigableProperty().get();
+        return this.navigableProperty().get();
     }
 
     public void setNavigable(final boolean navigable) {
-	this.navigableProperty().set(navigable);
+        this.navigableProperty().set(navigable);
     }
 
     public ObjectProperty<AttributeArity> arityProperty() {
-	return this.arity;
+        return this.arity;
     }
 
     @XmlAttribute(required = true)
     @Override
     public AttributeArity getArity() {
-	return this.arityProperty().get();
+        return this.arityProperty().get();
     }
 
     public void setArity(final AttributeArity arity) {
-	this.arityProperty().set(arity);
+        this.arityProperty().set(arity);
     }
-
 }

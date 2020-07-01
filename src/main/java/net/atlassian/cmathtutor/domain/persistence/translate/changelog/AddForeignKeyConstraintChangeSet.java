@@ -16,5 +16,4 @@ import lombok.experimental.SuperBuilder;
 public class AddForeignKeyConstraintChangeSet extends AbstractChangeSet {
 
     private AddForeignKeyConstraint addForeignKeyConstraint;
-
 }

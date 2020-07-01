@@ -6,6 +6,6 @@ import lombok.EqualsAndHashCode;
 public class EnumType<T extends Enum<T>> extends AbstractClassBasedClassifier<T> implements PackagedType {
 
     public EnumType(Class<T> clazz) {
-	super(clazz);
+        super(clazz);
     }
 }

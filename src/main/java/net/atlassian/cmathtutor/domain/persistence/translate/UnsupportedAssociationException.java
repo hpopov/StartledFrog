@@ -13,36 +13,37 @@ public class UnsupportedAssociationException extends IllegalArgumentException {
     private static final long serialVersionUID = -7218907139132501188L;
 
     public UnsupportedAssociationException(ReferentialAttribute primary, ReferentialAttribute secondary) {
-	super(prepareMessageFromAttributes(primary, secondary));
+        super(prepareMessageFromAttributes(primary, secondary));
     }
 
-    private static String prepareMessageFromAttributes(@NonNull ReferentialAttribute primary,
-	    @NonNull ReferentialAttribute secondary) {
-	if (primary.getAssociation() != secondary.getAssociation()) {
-	    throw new IllegalArgumentException("Referential attributes must belong to the same association");
-	}
-	@NonNull
-	Association association = primary.getAssociation();
-	String associationType = defineAssociationTypeByAggregationKind(association.getAggregationKind());
+    private static String prepareMessageFromAttributes(
+            @NonNull ReferentialAttribute primary,
+            @NonNull ReferentialAttribute secondary
+    ) {
+        if (primary.getAssociation() != secondary.getAssociation()) {
+            throw new IllegalArgumentException("Referential attributes must belong to the same association");
+        }
+        @NonNull
+        Association association = primary.getAssociation();
+        String associationType = defineAssociationTypeByAggregationKind(association.getAggregationKind());
 
-	String messageFormat = "%s of arity %s%s%s is not supported";
-	String arrow = association.getContainerAttribute() == primary ? "->" : "<-";
-	return String.format(messageFormat, associationType,
-		association.getElementAttribute().getArity().getAppearance(), arrow,
-		association.getContainerAttribute().getArity().getAppearance());
+        String messageFormat = "%s of arity %s%s%s is not supported";
+        String arrow = association.getContainerAttribute() == primary ? "->" : "<-";
+        return String.format(messageFormat, associationType,
+                association.getElementAttribute().getArity().getAppearance(), arrow,
+                association.getContainerAttribute().getArity().getAppearance());
     }
 
     private static String defineAssociationTypeByAggregationKind(AggregationKind aggregationKind) {
-	switch (aggregationKind) {
-	case COMPOSITE:
-	    return "Composition";
-	case NONE:
-	    return "Association";
-	case SHARED:
-	    return "Aggregation";
-	default:
-	    throw new UnimplementedEnumConstantException(aggregationKind);
-	}
+        switch (aggregationKind) {
+        case COMPOSITE:
+            return "Composition";
+        case NONE:
+            return "Association";
+        case SHARED:
+            return "Aggregation";
+        default:
+            throw new UnimplementedEnumConstantException(aggregationKind);
+        }
     }
-
 }
