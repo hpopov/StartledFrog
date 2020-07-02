@@ -25,16 +25,13 @@ import net.atlassian.cmathtutor.model.Project;
 @Slf4j
 public class ConfigurationDomainService {
 
-    private static final String DEFAULT_DOCKER_IP = "192.168.99.100";
-    private static final String LIQUIBASE_PROPERTIES = "liquibase.properties";
+    private static final String DEFAULT_DOCKER_IP = "localhost";
     private static final String DOCKER_COMPOSE_YAML = "docker-compose.yaml";
     private static final String APP_PROPERTIES = "application.properties";
     private static final String DEFAULT_USER = "startled-frog-user";
     private static final String DEFAULT_ROOT_PASSWORD = "root";
     private static final String DEFAULT_PASSWORD = "password";
     private static final String DEFAULT_DB_NAME = "appdb";
-    private static final String DEFAULT_JDBC_DRIVER_PATH = "C:/Users/Hryhorii_Popov/.m2/repository/mysql/"
-            + "mysql-connector-java/8.0.17/mysql-connector-java-8.0.17.jar";
     private static final String CONFIGURATION_MODEL_FILE_NAME = "configuration.model";
 
     @Inject
@@ -51,7 +48,6 @@ public class ConfigurationDomainService {
         Project currentProject = projectService.getCurrentProject();
         GlobalConfigurationModel configurationModel = GlobalConfigurationModel.builder()
                 .database(DEFAULT_DB_NAME)
-                .jdbcDriverPath(DEFAULT_JDBC_DRIVER_PATH)
                 .password(DEFAULT_PASSWORD)
                 .project(currentProject)
                 .rootPassword(DEFAULT_ROOT_PASSWORD)
@@ -116,13 +112,6 @@ public class ConfigurationDomainService {
             propertiesComposer.composeDockerYaml(writer, configurationModel);
         } catch (IOException e) {
             log.error("Unable to compose docker-compose.yaml for project {} due to {}",
-                    currentProject.getApplicationName(), e);
-        }
-
-        try (Writer writer = new FileWriter(resourceFolderPath.resolve(LIQUIBASE_PROPERTIES).toFile())) {
-            propertiesComposer.composeLiquibaseProperties(writer, configurationModel);
-        } catch (IOException e) {
-            log.error("Unable to compose application properties for project {} due to {}",
                     currentProject.getApplicationName(), e);
         }
     }

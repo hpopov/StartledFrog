@@ -63,7 +63,6 @@ public class SystemCallCreateStartledFrogProjectService extends AbstractCreateSt
         PersistenceModel persistenceModel = persistenceDomainService.initializeNewPersistenceModel();
         persistenceDomainService.persistModel(persistenceModel);
         GlobalConfigurationModel configurationModel = configurationDomainService.initializeDefaultConfigurationModel();
-        amendConfigurationModelDockerIp(configurationModel);
         configurationDomainService.persistModel(configurationModel);
     }
 
@@ -99,8 +98,4 @@ public class SystemCallCreateStartledFrogProjectService extends AbstractCreateSt
     // .build();
     // return persistenceFacade.getWrappedPersistence();
     // }
-
-    private void amendConfigurationModelDockerIp(GlobalConfigurationModel configurationModel) {
-        configurationModel.setDockerMachineIp("192.168.99.102");// TODO
-    }
 }
