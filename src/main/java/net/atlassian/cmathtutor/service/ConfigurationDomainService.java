@@ -25,7 +25,7 @@ import net.atlassian.cmathtutor.model.Project;
 @Slf4j
 public class ConfigurationDomainService {
 
-    private static final String DEFAULT_DOCKER_IP = "192.168.99.100";
+    private static final String DEFAULT_DOCKER_IP = "localhost";
     private static final String DOCKER_COMPOSE_YAML = "docker-compose.yaml";
     private static final String APP_PROPERTIES = "application.properties";
     private static final String DEFAULT_USER = "startled-frog-user";
