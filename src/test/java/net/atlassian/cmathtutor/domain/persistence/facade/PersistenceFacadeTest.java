@@ -28,6 +28,7 @@ import net.atlassian.cmathtutor.domain.persistence.descriptor.PersistenceUnitDes
 import net.atlassian.cmathtutor.domain.persistence.model.PersistenceModel;
 
 @Slf4j
+@Disabled
 class PersistenceFacadeTest {
 
     private static final File FILE_1 = new File(

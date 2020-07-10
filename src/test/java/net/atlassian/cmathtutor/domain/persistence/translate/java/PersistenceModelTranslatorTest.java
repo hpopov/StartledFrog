@@ -13,6 +13,7 @@ import javax.xml.bind.Marshaller;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,77 +30,75 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Repos
 import net.atlassian.cmathtutor.model.Project;
 
 @Slf4j
+@Disabled
 class PersistenceModelTranslatorTest {
 
-    private static final File FILE_2 = new File(
-            "C:/Users/Hryhorii_Popov/Data/Other/FullStack/StartledFrog/manualTest2.xml");
-    private static final File LIQUIBASE_FILE = new File(
-            "C:/Users/Hryhorii_Popov/Data/Other/FullStack/StartledFrog/liquibase2.xml");
+	private static final File FILE_2 = new File(
+			"C:/Users/Hryhorii_Popov/Data/Other/FullStack/StartledFrog/manualTest2.xml");
+	private static final File LIQUIBASE_FILE = new File(
+			"C:/Users/Hryhorii_Popov/Data/Other/FullStack/StartledFrog/liquibase2.xml");
 
-    private static VelocityEngine ve;
-    private Project project;
-    private PersistenceModelTranslator persistenceModelTranslator;
+	private static VelocityEngine ve;
+	private Project project;
+	private PersistenceModelTranslator persistenceModelTranslator;
 
-    @BeforeAll
-    static void beforeAll() {
-        ve = new VelocityEngine();
-        Properties config = new Properties();
-        config.put("resource.loaders", "class");
-        config.put("resource.loader.class.class",
-                "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-        ve.setProperties(config);
-        ve.init();
-    }
+	@BeforeAll
+	static void beforeAll() {
+		ve = new VelocityEngine();
+		Properties config = new Properties();
+		config.put("resource.loaders", "class");
+		config.put("resource.loader.class.class",
+				"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+		ve.setProperties(config);
+		ve.init();
+	}
 
-    @BeforeEach
-    void init() {
-        project = Project.builder()
-                .applicationName("Retina")
-                .projectBuildFramework(ProjectBuildFramework.MAVEN)
-                .rootPackage("some.root.package")
-                .build();
-        persistenceModelTranslator = new PersistenceModelTranslator(project);
-    }
+	@BeforeEach
+	void init() {
+		project = Project.builder().applicationName("Retina").projectBuildFramework(ProjectBuildFramework.MAVEN)
+				.rootPackage("some.root.package").build();
+		persistenceModelTranslator = new PersistenceModelTranslator(project);
+	}
 
-    @Test
-    final void test() {
-        Persistence persistence = PersistenceFacade.loadFromFile(FILE_2).getWrappedPersistence();
-        persistenceModelTranslator.translate(persistence);
-        JavaClassComposer javaClassComposer = new JavaClassComposer(ve);
-        TranslatedClassesData translatedClasses = persistenceModelTranslator.getTranslatedClasses();
+	@Test
+	final void test() {
+		Persistence persistence = PersistenceFacade.loadFromFile(FILE_2).getWrappedPersistence();
+		persistenceModelTranslator.translate(persistence);
+		JavaClassComposer javaClassComposer = new JavaClassComposer(ve);
+		TranslatedClassesData translatedClasses = persistenceModelTranslator.getTranslatedClasses();
 
-        StringWriter writer = new StringWriter();
-        javaClassComposer.createApplicationClass(translatedClasses.getTranslatedApplication(), writer);
-        for (ContainableEntity ce : translatedClasses.getTranslatedContainableEntities()) {
-            javaClassComposer.createContainableEntityClass(ce, writer);
-        }
-        for (Entity e : translatedClasses.getTranslatedEntities()) {
-            javaClassComposer.createEntityClass(e, writer);
-        }
-        for (Repository r : translatedClasses.getTranslatedRepositories()) {
-            javaClassComposer.createRepositoryInterface(r, writer);
-        }
-        System.out.println(writer.getBuffer());
-    }
+		StringWriter writer = new StringWriter();
+		javaClassComposer.createApplicationClass(translatedClasses.getTranslatedApplication(), writer);
+		for (ContainableEntity ce : translatedClasses.getTranslatedContainableEntities()) {
+			javaClassComposer.createContainableEntityClass(ce, writer);
+		}
+		for (Entity e : translatedClasses.getTranslatedEntities()) {
+			javaClassComposer.createEntityClass(e, writer);
+		}
+		for (Repository r : translatedClasses.getTranslatedRepositories()) {
+			javaClassComposer.createRepositoryInterface(r, writer);
+		}
+		System.out.println(writer.getBuffer());
+	}
 
-    @Test
-    final void testLiquibaseChangeLog() {
-        boolean success = true;
-        Persistence persistence = PersistenceFacade.loadFromFile(FILE_2).getWrappedPersistence();
-        persistenceModelTranslator.translate(persistence);
-        DatabaseChangeLog databaseChangeLog = persistenceModelTranslator.getTranslatedChangeLog();
+	@Test
+	final void testLiquibaseChangeLog() {
+		boolean success = true;
+		Persistence persistence = PersistenceFacade.loadFromFile(FILE_2).getWrappedPersistence();
+		persistenceModelTranslator.translate(persistence);
+		DatabaseChangeLog databaseChangeLog = persistenceModelTranslator.getTranslatedChangeLog();
 
-        try {
-            JAXBContext context = JAXBContext.newInstance(DatabaseChangeLog.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
-                    "http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd");
-            marshaller.marshal(databaseChangeLog, LIQUIBASE_FILE);
-        } catch (JAXBException e) {
-            log.error("Unable to persist changelog model using JAXB", e);
-            success = false;
-        }
-        assertTrue(success);
-    }
+		try {
+			JAXBContext context = JAXBContext.newInstance(DatabaseChangeLog.class);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
+					"http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd");
+			marshaller.marshal(databaseChangeLog, LIQUIBASE_FILE);
+		} catch (JAXBException e) {
+			log.error("Unable to persist changelog model using JAXB", e);
+			success = false;
+		}
+		assertTrue(success);
+	}
 }
