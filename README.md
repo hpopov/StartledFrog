@@ -17,7 +17,7 @@ Before launching the application, the following dependencies must be installed o
 3. [Optional] Apache **Maven** (you can use either mvn when it is installed or Maven wrapper (mvnw) if you'd prefer to skip Maven installation).
 
 ## Package installation
-1. Download binaries (in form of .zip archive from the latest release TODO: **insert reference here**);
+1. Download binaries from the [latest release](https://github.com/Tordek947/StartledFrog/releases/latest);
 2. Just unzip it at the location handy for you.
 
 ## Launch
