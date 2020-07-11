@@ -15,7 +15,7 @@
 	<items>
 		<AnchorPane maxWidth="1170.0">
 			<children>
-				<fx:include source="persistenceDiagram.fxml"
+				<fx:include source="PersistenceDiagram.fxml"
 					fx:id="persistenceDiagram" />
 			</children>
 		</AnchorPane>

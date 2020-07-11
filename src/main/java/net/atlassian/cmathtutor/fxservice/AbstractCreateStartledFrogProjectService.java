@@ -146,7 +146,7 @@ public abstract class AbstractCreateStartledFrogProjectService extends Service<P
         nameNode.appendChild(document.createTextNode("Repository with Startled Frog specific dependencies"));
         repositoryNode.appendChild(nameNode);
         Node urlNode = document.createElement("url");
-        urlNode.appendChild(document.createTextNode("http://raw.github.com/Tordek947/Dependencies/repository"));
+        urlNode.appendChild(document.createTextNode("http://github.com/Tordek947/Dependencies/raw/repository"));
         repositoryNode.appendChild(urlNode);
         repositoriesNode.appendChild(repositoryNode);
 

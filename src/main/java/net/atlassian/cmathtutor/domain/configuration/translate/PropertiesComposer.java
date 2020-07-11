@@ -25,15 +25,6 @@ public class PropertiesComposer {
         return writer;
     }
 
-    public Writer composeLiquibaseProperties(Writer writer, GlobalConfigurationModel model) {
-        VelocityContext context = new VelocityContext();
-        context.put("model", model);
-        Template template = ve.getTemplate("velocity/liquibase-properties-template.vm");
-        template.merge(context, writer);
-
-        return writer;
-    }
-
     public Writer composeDockerYaml(Writer writer, GlobalConfigurationModel model) {
         VelocityContext context = new VelocityContext();
         context.put("model", model);
