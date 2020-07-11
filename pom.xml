@@ -88,6 +88,7 @@
 								<resource>
 									<directory>.</directory>
 									<include>run.sh</include>
+									<include>run.bat</include>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
