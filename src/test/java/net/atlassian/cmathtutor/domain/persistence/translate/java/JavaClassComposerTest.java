@@ -12,6 +12,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import net.atlassian.cmathtutor.domain.persistence.translate.java.instance.AnnotationInstances;
@@ -23,6 +24,7 @@ import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Opera
 import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Repository;
 import net.atlassian.cmathtutor.domain.persistence.translate.java.velocity.Variable;
 
+@Disabled
 class JavaClassComposerTest {
 
     JavaClassComposer javaClassComposer;

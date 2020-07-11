@@ -102,11 +102,11 @@
 				<StackPane fx:id="viewPane" minHeight="-Infinity"
 					minWidth="-Infinity" prefHeight="877.0" prefWidth="1110.0">
 					<children>
-						<!-- <fx:include source="persistence.fxml" fx:id="persistence" /> -->
+						<!-- <fx:include source="Persistence.fxml" fx:id="persistence" /> -->
 						<fx:include fx:id="configuration"
-							source="configuration.fxml" />
+							source="Configuration.fxml" />
 						<fx:include fx:id="launch" visible="false"
-							source="launch.fxml" />
+							source="Launch.fxml" />
 					</children>
 				</StackPane>
 				<TilePane fx:id="persistenceToolbarTilePane"

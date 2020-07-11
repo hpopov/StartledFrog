@@ -11,8 +11,8 @@
 	fx:controller="net.atlassian.cmathtutor.presenter.StartPresenter">
 	<children>
 		<fx:include fx:id="createProject"
-			source="createProject.fxml" />
+			source="CreateProject.fxml" />
 		<Separator orientation="VERTICAL" prefHeight="200.0" />
-		<fx:include fx:id="loadProject" source="loadProject.fxml" />
+		<fx:include fx:id="loadProject" source="LoadProject.fxml" />
 	</children>
 </HBox>

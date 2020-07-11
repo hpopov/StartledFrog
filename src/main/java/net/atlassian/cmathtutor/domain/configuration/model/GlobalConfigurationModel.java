@@ -29,6 +29,5 @@ public class GlobalConfigurationModel {
     @Getter(onMethod = @__(@XmlTransient))
     @XmlTransient
     private Project project;
-    private String jdbcDriverPath;
     private String dockerMachineIp;
 }

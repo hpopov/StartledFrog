@@ -1,9 +1,0 @@
-url: jdbc:mysql://${model.DockerMachineIp}:3306/${model.Database}?useSSL=false&serverTimezone=UTC
-username: root
-password: ${model.RootPassword}
-classpath: ${model.JdbcDriverPath}
-changeLogFile: ./db/changelog/changelog-master.xml
-##
-##referenceUrl: jdbc:mysql://localhost:3306/${model.Database}?useSSL=false&serverTimezone=UTC
-##referenceUsername: root
-##referencePassword: root
