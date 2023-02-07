@@ -23,7 +23,7 @@ Before launching the application, the following dependencies must be installed o
 
 ## Package installation
 
-1. Download binaries from the [latest release](https://github.com/Tordek947/StartledFrog/releases/latest);
+1. Download binaries from the [latest release](https://github.com/hpopov/StartledFrog/releases/latest);
 2. Just unzip it at the location handy for you.
 
 ## Launch
