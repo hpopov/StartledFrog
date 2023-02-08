@@ -3,10 +3,9 @@
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.configuration.runtimes": [
         {
-            "name": "JavaSE-1.8",
+            "name": "JavaSE-11",
             "default": true,
-            "path": "~\\.sdkman\\candidates\\java\\1.8.0_351-oracle"
+            "path": "~\\.sdkman\\candidates\\java\\11.0.2-open"
         }
-    ],
-    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
+    ]
 }
