@@ -6,12 +6,11 @@ import net.atlassian.cmathtutor.domain.persistence.AttributeArity;
 import net.atlassian.cmathtutor.domain.persistence.ConstraintType;
 import net.atlassian.cmathtutor.domain.persistence.translate.UnimplementedEnumConstantException;
 import net.atlassian.cmathtutor.domain.persistence.translate.changelog.Constraints;
-import net.atlassian.cmathtutor.domain.persistence.translate.changelog.Constraints.ConstraintsBuilder;
 
 public class ConstraintsTranslator {
 
     public Constraints translate(Collection<ConstraintType> attributeConstraints) {
-        ConstraintsBuilder constraintsBuilder = Constraints.builder();
+        Constraints.ConstraintsBuilder constraintsBuilder = Constraints.builder();
         attributeConstraints.forEach(c -> {
             switch (c) {
             case NON_NULL:

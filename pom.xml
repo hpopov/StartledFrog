@@ -15,7 +15,7 @@
 		<repository>
 			<id>own-dependencies-repository</id>
 			<name>My First Mvn Repository</name>
-			<url>http://raw.github.com/Tordek947/Dependencies/repository</url>
+			<url>https://maven.pkg.github.com/hpopov/Dependencies/repository</url>
 		</repository>
 	</repositories>
 	<organization>
@@ -25,13 +25,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<lombok.version>1.18.12</lombok.version> <!-- Only IDE-based maven build to success -->
 		<afterburner.version>1.7.0</afterburner.version>
 		<slf4j.version>1.7.30</slf4j.version>
-		<log4j.version>2.13.3</log4j.version>
-		<velocity.version>2.2</velocity.version>
+		<log4j.version>2.19.0</log4j.version>
+		<velocity.version>2.3</velocity.version>
 		<apache.commons.version>3.10</apache.commons.version>
 		<!-- <apache.common-text.version>1.8</apache.common-text.version> -->
 		<!-- <zip4j.version>2.5.2</zip4j.version> -->
@@ -57,6 +57,8 @@
 
 	<build>
 		<finalName>StartledFrog</finalName>
+		<!-- Otherwise error: "duplicate class" -->
+		<sourceDirectory>${project.build.directory}/generated-sources/delombok</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -97,19 +99,80 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>com.zenjava</groupId>
+				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
-				<version>8.1.5</version>
+				<version>0.0.8</version>
+				<executions>
+					<execution>
+						<!-- Default configuration for running -->
+						<!-- Usage: mvn clean javafx:run -->
+						<id>default-cli</id>
+						<configuration>
+							<mainClass>net.atlassian.cmathtutor.VplApplication</mainClass>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-maven-plugin</artifactId>
+				<version>1.18.20.0</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>delombok</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
-
-					<mainClass>net.atlassian.cmathtutor.VplApplication</mainClass>
-
-					<!-- only required if signing the jar file -->
-					<keyStoreAlias>example-user</keyStoreAlias>
-					<keyStorePassword>example-password</keyStorePassword>
-					<allPermissions>true</allPermissions>
-
+					<! <compilerVersion>11</compilerVersion>
+					<source>11</source>
+					<target>11</target> >
+					<! Have to add 👇, otherwise "Skipping delombok: no source to process" >
+					<sourceDirectory>src/main/java</sourceDirectory>
+					<!<verbose>true</verbose> >
 				</configuration>
+			</plugin> -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>delombok</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<!-- Took this approach from
+								https://stackoverflow.com/questions/6271930/maven-antrun-not-executing-tasks/11009854#11009854 -->
+								<property name="compile_classpath" refid="maven.compile.classpath" />
+
+								<taskdef classname="lombok.delombok.ant.Tasks$Delombok"
+									classpath="${compile_classpath}" name="delombok" />
+								<mkdir dir="${project.build.sourceDirectory}" />
+								<delombok verbose="false" encoding="UTF-8"
+									to="${project.build.sourceDirectory}"
+									from="src/main/java"
+								>
+									<!-- This one is intentionally omitted, because apparently
+									 lombok cannot function with classpath of this project:
+									 delombok throws same compilation errors, as compilation with annotationProcessor
+									<classpath refid="maven.compile.classpath"/> -->
+								</delombok>
+
+
+								<!-- <jar
+									destfile="${project.build.directory}/${project.build.finalName}-sources.jar"
+									basedir="${project.build.directory}/delombok" /> -->
+							</target>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -138,25 +201,21 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>${lombok.version}</version>
-						</path>
-					</annotationProcessorPaths>
+					<release>11</release>
 				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven 
 				defaults (may be moved to parent pom) -->
 			<plugins>
-				<!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+				<!-- clean lifecycle, see
+				https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>3.1.0</version>
 				</plugin>
-				<!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+				<!-- default lifecycle, jar packaging: see
+				https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.0.2</version>
@@ -181,7 +240,8 @@
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
 				</plugin>
-				<!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+				<!-- site lifecycle, see
+				https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
 				<plugin>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.7.1</version>
@@ -195,6 +255,16 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>11</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -309,6 +379,11 @@
 			<groupId>javax.persistence</groupId>
 			<artifactId>javax.persistence-api</artifactId>
 			<version>2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.3.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
@@ -427,6 +502,13 @@
 			<scope>system</scope>
 			<version>${fxdiagram.version}</version>
 			<systemPath>${fx-diagram-libs}/de.fxdiagram.noeclipse-${fxdiagram.version}.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>de.fxdiagram.annotations</groupId>
+			<artifactId>de.fxdiagram.annotations</artifactId>
+			<scope>system</scope>
+			<version>${fxdiagram.version}</version>
+			<systemPath>${fx-diagram-libs}/de.fxdiagram.annotations-${fxdiagram.version}.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.xtend.lib.macro</groupId>
