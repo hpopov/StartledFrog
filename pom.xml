@@ -106,7 +106,11 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>>net.atlassian.cmathtutor.VplApplication</mainClass>
+							<mainClass>net.atlassian.cmathtutor.VplApplication</mainClass>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
                         </configuration>
                     </execution>
                 </executions>
