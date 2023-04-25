@@ -57,6 +57,8 @@
 
 	<build>
 		<finalName>StartledFrog</finalName>
+		<!-- Otherwise error: "duplicate class" -->
+		<sourceDirectory>${project.build.directory}/generated-sources/delombok</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -96,25 +98,82 @@
 					</execution>
 				</executions>
 			</plugin>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <executions>
-                    <execution>
-                        <!-- Default configuration for running -->
-                        <!-- Usage: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                        <configuration>
+			<plugin>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>0.0.8</version>
+				<executions>
+					<execution>
+						<!-- Default configuration for running -->
+						<!-- Usage: mvn clean javafx:run -->
+						<id>default-cli</id>
+						<configuration>
 							<mainClass>net.atlassian.cmathtutor.VplApplication</mainClass>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+			<!-- <plugin>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-maven-plugin</artifactId>
+				<version>1.18.20.0</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>delombok</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<! <compilerVersion>11</compilerVersion>
+					<source>11</source>
+					<target>11</target> >
+					<! Have to add 👇, otherwise "Skipping delombok: no source to process" >
+					<sourceDirectory>src/main/java</sourceDirectory>
+					<!<verbose>true</verbose> >
+				</configuration>
+			</plugin> -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>delombok</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<!-- Took this approach from
+								https://stackoverflow.com/questions/6271930/maven-antrun-not-executing-tasks/11009854#11009854 -->
+								<property name="compile_classpath" refid="maven.compile.classpath" />
+
+								<taskdef classname="lombok.delombok.ant.Tasks$Delombok"
+									classpath="${compile_classpath}" name="delombok" />
+								<mkdir dir="${project.build.sourceDirectory}" />
+								<delombok verbose="false" encoding="UTF-8"
+									to="${project.build.sourceDirectory}"
+									from="src/main/java"
+								>
+									<!-- This one is intentionally omitted, because apparently
+									 lombok cannot function with classpath of this project:
+									 delombok throws same compilation errors, as compilation with annotationProcessor
+									<classpath refid="maven.compile.classpath"/> -->
+								</delombok>
+
+
+								<!-- <jar
+									destfile="${project.build.directory}/${project.build.finalName}-sources.jar"
+									basedir="${project.build.directory}/delombok" /> -->
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.1.1</version>
@@ -142,14 +201,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>${lombok.version}</version>
-						</path>
-					</annotationProcessorPaths>
-                    <release>11</release>
+					<release>11</release>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -203,23 +255,23 @@
 	</build>
 
 	<dependencies>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>11</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
-        </dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>11</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
-			<scope>compile</scope>
-			<optional>false</optional>
+			<scope>provided</scope>
+			<!-- <optional>false</optional> -->
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.airhacks/afterburner.fx -->
 		<dependency>
