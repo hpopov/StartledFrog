@@ -18,7 +18,7 @@ This project aim is to create an environment to develop Web application in a gra
 ### Modelling new application with StartledFrog
 
 In this video new service for storing medical information of the patients is modelled.
-![Modelling new service](readme-resources/StartledFrog%20Demo%20--%20modelling%20new%20service.mp4)
+[![Modelling new service](readme-resources/Persistence%20View.png)](readme-resources/StartledFrog%20Demo%20--%20modelling%20new%20service.mp4 "Modelling new service")
 
 ### Running and using the service generated with StartledFrog
 
@@ -27,7 +27,7 @@ In this video it is shown:
 * How to launch generated application (SpringBoot RESTful service and docker-compose container with MySQL database),
 * How to use RESTful service, how modelled restrictions are implemented.
 
-![Launching and using new service](readme-resources/StartledFrog%20Demo%20--%20running%20and%20new%20service.mp4)
+[![Launching and using new service](readme-resources/Running%20RESTful%20service.png)](readme-resources/StartledFrog%20Demo%20--%20running%20and%20new%20service.mp4 "Launching and using new service")
 
 ## Currently obsolete
 
