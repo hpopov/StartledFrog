@@ -13,7 +13,27 @@ This project aim is to create an environment to develop Web application in a gra
 * Generated app: Simple CRUD RESTful API generated using Spring Data Rest;
 * Generated app: Navigable API (HATEOAS) using Spring HAL Explorer.
 
-## Prerequisites
+## Demo
+
+### Modelling new application with StartledFrog
+
+In this video new service for storing medical information of the patients is modelled.
+![Modelling new service](readme-resources/StartledFrog%20Demo%20--%20modelling%20new%20service.mp4)
+
+### Running and using the service generated with StartledFrog
+
+In this video it is shown:
+
+* How to launch generated application (SpringBoot RESTful service and docker-compose container with MySQL database),
+* How to use RESTful service, how modelled restrictions are implemented.
+
+![Launching and using new service](readme-resources/StartledFrog%20Demo%20--%20running%20and%20new%20service.mp4)
+
+## Currently obsolete
+
+Since many used API were updated during the last several years, the project, though buildable with Maven, is not capable of creating new StartledFrog projects (application).
+
+### Prerequisites
 
 Before launching the application, the following dependencies must be installed on your computer:  
 
@@ -21,12 +41,12 @@ Before launching the application, the following dependencies must be installed o
 2. **Docker** (with docker-compose) (to run database in generated project). On Windows the easiest way is to install Docker Desktop, on Linux make sure you have *docker* and *docker-compose* packages installed;
 3. [Optional] Apache **Maven** (you can use either mvn when it is installed or Maven wrapper (mvnw) if you'd prefer to skip Maven installation).
 
-## Package installation
+### Package installation
 
 1. Download binaries from the [latest release](https://github.com/hpopov/StartledFrog/releases/latest);
 2. Just unzip it at the location handy for you.
 
-## Launch
+### Launch
 
 Inside the release folder you unzipped earlier, run:
 
@@ -137,9 +157,8 @@ To launch generated application you should perform the following 3 steps (from t
 1. Ensure the Docker daemon is up and running;
 2. Execute `docker-compose up -d` to launch dockerized database;
 3. If you have Maven installed, run `mvn spring-boot:run`. **Otherwise** use its wrapper:
-
-* On Windows run `mvnw spring-boot:run` from the cmd shell;
-* On Linux run `./mvnw spring-boot:run` from the bash.
+    * On Windows run `mvnw spring-boot:run` from the cmd shell;
+    * On Linux run `./mvnw spring-boot:run` from the bash.
 
 When all 3 steps are executed successfully, you can explore generated application API browsing 'localhost:8080'.  
   
